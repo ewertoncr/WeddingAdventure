@@ -81,22 +81,39 @@
   }
   function drawGroom(c,x,y,frame=0,face=1){
     if(!couple.complete||!couple.naturalWidth){rect(c,x+10,y+20,28,38,"#263e78");rect(c,x+15,y+5,20,18,"#efb18c");return;}
+    // The source atlas contains one detailed groom pose. Animate that artwork with
+    // a real walk cycle: alternating bounce, tilt and stride compression.
+    const moving=frame===1||frame===2||frame===3;
+    const airborne=frame===3;
+    const phase=frame%3;
+    const bob=airborne?-5:moving?(phase===1?-2:phase===2?1:0):Math.sin(tick*.055)*.7;
+    const lean=moving?(phase===1?-.075:phase===2?.055:0):airborne?-.11:0;
+    const squash=moving&&phase===2?1.035:airborne?1.04:1;
     c.save();c.imageSmoothingEnabled=false;
-    if(face<0){c.translate(Math.round(x+48),0);c.scale(-1,1);x=0;}
-    c.drawImage(couple,0,0,96,128,Math.round(x),Math.round(y),48,64);c.restore();
+    c.translate(Math.round(x+24),Math.round(y+32+bob));
+    if(face<0)c.scale(-1,1);
+    c.rotate(lean);c.scale(1/squash,squash);
+    c.drawImage(couple,0,0,96,128,-24,-32,48,64);
+    c.restore();
   }
   function drawBride(c,x,y,frame=0){
     if(!couple.complete||!couple.naturalWidth){rect(c,x+10,y+20,28,38,"#fff4e9");rect(c,x+15,y+5,20,18,"#efb18c");return;}
+    const jumping=frame===2||frame===3||frame===4;
+    const bounce=jumping?(frame===2?-1:frame===3?-8:-4):Math.sin(tick*.07)*1.2;
+    const lean=jumping?(frame===3?-.09:.035):0;
     c.save();c.imageSmoothingEnabled=false;
-    const jump=frame===2||frame===3||frame===4;
-    c.drawImage(couple,jump?192:96,0,96,128,Math.round(x),Math.round(y),48,64);c.restore();
+    c.translate(Math.round(x+24),Math.round(y+32+bounce));c.rotate(lean);
+    // 96px-wide cells: bride standing (middle) and the original joyful leap (right).
+    c.drawImage(couple,jumping?192:96,0,96,128,-24,-32,48,64);
+    c.restore();
   }
   function drawHug(c,x,y,frame=0){
     if(!couple.complete||!couple.naturalWidth){drawGroom(c,x,y,0,1);drawBride(c,x+18,y,0);return;}
+    const beat=frame%6,lean=beat<3?-.035:.035,bob=beat===2?-2:beat===3?-1:0;
     c.save();c.imageSmoothingEnabled=false;
-    const lean=(frame%2)*2;
-    c.drawImage(couple,0,0,96,128,Math.round(x),Math.round(y),48,64);
-    c.drawImage(couple,96,0,96,128,Math.round(x+20+lean),Math.round(y),48,64);
+    c.translate(Math.round(x+48),Math.round(y+32+bob));c.rotate(lean);
+    c.drawImage(couple,0,0,96,128,-48,-32,48,64);
+    c.drawImage(couple,96,0,96,128,-27,-32,48,64);
     c.restore();
   }
   function drawCouple(c,x,y,frame,face=1){
@@ -145,7 +162,7 @@
         }
       }else{
         if(player.x>1500)drawBride(ctx,1900-camera,126,0);
-        drawGroom(ctx,player.x-camera,player.y-27,!player.ground?3:Math.abs(player.vx)>.25?Math.floor(tick/7)%3:0,player.face);
+        drawGroom(ctx,player.x-camera,player.y-27,!player.ground?3:Math.abs(player.vx)>.25?1+Math.floor(tick/6)%3:0,player.face);
       }
       // In-game status panel.
       rect(ctx,7,7,120,22,"#1d2b50dd");drawHeart(ctx,13,12,.7);ctx.fillStyle=C.white;ctx.font="bold 8px monospace";ctx.fillText(score+" / "+pickups.length+" MEMORIAS",28,22);
