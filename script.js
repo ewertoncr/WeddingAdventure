@@ -60,7 +60,7 @@
 
   // Hero cover preview loops a little playable-looking vignette.
   const preview=$("#hero-game-preview"),pctx=preview?.getContext("2d");
-  if(pctx){pctx.imageSmoothingEnabled=false;let frame=0;function previewLoop(){frame++;drawScene(pctx,480,270,0,frame,175+(frame*.24)%95,178,false);requestAnimationFrame(previewLoop);}previewLoop();}
+  if(pctx){pctx.imageSmoothingEnabled=false;let frame=0;function previewLoop(){frame++;drawScene(pctx,480,270,0,frame,175+(frame*.24)%95,187,false);requestAnimationFrame(previewLoop);}previewLoop();}
 
   // Playable side-scrolling platform game.
   const canvas=$("#game"),ctx=canvas?.getContext("2d");
