@@ -54,7 +54,7 @@
     const flagX=1010-camera;if(flagX>-20&&flagX<w+20){rect(c,flagX,115,3,44,C.white);rect(c,flagX+3,117,22,13,C.pink);rect(c,flagX+3,130,15,4,C.gold);}
     if(player){
       const walk=Math.abs(player.vx)>.25,air=!player.ground,frame=player.celebrate?4:air?3:walk?Math.floor(t/7)%3:0;
-      drawCouple(c,player.x-camera-3,player.y-27,frame,player.face||1);
+      drawCouple(c,player.x-camera,player.y-27,frame,player.face||1);
     }else if(preview){
       const x=178+(Math.sin(t*.015)*14),y=145+Math.sin(t*.1)*2;drawCouple(c,x, y,Math.floor(t/8)%3,1);
       drawHeart(c,x+20,y-23+Math.sin(t*.1)*2,.7);
@@ -78,7 +78,7 @@
     const W=480,H=250,GRAVITY=.43;
     ctx.imageSmoothingEnabled=false;
     const keys={left:false,right:false};
-    const player={x:28,y:173,vx:0,vy:0,w:76,h:37,ground:false,face:1,celebrate:false};
+    const player={x:28,y:173,vx:0,vy:0,w:82,h:37,ground:false,face:1,celebrate:false};
     const pickups=hearts.map(p=>({...p,got:false}));
     const enemies=[{x:590,y:168,min:545,max:625,v:0.65,alive:true},{x:1190,y:162,min:1120,max:1215,v:0.72,alive:true},{x:1510,y:166,min:1460,max:1570,v:0.8,alive:true}];
     let camera=0,tick=0,score=0,lives=3,playing=false,won=false,checkpoint=28,raf=0,last=0,particles=[];
@@ -95,7 +95,7 @@
       pickups.forEach(p=>{if(!p.got){const x=p.x-camera;if(x>-20&&x<W+20){drawHeart(ctx,x,p.y+Math.sin(tick*.09+p.x)*2,1);drawSpark(ctx,x+7,p.y-6,tick);}}});
       enemies.forEach(drawEnemy);
       // Player rendered in the foreground.
-      drawCouple(ctx,player.x-camera-3,player.y-27,player.celebrate?4:!player.ground?3:Math.abs(player.vx)>.25?Math.floor(tick/7)%3:0,player.face);
+      drawCouple(ctx,player.x-camera,player.y-27,player.celebrate?4:!player.ground?3:Math.abs(player.vx)>.25?Math.floor(tick/7)%3:0,player.face);
       // In-game status panel.
       rect(ctx,7,7,120,22,"#1d2b50dd");drawHeart(ctx,13,12,.7);ctx.fillStyle=C.white;ctx.font="bold 8px monospace";ctx.fillText(score+" / "+pickups.length+" MEMORIAS",28,22);
       rect(ctx,365,7,108,22,"#1d2b50dd");ctx.fillStyle=C.gold;ctx.font="bold 7px monospace";ctx.fillText("WORLD 01 · LOVE",373,21);
@@ -112,7 +112,7 @@
         player.vy+=GRAVITY*dt;player.y+=player.vy*dt;player.ground=false;
         platforms.forEach(p=>{const overlap=player.x+player.w>p.x&&player.x<p.x+p.w,bottom=player.y+player.h;if(overlap&&player.vy>=0&&prevBottom<=p.y+5&&bottom>=p.y&&bottom<=p.y+18){player.y=p.y-player.h;player.vy=0;player.ground=true;}});
         if(player.y>H+45)respawn();
-        pickups.forEach(p=>{if(!p.got&&Math.abs(player.x+38-p.x)<17&&Math.abs(player.y+17-p.y)<22){p.got=true;score++;updateHud();sparkle(p.x,p.y);message.textContent="Memória encontrada! "+score+" de "+pickups.length+" ♥";}});
+        pickups.forEach(p=>{if(!p.got&&Math.abs(player.x+41-p.x)<17&&Math.abs(player.y+17-p.y)<22){p.got=true;score++;updateHud();sparkle(p.x,p.y);message.textContent="Memória encontrada! "+score+" de "+pickups.length+" ♥";}});
         enemies.forEach(e=>{if(!e.alive)return;e.x+=e.v*dt;if(e.x<e.min||e.x>e.max)e.v*=-1;
           if(player.x+player.w>e.x+3&&player.x<e.x+24&&player.y+player.h>e.y+5&&player.y<e.y+29){
             if(player.vy>1&&player.y+player.h<e.y+18){e.alive=false;player.vy=-5;sparkle(e.x,e.y,C.pink);message.textContent="Guardião ultrapassado!";}else{player.x=Math.max(checkpoint,player.x-55);player.vx=0;player.vy=-3;respawn();}
