@@ -193,3 +193,7 @@ footer{padding:25px 6vw;background:#17254d}
 .game-overlay{z-index:5}
 .game-hud{pointer-events:none}
 @media(max-width:540px){.game-lives{font-size:8px}.game-stage{border-width:1px}.game-bar{gap:5px}.game-brand{font-size:6px}}
+
+/* Crisp, enlarged SNES sprite rendering */
+#game, #hero-game-preview { image-rendering: pixelated; image-rendering: crisp-edges; }
+#game { width:100%; height:auto; }
