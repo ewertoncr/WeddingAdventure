@@ -84,7 +84,7 @@
     function jump(){if(playing&&!won&&player.ground){player.vy=-7.9;player.ground=false;}}
     function burst(x,y){for(let i=0;i<10;i++){const a=i*Math.PI/5;particles.push({x,y,vx:Math.cos(a)*1.2,vy:Math.sin(a)*1.2-1,life:24});}}
     function draw(){
-      drawScene(ctx,W,H,camera,frame,player.x+player.w/2,player.y,false);
+      drawScene(ctx,W,H,camera,frame,player.x+player.w/2,player.y,true);
       // cover the scene with a camera-translated world layer for moving pickups/platforms/castle
       // redraw pickups in camera space; the background is intentionally parallax.
       pickups.forEach(p=>{if(p.got)return;const x=p.x-camera,y=p.y+Math.sin(frame*.08+p.x)*2;if(x>-12&&x<W+12)heart(ctx,x,y,1);});
