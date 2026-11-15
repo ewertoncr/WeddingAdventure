@@ -89,7 +89,7 @@
     function jump(){if(playing&&!won&&player.ground){player.vy=-8.3;player.ground=false;}}
     function sparkle(x,y,color=C.gold){for(let i=0;i<12;i++){const a=i*Math.PI/6;particles.push({x,y,vx:Math.cos(a)*1.4,vy:Math.sin(a)*1.4-1,life:28,color});}}
     function respawn(){lives--;updateHud();if(lives<=0){playing=false;overlay?.classList.remove("hidden");const h=overlay?.querySelector("h3"),p=overlay?.querySelector("p"),b=$("#start-game");if(h)h.textContent="A aventura continua.";if(p)p.textContent="As memórias continuam à vossa espera. Tentem novamente!";if(b)b.textContent="Jogar novamente ▶";return;}
-      player.x=checkpoint;player.y=130;player.vx=player.vy=0;message.textContent="Respirem fundo — ainda têm "+lives+" vidas!";}
+      player.x=checkpoint;player.y=checkpoint>1000?120:173;player.vx=player.vy=0;message.textContent="Respirem fundo — ainda têm "+lives+" vidas!";}
     function drawEnemy(e){const x=e.x-camera;if(x< -30||x>W+30||!e.alive)return;rect(ctx,x+3,e.y+25,21,4,"#28385c66");rect(ctx,x+4,e.y+9,18,15,"#8b5a91");rect(ctx,x+1,e.y+13,24,10,"#a96a9d");rect(ctx,x+6,e.y+4,14,8,"#c68eb7");rect(ctx,x+7,e.y+10,3,4,C.white);rect(ctx,x+16,e.y+10,3,4,C.white);rect(ctx,x+8,e.y+11,2,2,C.dark);rect(ctx,x+17,e.y+11,2,2,C.dark);rect(ctx,x+9,e.y+20,3,3,C.gold);rect(ctx,x+16,e.y+20,3,3,C.gold);}
     function draw(){
       drawWorld(ctx,W,H,camera,tick,false,null);
