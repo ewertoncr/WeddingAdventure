@@ -189,7 +189,7 @@ if(ctx){
    particles=particles.filter(p=>p.life-->0);particles.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=.05*dt;});
    camera=clamp(player.x-270,0,WORLD-W);draw();
  }
- let last=0;
+
  function frame(ts){const dt=Math.min((ts-last)/16.667||1,1.8);last=ts;update(dt);requestAnimationFrame(frame);}
  function jump(){if(playing&&!ending&&!won)player.buffer=10;}
  $("#start-game")?.addEventListener("click",()=>{if(lives<=0)reset();playing=true;overlay?.classList.add("hidden");message.textContent="A aventura começou! Recolham as 12 memórias.";last=performance.now();});
