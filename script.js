@@ -47,7 +47,7 @@
     // Tiny foreground flowers and grass tufts.
     for(let i=0;i<52;i++){const x=((i*31-camera*.92)%(w+24)+w+24)%(w+24);rect(c,x,204,2,7,"#34724e");rect(c,x-2,201,4,3,i%3===0?"#fff0a8":i%2?"#ff9fbd":"#e9e5e0");}
     // Floating hearts for the cover and game world.
-    hearts.forEach((p,i)=>{const x=p.x-camera,y=p.y+Math.sin(t*.08+i)*2;if(x>-20&&x<w+20)drawHeart(c,x,y,1);});
+    if(preview)hearts.forEach((p,i)=>{const x=p.x-camera,y=p.y+Math.sin(t*.08+i)*2;if(x>-20&&x<w+20)drawHeart(c,x,y,1);});
     // Decorative castle appears at the destination only.
     const castleX=1900-camera;if(castleX>-150&&castleX<w+150)drawCastle(c,castleX,205);
     // Checkpoint flag.
