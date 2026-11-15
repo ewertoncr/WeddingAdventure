@@ -14,7 +14,8 @@
 
   const canvas = $("#game"), ctx = canvas?.getContext("2d");
   if (ctx) {
-    const W = 960, H = 500, WORLD = 2600, gravity = .62;\n    ctx.imageSmoothingEnabled = false;
+    const W = 960, H = 500, WORLD = 2600, gravity = .62;
+    ctx.imageSmoothingEnabled = false;
     let camera = 0, tick = 0, score = 0, started = false, won = false;
     let particles = [], lastTime = 0;
     const keys = { left:false, right:false };
