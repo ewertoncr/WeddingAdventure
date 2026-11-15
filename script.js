@@ -62,11 +62,19 @@
     // Foreground frame.
     rect(c,0,h-3,w,3,"#fff7e8aa");
   }
+  function drawGroom(c,x,y,frame=0,face=1){
+    if(!couple.complete||!couple.naturalWidth){rect(c,x+10,y+20,28,38,"#263e78");rect(c,x+15,y+5,20,18,"#efb18c");return;}
+    c.save();c.imageSmoothingEnabled=false;
+    if(face<0){c.translate(Math.round(x+48),0);c.scale(-1,1);x=0;}
+    c.drawImage(couple,(frame%5)*48,0,48,64,Math.round(x),Math.round(y),48,64);c.restore();
+  }
+  function drawBride(c,x,y,frame=0){
+    if(!couple.complete||!couple.naturalWidth){rect(c,x+10,y+20,28,38,"#fff4e9");rect(c,x+15,y+5,20,18,"#efb18c");return;}
+    c.save();c.imageSmoothingEnabled=false;
+    c.drawImage(couple,(frame%5)*48,64,48,64,Math.round(x),Math.round(y),48,64);c.restore();
+  }
   function drawCouple(c,x,y,frame,face=1){
-    if(!couple.complete||!couple.naturalWidth){rect(c,x+10,y+20,28,38,"#31589b");rect(c,x+15,y+5,20,18,"#efb18c");rect(c,x+13,y+2,23,7,"#49312d");return;}
-    c.save();c.imageSmoothingEnabled=false;if(face<0){c.translate(Math.round(x+82),0);c.scale(-1,1);x=0;}else x=Math.round(x);
-    c.drawImage(couple,(frame%5)*48,0,48,64,x,Math.round(y),48,64);
-    c.drawImage(couple,(frame%5)*48,64,48,64,x+34,Math.round(y+1),48,64);c.restore();
+    drawGroom(c,x,y,frame,face);drawBride(c,x+38,y+1,frame);
   }
   // Animated cover preview.
   const preview=$("#hero-game-preview"),pctx=preview?.getContext("2d");
@@ -81,10 +89,10 @@
     const player={x:28,y:173,vx:0,vy:0,w:82,h:37,ground:false,face:1,celebrate:false};
     const pickups=hearts.map(p=>({...p,got:false}));
     const enemies=[{x:590,y:168,min:545,max:625,v:0.65,alive:true},{x:1190,y:162,min:1120,max:1215,v:0.72,alive:true},{x:1510,y:166,min:1460,max:1570,v:0.8,alive:true}];
-    let camera=0,tick=0,score=0,lives=3,playing=false,won=false,checkpoint=28,raf=0,last=0,particles=[];
+    let camera=0,tick=0,score=0,lives=3,playing=false,won=false,ending=false,endingStarted=0,checkpoint=28,raf=0,last=0,particles=[];
     const scoreEl=$("#score"),overlay=$("#game-overlay"),message=$("#game-message"),level=$("#level-name"),lifeEl=$(".game-lives");
     function updateHud(){if(scoreEl)scoreEl.textContent=score+" / "+pickups.length;if(lifeEl)lifeEl.textContent="♥ ".repeat(lives).trim()||"♡";}
-    function reset(){player.x=28;player.y=173;player.vx=player.vy=0;player.ground=false;player.face=1;player.celebrate=false;camera=0;tick=0;score=0;lives=3;checkpoint=28;won=false;playing=false;particles=[];pickups.forEach(p=>p.got=false);enemies.forEach(e=>e.alive=true);keys.left=keys.right=false;updateHud();if(message)message.textContent="Recolham as 12 memórias, evitem os guardiões e cheguem ao castelo.";const title=overlay?.querySelector("h3"),copy=overlay?.querySelector("p"),start=$("#start-game");if(title)title.innerHTML="A vossa história<br>começa aqui.";if(copy)copy.textContent="Uma aventura a dois, à procura de todas as memórias.";if(start)start.innerHTML="Começar a jogar <span>▶</span>";overlay?.classList.remove("hidden");if(level)level.textContent="THE MEADOW";}
+    function reset(){player.x=28;player.y=173;player.vx=player.vy=0;player.ground=false;player.face=1;player.celebrate=false;camera=0;tick=0;score=0;lives=3;checkpoint=28;won=false;ending=false;endingStarted=0;playing=false;particles=[];pickups.forEach(p=>p.got=false);enemies.forEach(e=>e.alive=true);keys.left=keys.right=false;updateHud();if(message)message.textContent="Recolham as 12 memórias, evitem os guardiões e cheguem ao castelo.";const title=overlay?.querySelector("h3"),copy=overlay?.querySelector("p"),start=$("#start-game");if(title)title.innerHTML="A vossa história<br>começa aqui.";if(copy)copy.textContent="Uma aventura a dois, à procura de todas as memórias.";if(start)start.innerHTML="Começar a jogar <span>▶</span>";overlay?.classList.remove("hidden");if(level)level.textContent="THE MEADOW";}
     function jump(){if(playing&&!won&&player.ground){player.vy=-8.3;player.ground=false;}}
     function sparkle(x,y,color=C.gold){for(let i=0;i<12;i++){const a=i*Math.PI/6;particles.push({x,y,vx:Math.cos(a)*1.4,vy:Math.sin(a)*1.4-1,life:28,color});}}
     function respawn(){lives--;updateHud();if(lives<=0){playing=false;overlay?.classList.remove("hidden");const h=overlay?.querySelector("h3"),p=overlay?.querySelector("p"),b=$("#start-game");if(h)h.textContent="A aventura continua.";if(p)p.textContent="As memórias continuam à vossa espera. Tentem novamente!";if(b)b.textContent="Jogar novamente ▶";return;}
@@ -95,7 +103,25 @@
       pickups.forEach(p=>{if(!p.got){const x=p.x-camera;if(x>-20&&x<W+20){drawHeart(ctx,x,p.y+Math.sin(tick*.09+p.x)*2,1);drawSpark(ctx,x+7,p.y-6,tick);}}});
       enemies.forEach(drawEnemy);
       // Player rendered in the foreground.
-      drawCouple(ctx,player.x-camera,player.y-27,player.celebrate?4:!player.ground?3:Math.abs(player.vx)>.25?Math.floor(tick/7)%3:0,player.face);
+      if(ending){
+        const elapsed=tick-endingStarted,gx=player.x-camera,bx=1900-camera;
+        if(elapsed<105){
+          drawGroom(ctx,gx,player.y-45,elapsed>55?2:1,1);
+          const phase=Math.floor((elapsed%54)/18),brideFrame=phase===0?1:phase===1?3:4;
+          const brideY=phase===1?105:phase===0?126:120;
+          drawBride(ctx,bx,brideY,brideFrame);
+          if(elapsed>42){drawHeart(ctx,bx+8,90+Math.sin(tick*.18)*4,.8);drawHeart(ctx,bx+35,75+Math.sin(tick*.15+1)*4,.65);}
+        }else{
+          const hugFrame=3+Math.floor((elapsed-105)/18)%3;
+          // The final atlas poses bring the groom and bride together in a close embrace.
+          if(couple.complete&&couple.naturalWidth){ctx.save();ctx.imageSmoothingEnabled=false;ctx.drawImage(couple,hugFrame*48,0,48,64,gx-2,player.y-47,48,64);ctx.drawImage(couple,hugFrame*48,64,48,64,gx+28,player.y-46,48,64);ctx.restore();}
+          for(let i=0;i<5;i++){const hx=gx+22+i*15,hy=94+Math.sin(tick*.12+i*1.4)*10-(i%2)*14;drawHeart(ctx,hx,hy,.65+(i%2)*.15);}
+          if(Math.floor(elapsed/14)%2===0){drawSpark(ctx,gx+61,79,tick);drawSpark(ctx,gx+8,93,tick+3);}
+        }
+      }else{
+        if(player.x>1500)drawBride(ctx,1900-camera,126,0);
+        drawGroom(ctx,player.x-camera,player.y-45,!player.ground?3:Math.abs(player.vx)>.25?Math.floor(tick/7)%3:0,player.face);
+      }
       // In-game status panel.
       rect(ctx,7,7,120,22,"#1d2b50dd");drawHeart(ctx,13,12,.7);ctx.fillStyle=C.white;ctx.font="bold 8px monospace";ctx.fillText(score+" / "+pickups.length+" MEMORIAS",28,22);
       rect(ctx,365,7,108,22,"#1d2b50dd");ctx.fillStyle=C.gold;ctx.font="bold 7px monospace";ctx.fillText("WORLD 01 · LOVE",373,21);
@@ -119,9 +145,10 @@
           }});
         if(player.x>970&&checkpoint<1000){checkpoint=1015;message.textContent="Ponto de controlo ativado! ✦";}
         camera=clamp(player.x-155,0,worldWidth-W);
-        if(player.x>1880&&score===pickups.length){won=true;player.celebrate=true;message.textContent="Conseguiram! Todas as memórias estão reunidas. ♥";}
+        if(player.x>1880&&score===pickups.length&&!ending){ending=true;endingStarted=tick;playing=false;player.x=1820;player.vx=player.vy=0;player.face=1;camera=clamp(player.x-155,0,worldWidth-W);message.textContent="Ela viu o noivo chegar... e corre para os seus braços! ♥";}
         else if(player.x>1880&&score<pickups.length){player.x=1870;message.textContent="Faltam "+(pickups.length-score)+" memórias para abrir o castelo.";}
       }
+      if(ending&&tick-endingStarted>225){ending=false;won=true;message.textContent="O amor venceu! Um abraço, muitos beijinhos e uma vida inteira juntos. ♥";}
       particles=particles.filter(p=>p.life-->0);draw();raf=requestAnimationFrame(step);
     }
     $("#start-game")?.addEventListener("click",()=>{if(lives<=0)reset();playing=true;overlay?.classList.add("hidden");message.textContent="A aventura começou! Recolham as 12 memórias." ;last=performance.now();});
