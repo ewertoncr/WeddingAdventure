@@ -1,45 +1,36 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="128" height="80" viewBox="0 0 128 80" shape-rendering="crispEdges">
-<!-- Transparent 4-frame walk cycles: groom row 0, bride row 1. Each cell 32x40. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="96" viewBox="0 0 160 96" shape-rendering="crispEdges">
+<!-- Wedding Adventure original 16-bit character atlas: five 32x48 frames per row. -->
 <defs>
  <g id="groom">
-  <rect x="8" y="36" width="16" height="2" fill="#25365d"/>
-  <rect x="10" y="30" width="5" height="7" fill="#233e7c"/><rect x="18" y="30" width="5" height="7" fill="#233e7c"/>
-  <rect x="8" y="35" width="8" height="3" fill="#5a4039"/><rect x="18" y="35" width="8" height="3" fill="#5a4039"/>
-  <rect x="10" y="19" width="13" height="13" fill="#31569d"/><rect x="15" y="20" width="4" height="12" fill="#e94779"/>
-  <rect x="7" y="21" width="4" height="9" fill="#31569d"/><rect x="22" y="21" width="4" height="9" fill="#31569d"/>
-  <rect x="6" y="28" width="4" height="4" fill="#e8a27e"/><rect x="23" y="28" width="4" height="4" fill="#e8a27e"/>
-  <rect x="14" y="15" width="5" height="6" fill="#d99470"/>
-  <rect x="10" y="5" width="13" height="12" fill="#eeb18d"/>
-  <rect x="9" y="3" width="15" height="6" fill="#51342e"/><rect x="11" y="1" width="11" height="4" fill="#684337"/>
-  <rect x="8" y="7" width="4" height="8" fill="#51342e"/><rect x="21" y="7" width="4" height="7" fill="#51342e"/>
-  <rect x="12" y="9" width="2" height="2" fill="#263450"/><rect x="19" y="9" width="2" height="2" fill="#263450"/>
-  <rect x="15" y="13" width="4" height="1" fill="#a65b55"/>
+  <rect x="9" y="43" width="14" height="3" fill="#26365c"/><rect x="10" y="38" width="6" height="7" fill="#253a70"/><rect x="18" y="38" width="6" height="7" fill="#253a70"/>
+  <rect x="8" y="43" width="8" height="3" fill="#5a4035"/><rect x="18" y="43" width="8" height="3" fill="#5a4035"/>
+  <rect x="9" y="22" width="15" height="18" fill="#31589b"/><rect x="14" y="22" width="5" height="17" fill="#e9b95e"/><rect x="10" y="26" width="13" height="3" fill="#547cc0"/>
+  <rect x="5" y="24" width="5" height="12" fill="#31589b"/><rect x="23" y="24" width="5" height="12" fill="#31589b"/><rect x="4" y="33" width="5" height="5" fill="#e9aa83"/><rect x="24" y="33" width="5" height="5" fill="#e9aa83"/>
+  <rect x="13" y="17" width="7" height="7" fill="#d99570"/><rect x="9" y="5" width="16" height="14" fill="#f0b58f"/>
+  <rect x="8" y="3" width="17" height="7" fill="#47302c"/><rect x="11" y="0" width="13" height="5" fill="#654236"/><rect x="7" y="7" width="4" height="10" fill="#49312c"/><rect x="23" y="7" width="4" height="8" fill="#49312c"/>
+  <rect x="12" y="11" width="3" height="3" fill="#27324b"/><rect x="20" y="11" width="3" height="3" fill="#27324b"/><rect x="16" y="16" width="4" height="1" fill="#a65b55"/>
+  <rect x="10" y="24" width="3" height="3" fill="#8ca9d8"/><rect x="22" y="24" width="3" height="3" fill="#8ca9d8"/>
  </g>
  <g id="bride">
-  <rect x="8" y="36" width="16" height="2" fill="#25365d"/>
-  <rect x="10" y="30" width="5" height="7" fill="#fff0e6"/><rect x="18" y="30" width="5" height="7" fill="#fff0e6"/>
-  <rect x="8" y="35" width="8" height="3" fill="#68473e"/><rect x="18" y="35" width="8" height="3" fill="#68473e"/>
-  <rect x="11" y="19" width="12" height="11" fill="#fff7e9"/><rect x="8" y="25" width="18" height="7" fill="#f0cbd6"/>
-  <rect x="12" y="20" width="10" height="11" fill="#fffdf5"/><rect x="15" y="22" width="4" height="4" fill="#e94779"/>
-  <rect x="8" y="20" width="4" height="9" fill="#f0cbd6"/><rect x="22" y="20" width="4" height="9" fill="#f0cbd6"/>
-  <rect x="14" y="15" width="5" height="6" fill="#d99470"/>
-  <rect x="10" y="5" width="13" height="12" fill="#efb18c"/>
-  <rect x="8" y="2" width="17" height="7" fill="#58372f"/><rect x="7" y="6" width="4" height="13" fill="#58372f"/><rect x="22" y="6" width="4" height="13" fill="#58372f"/>
-  <rect x="11" y="0" width="12" height="4" fill="#694438"/>
-  <rect x="12" y="9" width="2" height="2" fill="#263450"/><rect x="19" y="9" width="2" height="2" fill="#263450"/>
-  <rect x="15" y="13" width="4" height="1" fill="#a65b55"/>
-  <rect x="12" y="0" width="3" height="3" fill="#ffe7a4"/><rect x="19" y="0" width="3" height="3" fill="#ffe7a4"/>
+  <rect x="9" y="43" width="14" height="3" fill="#68483c"/><rect x="10" y="38" width="6" height="7" fill="#fff0e7"/><rect x="18" y="38" width="6" height="7" fill="#fff0e7"/>
+  <path d="M10 22h13v13l5 8H5l5-8z" fill="#f1c9d5"/><rect x="12" y="22" width="10" height="15" fill="#fffaf0"/><rect x="14" y="25" width="6" height="8" fill="#e8a9bd"/>
+  <rect x="6" y="24" width="5" height="11" fill="#f1c9d5"/><rect x="23" y="24" width="5" height="11" fill="#f1c9d5"/><rect x="4" y="33" width="5" height="5" fill="#e9aa83"/><rect x="25" y="33" width="5" height="5" fill="#e9aa83"/>
+  <rect x="13" y="17" width="7" height="7" fill="#d99570"/><rect x="9" y="5" width="16" height="14" fill="#f0b58f"/>
+  <rect x="7" y="3" width="19" height="7" fill="#57372f"/><rect x="10" y="0" width="14" height="5" fill="#70463a"/><rect x="6" y="7" width="5" height="15" fill="#57372f"/><rect x="23" y="7" width="5" height="15" fill="#57372f"/>
+  <rect x="12" y="11" width="3" height="3" fill="#27324b"/><rect x="20" y="11" width="3" height="3" fill="#27324b"/><rect x="16" y="16" width="4" height="1" fill="#a65b55"/>
+  <rect x="9" y="0" width="4" height="4" fill="#ffe7a4"/><rect x="20" y="0" width="4" height="4" fill="#ffe7a4"/><rect x="24" y="5" width="3" height="4" fill="#ffe7a4"/>
  </g>
 </defs>
-<!-- frame 1 -->
-<use href="#groom" x="0" y="0"/><use href="#bride" x="0" y="40"/>
-<!-- frame 2: stepping foot -->
-<g transform="translate(32 0)"><use href="#groom"/><rect x="8" y="35" width="8" height="3" fill="#5a4039"/><rect x="20" y="34" width="7" height="3" fill="#5a4039"/><rect x="7" y="21" width="4" height="8" fill="#31569d"/></g>
-<g transform="translate(32 40)"><use href="#bride"/><rect x="8" y="35" width="8" height="3" fill="#68473e"/><rect x="20" y="34" width="7" height="3" fill="#68473e"/></g>
-<!-- frame 3: opposite step -->
-<g transform="translate(64 0)"><use href="#groom"/><rect x="10" y="34" width="7" height="3" fill="#5a4039"/><rect x="18" y="35" width="8" height="3" fill="#5a4039"/><rect x="22" y="21" width="4" height="8" fill="#31569d"/></g>
-<g transform="translate(64 40)"><use href="#bride"/><rect x="10" y="34" width="7" height="3" fill="#68473e"/><rect x="18" y="35" width="8" height="3" fill="#68473e"/></g>
-<!-- frame 4: landing / happy pose -->
-<g transform="translate(96 0)"><use href="#groom"/><rect x="5" y="19" width="4" height="9" fill="#31569d"/><rect x="24" y="19" width="4" height="9" fill="#31569d"/><rect x="4" y="16" width="4" height="4" fill="#e8a27e"/><rect x="25" y="16" width="4" height="4" fill="#e8a27e"/></g>
-<g transform="translate(96 40)"><use href="#bride"/><rect x="5" y="18" width="4" height="10" fill="#f0cbd6"/><rect x="24" y="18" width="4" height="10" fill="#f0cbd6"/><rect x="4" y="15" width="4" height="4" fill="#e8a27e"/><rect x="25" y="15" width="4" height="4" fill="#e8a27e"/></g>
+<!-- Walk cycle frames -->
+<g><use href="#groom"/><use href="#bride" y="48"/></g>
+<g transform="translate(32 0)"><use href="#groom"/><rect x="7" y="42" width="9" height="4" fill="#5a4035"/><rect x="20" y="40" width="8" height="4" fill="#5a4035"/><rect x="4" y="25" width="5" height="10" fill="#31589b"/></g>
+<g transform="translate(32 48)"><use href="#bride"/><rect x="7" y="42" width="9" height="4" fill="#68483c"/><rect x="20" y="40" width="8" height="4" fill="#68483c"/></g>
+<g transform="translate(64 0)"><use href="#groom"/><rect x="9" y="40" width="8" height="4" fill="#5a4035"/><rect x="18" y="42" width="9" height="4" fill="#5a4035"/><rect x="23" y="25" width="5" height="10" fill="#31589b"/></g>
+<g transform="translate(64 48)"><use href="#bride"/><rect x="9" y="40" width="8" height="4" fill="#68483c"/><rect x="18" y="42" width="9" height="4" fill="#68483c"/></g>
+<!-- Jump / arms up -->
+<g transform="translate(96 0)"><use href="#groom"/><rect x="2" y="16" width="5" height="12" fill="#31589b"/><rect x="25" y="16" width="5" height="12" fill="#31589b"/><rect x="1" y="12" width="5" height="5" fill="#e9aa83"/><rect x="26" y="12" width="5" height="5" fill="#e9aa83"/></g>
+<g transform="translate(96 48)"><use href="#bride"/><rect x="2" y="16" width="5" height="12" fill="#f1c9d5"/><rect x="25" y="16" width="5" height="12" fill="#f1c9d5"/><rect x="1" y="12" width="5" height="5" fill="#e9aa83"/><rect x="26" y="12" width="5" height="5" fill="#e9aa83"/></g>
+<!-- Celebrate pose -->
+<g transform="translate(128 0)"><use href="#groom"/><rect x="3" y="15" width="5" height="12" fill="#31589b"/><rect x="24" y="15" width="5" height="12" fill="#31589b"/><rect x="2" y="10" width="5" height="5" fill="#e9aa83"/><rect x="25" y="10" width="5" height="5" fill="#e9aa83"/><rect x="13" y="1" width="6" height="3" fill="#ffe18a"/></g>
+<g transform="translate(128 48)"><use href="#bride"/><rect x="3" y="15" width="5" height="12" fill="#f1c9d5"/><rect x="24" y="15" width="5" height="12" fill="#f1c9d5"/><rect x="2" y="10" width="5" height="5" fill="#e9aa83"/><rect x="25" y="10" width="5" height="5" fill="#e9aa83"/><rect x="13" y="1" width="6" height="3" fill="#ffe18a"/></g>
 </svg>
