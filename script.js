@@ -8,7 +8,7 @@
 
   // Original pixel-art engine: crisp tile rendering, layered scenery and an animated couple atlas.
   const C={sky:"#76a9e5",sky2:"#d9d9e8",sun:"#fff0b9",cloud:"#fff8e8",far:"#9bafd0",far2:"#728fb2",hill:"#507c72",hill2:"#396653",leaf:"#2c694f",leaf2:"#43865a",leaf3:"#78ad61",trunk:"#775044",soil:"#89553e",soil2:"#a96b49",grass:"#4b984f",grass2:"#83ce68",stone:"#e8d4ad",gold:"#ffe18a",pink:"#ed4d80",dark:"#24345b",white:"#fff5e6",shadow:"#263b5c"};
-  const couple=new Image();couple.src="/WeddingAdventure/assets/sprites/wedding-atlas-48.png?v=1";
+  const couple=new Image();couple.src="/WeddingAdventure/assets/sprites/couple-atlas.webp?v=2";
   const rect=(c,x,y,w,h,color)=>{c.fillStyle=color;c.fillRect(Math.round(x),Math.round(y),Math.ceil(w),Math.ceil(h));};
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   function drawCloud(c,x,y,s=1){rect(c,x+7*s,y,25*s,7*s,C.cloud);rect(c,x,y+6*s,42*s,8*s,C.cloud);rect(c,x+13*s,y-6*s,19*s,9*s,C.cloud);}
@@ -66,20 +66,24 @@
     if(!couple.complete||!couple.naturalWidth){rect(c,x+10,y+20,28,38,"#263e78");rect(c,x+15,y+5,20,18,"#efb18c");return;}
     c.save();c.imageSmoothingEnabled=false;
     if(face<0){c.translate(Math.round(x+48),0);c.scale(-1,1);x=0;}
-    c.drawImage(couple,(frame%6)*48,0,48,64,Math.round(x),Math.round(y),48,64);c.restore();
+    c.drawImage(couple,0,0,96,128,Math.round(x),Math.round(y),48,64);c.restore();
   }
   function drawBride(c,x,y,frame=0){
     if(!couple.complete||!couple.naturalWidth){rect(c,x+10,y+20,28,38,"#fff4e9");rect(c,x+15,y+5,20,18,"#efb18c");return;}
     c.save();c.imageSmoothingEnabled=false;
-    c.drawImage(couple,(frame%6)*48,64,48,64,Math.round(x),Math.round(y),48,64);c.restore();
+    const jump=frame===2||frame===3||frame===4;
+    c.drawImage(couple,jump?192:96,0,96,128,Math.round(x),Math.round(y),48,64);c.restore();
   }
   function drawHug(c,x,y,frame=0){
     if(!couple.complete||!couple.naturalWidth){drawGroom(c,x,y,0,1);drawBride(c,x+18,y,0);return;}
     c.save();c.imageSmoothingEnabled=false;
-    c.drawImage(couple,(frame%6)*48,128,48,64,Math.round(x),Math.round(y),48,64);c.restore();
+    const lean=(frame%2)*2;
+    c.drawImage(couple,0,0,96,128,Math.round(x),Math.round(y),48,64);
+    c.drawImage(couple,96,0,96,128,Math.round(x+20+lean),Math.round(y),48,64);
+    c.restore();
   }
   function drawCouple(c,x,y,frame,face=1){
-    drawGroom(c,x,y,frame,face);drawBride(c,x+48,y,frame);
+    drawGroom(c,x,y,frame,face);drawBride(c,x+34,y,frame);
   }
   // Animated cover preview.
   const preview=$("#hero-game-preview"),pctx=preview?.getContext("2d");
