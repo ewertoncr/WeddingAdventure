@@ -65,7 +65,7 @@
   }
   function drawCouple(c,x,y,frame,face=1){
     if(!couple.complete||!couple.naturalWidth){rect(c,x+10,y+20,28,38,"#31589b");rect(c,x+15,y+5,20,18,"#efb18c");rect(c,x+13,y+2,23,7,"#49312d");return;}
-    c.save();c.imageSmoothingEnabled=false;if(face<0){c.translate(Math.round(x+32),0);c.scale(-1,1);x=0;}else x=Math.round(x);
+    c.save();c.imageSmoothingEnabled=false;if(face<0){c.translate(Math.round(x+48),0);c.scale(-1,1);x=0;}else x=Math.round(x);
     c.drawImage(couple,(frame%5)*48,0,48,64,x,Math.round(y),48,64);
     c.drawImage(couple,(frame%5)*48,64,48,64,x+34,Math.round(y+1),48,64);c.restore();
   }
