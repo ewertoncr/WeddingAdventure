@@ -8,7 +8,7 @@
 
   // Original pixel-art engine: crisp tile rendering, layered scenery and an animated couple atlas.
   const C={sky:"#76a9e5",sky2:"#d9d9e8",sun:"#fff0b9",cloud:"#fff8e8",far:"#9bafd0",far2:"#728fb2",hill:"#507c72",hill2:"#396653",leaf:"#2c694f",leaf2:"#43865a",leaf3:"#78ad61",trunk:"#775044",soil:"#89553e",soil2:"#a96b49",grass:"#4b984f",grass2:"#83ce68",stone:"#e8d4ad",gold:"#ffe18a",pink:"#ed4d80",dark:"#24345b",white:"#fff5e6",shadow:"#263b5c"};
-  const couple=new Image();couple.src="/WeddingAdventure/assets/sprites/wedding-couple-16bit.svg";
+  const couple=new Image();couple.src="/WeddingAdventure/assets/sprites/wedding-atlas-48.png?v=1";
   const rect=(c,x,y,w,h,color)=>{c.fillStyle=color;c.fillRect(Math.round(x),Math.round(y),Math.ceil(w),Math.ceil(h));};
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   function drawCloud(c,x,y,s=1){rect(c,x+7*s,y,25*s,7*s,C.cloud);rect(c,x,y+6*s,42*s,8*s,C.cloud);rect(c,x+13*s,y-6*s,19*s,9*s,C.cloud);}
@@ -66,15 +66,20 @@
     if(!couple.complete||!couple.naturalWidth){rect(c,x+10,y+20,28,38,"#263e78");rect(c,x+15,y+5,20,18,"#efb18c");return;}
     c.save();c.imageSmoothingEnabled=false;
     if(face<0){c.translate(Math.round(x+48),0);c.scale(-1,1);x=0;}
-    c.drawImage(couple,(frame%5)*48,0,48,64,Math.round(x),Math.round(y),48,64);c.restore();
+    c.drawImage(couple,(frame%6)*48,0,48,64,Math.round(x),Math.round(y),48,64);c.restore();
   }
   function drawBride(c,x,y,frame=0){
     if(!couple.complete||!couple.naturalWidth){rect(c,x+10,y+20,28,38,"#fff4e9");rect(c,x+15,y+5,20,18,"#efb18c");return;}
     c.save();c.imageSmoothingEnabled=false;
-    c.drawImage(couple,(frame%5)*48,64,48,64,Math.round(x),Math.round(y),48,64);c.restore();
+    c.drawImage(couple,(frame%6)*48,64,48,64,Math.round(x),Math.round(y),48,64);c.restore();
+  }
+  function drawHug(c,x,y,frame=0){
+    if(!couple.complete||!couple.naturalWidth){drawGroom(c,x,y,0,1);drawBride(c,x+18,y,0);return;}
+    c.save();c.imageSmoothingEnabled=false;
+    c.drawImage(couple,(frame%6)*48,128,48,64,Math.round(x),Math.round(y),48,64);c.restore();
   }
   function drawCouple(c,x,y,frame,face=1){
-    drawGroom(c,x,y,frame,face);drawBride(c,x+38,y+1,frame);
+    drawGroom(c,x,y,frame,face);drawBride(c,x+48,y,frame);
   }
   // Animated cover preview.
   const preview=$("#hero-game-preview"),pctx=preview?.getContext("2d");
@@ -86,7 +91,7 @@
     const W=480,H=250,GRAVITY=.43;
     ctx.imageSmoothingEnabled=false;
     const keys={left:false,right:false};
-    const player={x:28,y:173,vx:0,vy:0,w:82,h:37,ground:false,face:1,celebrate:false};
+    const player={x:28,y:173,vx:0,vy:0,w:48,h:37,ground:false,face:1,celebrate:false};
     const pickups=hearts.map(p=>({...p,got:false}));
     const enemies=[{x:590,y:168,min:545,max:625,v:0.65,alive:true},{x:1190,y:162,min:1120,max:1215,v:0.72,alive:true},{x:1510,y:166,min:1460,max:1570,v:0.8,alive:true}];
     let camera=0,tick=0,score=0,lives=3,playing=false,won=false,ending=false,endingStarted=0,checkpoint=28,raf=0,last=0,particles=[];
@@ -107,25 +112,14 @@
         const elapsed=tick-endingStarted,gx=player.x-camera,bx=1900-camera;
         if(elapsed<105){
           drawGroom(ctx,gx,player.y-27,elapsed>55?2:1,1);
-          const phase=Math.floor((elapsed%54)/18),brideFrame=phase===0?1:phase===1?3:4;
-          const brideY=phase===1?110:phase===0?141:135;
+          const phase=Math.floor((elapsed%72)/24),brideFrame=phase===0?1:phase===1?3:phase===2?2:4;
+          const brideY=phase===1?112:phase===0?141:phase===2?119:135;
           drawBride(ctx,bx,brideY,brideFrame);
           if(elapsed>42){drawHeart(ctx,bx+8,90+Math.sin(tick*.18)*4,.8);drawHeart(ctx,bx+35,75+Math.sin(tick*.15+1)*4,.65);}
         }else{
-          const hugFrame=3+Math.floor((elapsed-105)/18)%3;
-          // The final atlas poses bring the groom and bride together in a close embrace.
-          if(couple.complete&&couple.naturalWidth){
-            ctx.save();ctx.imageSmoothingEnabled=false;
-            drawGroom(ctx,gx+5,player.y-27,0,1);drawBride(ctx,gx+25,player.y-26,0);
-            // Pixel-art arms wrap around shoulders and waist to make the embrace readable.
-            ctx.lineCap="round";ctx.lineJoin="round";
-            ctx.strokeStyle="#263e78";ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(gx+37,player.y-19);ctx.quadraticCurveTo(gx+57,player.y-4,gx+66,player.y-20);ctx.stroke();
-            ctx.strokeStyle="#e7ad8e";ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(gx+66,player.y-20);ctx.lineTo(gx+69,player.y-24);ctx.stroke();
-            ctx.strokeStyle="#f0dcd6";ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(gx+43,player.y-35);ctx.quadraticCurveTo(gx+31,player.y-55,gx+20,player.y-36);ctx.stroke();
-            ctx.strokeStyle="#e7ad8e";ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(gx+20,player.y-36);ctx.lineTo(gx+18,player.y-31);ctx.stroke();
-            ctx.restore();
-          }
-          for(let i=0;i<5;i++){const hx=gx+22+i*15,hy=94+Math.sin(tick*.12+i*1.4)*10-(i%2)*14;drawHeart(ctx,hx,hy,.65+(i%2)*.15);}
+          const hugFrame=Math.floor((elapsed-105)/20)%6;
+          drawHug(ctx,gx+4,player.y-27,hugFrame);
+          for(let i=0;i<5;i++){const hx=gx+8+i*13,hy=94+Math.sin(tick*.12+i*1.4)*10-(i%2)*14;drawHeart(ctx,hx,hy,.65+(i%2)*.15);}
           if(Math.floor(elapsed/14)%2===0){drawSpark(ctx,gx+61,79,tick);drawSpark(ctx,gx+8,93,tick+3);}
         }
       }else{
@@ -148,7 +142,7 @@
         player.vy+=GRAVITY*dt;player.y+=player.vy*dt;player.ground=false;
         platforms.forEach(p=>{const overlap=player.x+player.w>p.x&&player.x<p.x+p.w,bottom=player.y+player.h;if(overlap&&player.vy>=0&&prevBottom<=p.y+5&&bottom>=p.y&&bottom<=p.y+18){player.y=p.y-player.h;player.vy=0;player.ground=true;}});
         if(player.y>H+45)respawn();
-        pickups.forEach(p=>{if(!p.got&&Math.abs(player.x+41-p.x)<17&&Math.abs(player.y+17-p.y)<22){p.got=true;score++;updateHud();sparkle(p.x,p.y);message.textContent="Memória encontrada! "+score+" de "+pickups.length+" ♥";}});
+        pickups.forEach(p=>{if(!p.got&&Math.abs(player.x+24-p.x)<17&&Math.abs(player.y+17-p.y)<22){p.got=true;score++;updateHud();sparkle(p.x,p.y);message.textContent="Memória encontrada! "+score+" de "+pickups.length+" ♥";}});
         enemies.forEach(e=>{if(!e.alive)return;e.x+=e.v*dt;if(e.x<e.min||e.x>e.max)e.v*=-1;
           if(player.x+player.w>e.x+3&&player.x<e.x+24&&player.y+player.h>e.y+5&&player.y<e.y+29){
             if(player.vy>1&&player.y+player.h<e.y+18){e.alive=false;player.vy=-5;sparkle(e.x,e.y,C.pink);message.textContent="Guardião ultrapassado!";}else{player.x=Math.max(checkpoint,player.x-55);player.vx=0;player.vy=-3;respawn();}
