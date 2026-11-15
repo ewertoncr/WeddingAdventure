@@ -8,7 +8,7 @@
 
   // Original pixel-art engine: crisp tile rendering, layered scenery and an animated couple atlas.
   const C={sky:"#76a9e5",sky2:"#d9d9e8",sun:"#fff0b9",cloud:"#fff8e8",far:"#9bafd0",far2:"#728fb2",hill:"#507c72",hill2:"#396653",leaf:"#2c694f",leaf2:"#43865a",leaf3:"#78ad61",trunk:"#775044",soil:"#89553e",soil2:"#a96b49",grass:"#4b984f",grass2:"#83ce68",stone:"#e8d4ad",gold:"#ffe18a",pink:"#ed4d80",dark:"#24345b",white:"#fff5e6",shadow:"#263b5c"};
-  const couple=new Image();couple.src="/WeddingAdventure/assets/sprites/couple-atlas.webp?v=2";
+  const couple=new Image();couple.src="/WeddingAdventure/assets/sprites/couple-atlas.webp?v=3";
   const rect=(c,x,y,w,h,color)=>{c.fillStyle=color;c.fillRect(Math.round(x),Math.round(y),Math.ceil(w),Math.ceil(h));};
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   function drawCloud(c,x,y,s=1){rect(c,x+7*s,y,25*s,7*s,C.cloud);rect(c,x,y+6*s,42*s,8*s,C.cloud);rect(c,x+13*s,y-6*s,19*s,9*s,C.cloud);}
@@ -30,98 +30,137 @@
   const worldWidth=2055;
   const hearts=[{x:108,y:181},{x:319,y:154},{x:443,y:128},{x:567,y:160},{x:714,y:134},{x:846,y:158},{x:988,y:128},{x:1140,y:155},{x:1290,y:127},{x:1435,y:155},{x:1585,y:127},{x:1785,y:177}];
   function drawWorld(c,w,h,camera,t,preview=false,player=null){
-    const sky=c.createLinearGradient(0,0,0,h);sky.addColorStop(0,C.sky);sky.addColorStop(.67,C.sky2);sky.addColorStop(1,"#f5c6aa");c.fillStyle=sky;c.fillRect(0,0,w,h);
-    rect(c,0,0,w,2,"#ffffff88");
-    rect(c,367,35,31,31,C.sun);rect(c,361,41,43,19,C.sun);rect(c,376,27,13,45,"#fff3c466");
-    for(let i=0;i<7;i++){const x=((i*111-t*.22)%(w+70)+w+70)%(w+70)-30;drawCloud(c,x,30+(i%3)*18,.72+(i%2)*.18);}
-    // Distant mountains and rolling hills, all aligned to the pixel grid.
-    for(let i=0;i<9;i++){const x=i*76-(camera*.13%76),y=112+(i%3)*9;rect(c,x,y+15,57,91,C.far);rect(c,x+10,y+2,39,18,"#c7d4e5");rect(c,x+22,y-7,18,12,"#e5e8e9");rect(c,x+5,y+34,49,5,C.far2);}
-    for(let i=0;i<7;i++){const x=i*105-(camera*.25%105);rect(c,x,168+(i%2)*7,115,65,i%2?C.hill:C.hill2);rect(c,x+10,163+(i%2)*7,75,9,"#659174");}
-    for(let i=0;i<13;i++){const x=i*59-(camera*.34%59);drawTree(c,x,195+(i%2)*3,.65+(i%3)*.1);}
-    // Platforms with grass caps, soil strata, stones and flowers.
-    platforms.forEach((p,i)=>{const x=p.x-camera;if(x> w+20||x+p.w< -20)return;
-      rect(c,x,p.y+6,p.w,46,C.soil);rect(c,x,p.y+3,p.w,7,C.grass);rect(c,x,p.y,p.w,5,C.grass2);
-      for(let q=8;q<p.w-4;q+=24){rect(c,x+q,p.y+14,9,4,"#b77a51");rect(c,x+q+9,p.y+30,5,4,"#69483c");rect(c,x+q+3,p.y+1,4,3,"#c1e77d");}
-      if(i%2===0){rect(c,x+17,p.y+20,8,6,"#d2a078");rect(c,x+Math.max(30,p.w-32),p.y+38,6,5,"#6e473d");}
-    });
-    // Tiny foreground flowers and grass tufts.
-    for(let i=0;i<52;i++){const x=((i*31-camera*.92)%(w+24)+w+24)%(w+24);rect(c,x,204,2,7,"#34724e");rect(c,x-2,201,4,3,i%3===0?"#fff0a8":i%2?"#ff9fbd":"#e9e5e0");}
-    // Floating hearts for the cover and game world.
-    if(preview)hearts.forEach((p,i)=>{const x=p.x-camera,y=p.y+Math.sin(t*.08+i)*2;if(x>-20&&x<w+20)drawHeart(c,x,y,1);});
-    // Waterfall and turquoise river inspired by the supplied castle scene.
-    const fallX=865-camera*.22;
-    if(fallX>-70&&fallX<w+40){
-      rect(c,fallX,157,28,10,"#e4f3ff");rect(c,fallX+4,164,22,42,"#8bd0f3");
-      rect(c,fallX+8,166,5,37,"#d2f2ff");rect(c,fallX+17,170,4,31,"#b7e7ff");
-      rect(c,fallX-3,202,36,5,"#d9f5ff");rect(c,fallX+2,207,29,3,"#72c6e8");
-      for(let k=0;k<5;k++){rect(c,fallX-7+k*8,198+(k%2)*4,3,3,"#f5ffff");}
+    // Illustrated parallax environment: layered mountains, forest, river and a living castle valley.
+    const sky=c.createLinearGradient(0,0,0,h);
+    sky.addColorStop(0,"#5d91c8");sky.addColorStop(.48,"#b8d8e7");sky.addColorStop(.78,"#f5d7c4");sky.addColorStop(1,"#f8e5c9");
+    c.fillStyle=sky;c.fillRect(0,0,w,h);
+    const glow=c.createRadialGradient(360-camera*.035,42,4,360-camera*.035,42,110);
+    glow.addColorStop(0,"#fff7d8bb");glow.addColorStop(1,"#fff7d800");c.fillStyle=glow;c.fillRect(220,0,260,170);
+    c.fillStyle="#fff0c9";c.beginPath();c.arc(365-camera*.035,42,17,0,Math.PI*2);c.fill();
+    // distant cloud banks drifting independently
+    for(let i=0;i<6;i++){let x=((i*112-t*.13)%(w+150)+w+150)%(w+150)-70,y=25+(i%3)*17;
+      c.fillStyle="#fff9ed88";c.beginPath();c.ellipse(x,y,31,8,0,0,Math.PI*2);c.ellipse(x+18,y-4,20,9,0,0,Math.PI*2);c.ellipse(x-16,y-2,17,7,0,0,Math.PI*2);c.fill();}
+    // distant mountain silhouettes with atmospheric haze
+    for(let i=0;i<7;i++){const x=i*94-(camera*.12%94),base=157+(i%3)*8;
+      c.fillStyle=i%2?"#8baec0":"#769cb4";c.beginPath();c.moveTo(x-12,base);c.lineTo(x+40,base-75-(i%2)*12);c.lineTo(x+96,base);c.closePath();c.fill();
+      c.fillStyle="#e7f0e9aa";c.beginPath();c.moveTo(x+25,base-54);c.lineTo(x+40,base-75-(i%2)*12);c.lineTo(x+56,base-52);c.lineTo(x+45,base-57);c.lineTo(x+39,base-49);c.closePath();c.fill();}
+    // valley and forest in multiple parallax layers
+    for(let i=0;i<6;i++){const x=i*110-(camera*.22%110),y=145+(i%2)*9;
+      c.fillStyle=i%2?"#6e9a83":"#5f8e7b";c.beginPath();c.ellipse(x+48,y+30,72,43,0,0,Math.PI*2);c.fill();}
+    for(let i=0;i<15;i++){const x=i*39-(camera*.38%39),y=185+(i%3)*5,sc=.55+(i%4)*.12;
+      c.save();c.translate(x,y);c.scale(sc,sc);c.fillStyle="#6d5848";c.fillRect(-3,-24,6,29);
+      const g=c.createRadialGradient(0,-36,2,0,-36,23);g.addColorStop(0,"#91b982");g.addColorStop(1,i%2?"#376c59":"#477c61");
+      c.fillStyle=g;c.beginPath();c.arc(0,-36,22,0,Math.PI*2);c.fill();c.beginPath();c.arc(-12,-29,14,0,Math.PI*2);c.arc(12,-28,15,0,Math.PI*2);c.fill();c.restore();}
+    // river bends through the valley; highlights move with the current
+    c.save();c.globalAlpha=.9;c.fillStyle="#6bb8c8";c.beginPath();c.moveTo(0,185);c.bezierCurveTo(95,166,126,215,220,199);c.bezierCurveTo(320,182,365,214,480,190);c.lineTo(480,250);c.lineTo(0,250);c.closePath();c.fill();
+    c.strokeStyle="#d5f5e9aa";c.lineWidth=3;c.beginPath();c.moveTo(-10,204);c.bezierCurveTo(95,181,142,226,235,211);c.bezierCurveTo(328,194,386,224,495,202);c.stroke();
+    for(let i=0;i<10;i++){let x=(i*57+t*1.15)%510-15,y=211+(i%3)*8;c.strokeStyle="#e9ffff88";c.lineWidth=1.4;c.beginPath();c.moveTo(x,y);c.quadraticCurveTo(x+9,y-2,x+18,y);c.stroke();}c.restore();
+    // soft meadow floor and organic platforms
+    c.fillStyle="#557f59";c.fillRect(0,205,w,45);
+    c.fillStyle="#7fa76a";c.beginPath();c.moveTo(0,205);c.quadraticCurveTo(90,196,175,207);c.quadraticCurveTo(270,216,360,202);c.quadraticCurveTo(420,197,480,205);c.lineTo(480,220);c.lineTo(0,220);c.closePath();c.fill();
+    platforms.forEach((p,i)=>{const x=p.x-camera;if(x>w+30||x+p.w< -30)return;
+      const y=p.y;c.save();c.shadowColor="#294c3c55";c.shadowBlur=5;c.shadowOffsetY=4;
+      const soil=c.createLinearGradient(0,y,0,y+54);soil.addColorStop(0,"#9a7655");soil.addColorStop(1,"#614d43");
+      c.fillStyle=soil;c.beginPath();c.roundRect(x,y+4,p.w,48,5);c.fill();c.shadowColor="transparent";
+      const turf=c.createLinearGradient(0,y-2,0,y+9);turf.addColorStop(0,"#a8cf79");turf.addColorStop(1,"#4e8d58");
+      c.fillStyle=turf;c.beginPath();c.roundRect(x,y,p.w,10,4);c.fill();
+      for(let q=10;q<p.w-5;q+=19){const sway=Math.sin(t*.06+q)*2;c.strokeStyle="#c6df8c";c.lineWidth=1.4;c.beginPath();c.moveTo(x+q,y+2);c.quadraticCurveTo(x+q-2+sway,y-5,x+q+2+sway,y-7);c.stroke();}
+      c.restore();});
+    // waterfall and foam with animated droplets
+    const fx=865-camera*.22;
+    if(fx>-65&&fx<w+50){c.fillStyle="#d9f5f3";c.beginPath();c.moveTo(fx-7,153);c.quadraticCurveTo(fx+12,148,fx+35,155);c.lineTo(fx+28,207);c.quadraticCurveTo(fx+12,214,fx-1,207);c.closePath();c.fill();
+      const water=c.createLinearGradient(fx,155,fx+28,205);water.addColorStop(0,"#8dd4df");water.addColorStop(.5,"#d5f5f0");water.addColorStop(1,"#55aebf");c.fillStyle=water;c.fillRect(fx+2,157,25,48);
+      for(let k=0;k<7;k++){const yy=157+(t*1.8+k*9)%49;c.fillStyle="#ffffffbb";c.beginPath();c.ellipse(fx+4+(k*7)%22,yy,1.4,3,0,0,Math.PI*2);c.fill();}
+      c.fillStyle="#e5fff0aa";c.beginPath();c.ellipse(fx+14,207,27,5,0,0,Math.PI*2);c.fill();}
+    // destination castle, built into the landscape
+    const castleX=1900-camera;
+    if(castleX>-160&&castleX<w+160){const x=castleX,g=205;
+      c.fillStyle="#d8c4ad";c.beginPath();c.moveTo(x-10,g);c.lineTo(x+8,g-79);c.lineTo(x+129,g-79);c.lineTo(x+148,g);c.closePath();c.fill();
+      const wall=c.createLinearGradient(x,g-80,x+140,g);wall.addColorStop(0,"#fff0d9");wall.addColorStop(1,"#c9b29b");c.fillStyle=wall;c.fillRect(x+15,g-83,112,83);
+      for(const [tx,tw,th] of [[x,31,111],[x+104,34,126]]){c.fillStyle="#f3dfc7";c.fillRect(tx,g-th,tw,th);c.fillStyle="#9c6176";c.beginPath();c.moveTo(tx-5,g-th);c.lineTo(tx+tw/2,g-th-23);c.lineTo(tx+tw+5,g-th);c.closePath();c.fill();c.fillStyle="#b8d5d7";c.fillRect(tx+10,g-th+28,10,18);}
+      c.fillStyle="#77566a";c.beginPath();c.roundRect(x+58,g-51,28,51,[14,14,0,0]);c.fill();
+      c.fillStyle="#d8b987";c.fillRect(x+69,g-51,4,51);
+      c.fillStyle="#a7c9c9";c.fillRect(x+43,g-69,12,19);c.fillRect(x+91,g-69,12,19);
+      // pennants flutter
+      c.strokeStyle="#765b55";c.lineWidth=2;c.beginPath();c.moveTo(x+132,g-132);c.lineTo(x+132,g-102);c.stroke();
+      c.fillStyle="#e66b83";c.beginPath();c.moveTo(x+133,g-131);c.quadraticCurveTo(x+151,g-128+Math.sin(t*.08)*3,x+148,g-117);c.lineTo(x+133,g-119);c.fill();
+      // garden arch, flower garlands and lanterns
+      c.strokeStyle="#765846";c.lineWidth=5;c.beginPath();c.moveTo(x-15,g);c.lineTo(x-15,g-63);c.quadraticCurveTo(x+43,g-100,x+99,g-63);c.lineTo(x+99,g);c.stroke();
+      for(let k=0;k<19;k++){const px=x-13+k*6,py=g-68-Math.sin(k/18*Math.PI)*25+Math.sin(t*.05+k)*1.5;
+        c.fillStyle=["#f7b4bf","#fff0dc","#d9a5c8","#e8c879"][k%4];c.beginPath();c.arc(px,py,3.1,0,Math.PI*2);c.fill();
+        c.fillStyle="#64895b";c.beginPath();c.arc(px+2,py-3,1.8,0,Math.PI*2);c.fill();}
     }
-    // A flower-covered wedding pergola at the castle entrance.
-    const archX=1810-camera;
-    if(archX>-80&&archX<w+100){
-      rect(c,archX,143,7,62,"#8a563f");rect(c,archX+66,143,7,62,"#8a563f");
-      rect(c,archX-4,138,82,7,"#9b6244");rect(c,archX+4,133,65,5,"#e8d5b8");
-      for(let k=0;k<11;k++){const fx=archX+4+k*6,fy=132+Math.sin(k*.45)*7;rect(c,fx,fy,5,5,k%3===0?"#f7d77d":k%2?"#f28ca8":"#fff0e6");rect(c,fx+2,fy-3,3,3,"#6eaa62");}
-      rect(c,archX+18,142,3,28,"#fff0df");rect(c,archX+48,142,3,28,"#fff0df");
-      rect(c,archX+18,169,33,3,"#fff0df");
-    }
-    // Decorative castle appears at the destination only.
-    const castleX=1900-camera;if(castleX>-150&&castleX<w+150)drawCastle(c,castleX,205);
-    // Checkpoint flag.
-    const flagX=1010-camera;if(flagX>-20&&flagX<w+20){rect(c,flagX,115,3,44,C.white);rect(c,flagX+3,117,22,13,C.pink);rect(c,flagX+3,130,15,4,C.gold);}
-    if(player){
-      const walk=Math.abs(player.vx)>.25,air=!player.ground,frame=player.celebrate?4:air?3:walk?Math.floor(t/7)%3:0;
-      drawCouple(c,player.x-camera,player.y-27,frame,player.face||1);
-    }else if(preview){
-      const x=178+(Math.sin(t*.015)*14),y=145+Math.sin(t*.1)*2;drawCouple(c,x, y,Math.floor(t/8)%3,1);
-      drawHeart(c,x+20,y-23+Math.sin(t*.1)*2,.7);
-    }
-    // Foreground frame.
-    rect(c,0,h-3,w,3,"#fff7e8aa");
+    // birds, drifting petals and grass that reacts to the breeze
+    for(let i=0;i<4;i++){const bx=((i*137+t*.55)%(w+60))-20,by=75+(i%3)*17+Math.sin(t*.04+i)*3;c.strokeStyle="#496b7a99";c.lineWidth=1.2;c.beginPath();c.moveTo(bx-4,by+2);c.quadraticCurveTo(bx,by-3,bx+4,by+2);c.stroke();}
+    for(let i=0;i<16;i++){const px=((i*47-t*(.18+i%3*.03))%(w+20)+w+20)%(w+20)-10,py=120+(i*23%88)+Math.sin(t*.04+i)*5;c.save();c.translate(px,py);c.rotate(t*.012+i);c.fillStyle=i%2?"#f4b6c5aa":"#fff0d5bb";c.beginPath();c.ellipse(0,0,2,4,0,0,Math.PI*2);c.fill();c.restore();}
+    // meadow flowers with swaying stems
+    for(let i=0;i<34;i++){const x=((i*29-camera*.8)%(w+20)+w+20)%(w+20)-10,y=202+(i%3)*3,sway=Math.sin(t*.07+i)*2.2;
+      c.strokeStyle="#39704d";c.lineWidth=1;c.beginPath();c.moveTo(x,y+5);c.quadraticCurveTo(x+sway,y+1,x+sway,y-2);c.stroke();
+      c.fillStyle=i%3===0?"#fff0c9":i%2?"#f4a9bd":"#d8c4f1";c.beginPath();c.arc(x+sway,y-3,2.2,0,Math.PI*2);c.fill();}
+    // The scene breathes in the cover and reacts to the hero's movement.
+    if(preview)hearts.forEach((p,i)=>{const x=p.x-camera,y=p.y+Math.sin(t*.06+i)*4;if(x>-20&&x<w+20)drawHeart(c,x,y,1);});
+    if(player){const px=player.x-camera;for(let i=0;i<4;i++){const gx=px+((i*13+t*.7)%58)-20,gy=player.y+31+Math.sin(t*.18+i)*2;c.strokeStyle="#c4e58c";c.lineWidth=1.5;c.beginPath();c.moveTo(gx,gy);c.quadraticCurveTo(gx-3,gy-5,gx+Math.sin(t*.1+i)*4,gy-8);c.stroke();}}
+    if(player)drawGroom(c,player.x-camera,player.y-27,Math.abs(player.vx)>.25?1+Math.floor(t/7)%3:0,player.face||1);
+    else if(preview){const x=178+Math.sin(t*.015)*14,y=139+Math.sin(t*.09)*2;drawGroom(c,x,y,Math.floor(t/8)%3,1);drawBride(c,x+35,y,Math.floor(t/10)%4);}
+    c.fillStyle="#fff7e8aa";c.fillRect(0,h-3,w,3);
   }
-  function drawGroom(c,x,y,frame=0,face=1){
-    if(!couple.complete||!couple.naturalWidth){rect(c,x+10,y+20,28,38,"#263e78");rect(c,x+15,y+5,20,18,"#efb18c");return;}
-    // The source atlas contains one detailed groom pose. Animate that artwork with
-    // a real walk cycle: alternating bounce, tilt and stride compression.
-    const moving=frame===1||frame===2||frame===3;
-    const airborne=frame===3;
-    const phase=frame%3;
-    const bob=airborne?-5:moving?(phase===1?-2:phase===2?1:0):Math.sin(frame*.7)*.7;
-    const lean=moving?(phase===1?-.075:phase===2?.055:0):airborne?-.11:0;
-    const squash=moving&&phase===2?1.035:airborne?1.04:1;
-    c.save();c.imageSmoothingEnabled=false;
-    c.translate(Math.round(x+24),Math.round(y+32+bob));
-    if(face<0)c.scale(-1,1);
-    c.rotate(lean);c.scale(1/squash,squash);
-    c.drawImage(couple,0,0,96,128,-24,-32,48,64);
+  // Detailed illustrated characters, rendered as layered human figures rather than tiny atlas tiles.
+  function drawPersonBase(c,x,y,kind,pose=0,face=1){
+    c.save();c.translate(Math.round(x+24),Math.round(y+32));if(face<0)c.scale(-1,1);
+    const bride=kind==="bride",jump=pose===3||pose===4,step=pose===1||pose===2;
+    const bob=jump?-5:step?Math.sin(pose*Math.PI/2)*1.5:Math.sin(pose*.7)*.5;
+    c.translate(0,bob);
+    // soft contact shadow
+    c.fillStyle="#253a4c44";c.beginPath();c.ellipse(0,30,jump?12:15,3,0,0,Math.PI*2);c.fill();
+    if(bride){
+      // veil and flowing hair
+      c.fillStyle="#fff8f0cc";c.beginPath();c.moveTo(-10,-24);c.quadraticCurveTo(-25,-7,-18,19);c.quadraticCurveTo(0,28,18,17);c.quadraticCurveTo(21,-6,9,-25);c.closePath();c.fill();
+      const dress=c.createLinearGradient(-12,-5,13,29);dress.addColorStop(0,"#fffefa");dress.addColorStop(.55,"#f4e7e3");dress.addColorStop(1,"#d9c9d2");
+      c.fillStyle=dress;c.beginPath();c.moveTo(-8,-5);c.quadraticCurveTo(-17,8,-20,28);c.quadraticCurveTo(0,34,20,28);c.quadraticCurveTo(16,9,8,-5);c.closePath();c.fill();
+      c.strokeStyle="#c8a9b5";c.lineWidth=1;c.beginPath();c.moveTo(-10,13);c.quadraticCurveTo(0,17,10,13);c.stroke();
+      c.fillStyle="#e7c9d0";for(let i=0;i<7;i++){c.beginPath();c.arc(-11+i*3.5,18+(i%2)*5,1.1,0,Math.PI*2);c.fill();}
+      // shoulders, neck and face
+      c.fillStyle="#e6b18f";c.fillRect(-3,-11,6,8);c.fillStyle="#f0c4a4";c.beginPath();c.ellipse(0,-19,8.2,10,0,0,Math.PI*2);c.fill();
+      c.fillStyle="#5b392f";c.beginPath();c.arc(0,-23,9,Math.PI,Math.PI*2);c.quadraticCurveTo(11,-18,7,-12);c.quadraticCurveTo(4,-17,2,-18);c.quadraticCurveTo(-7,-13,-9,-17);c.closePath();c.fill();
+      c.strokeStyle="#5b392f";c.lineWidth=3;c.beginPath();c.moveTo(-7,-18);c.quadraticCurveTo(-14,-4,-10,8);c.stroke();
+      c.fillStyle="#d9b76c";c.beginPath();c.arc(-5,-28,1.5,0,Math.PI*2);c.arc(0,-30,1.6,0,Math.PI*2);c.arc(5,-28,1.5,0,Math.PI*2);c.fill();
+      c.fillStyle="#68453b";c.beginPath();c.arc(-3,-18,1,0,Math.PI*2);c.arc(3,-18,1,0,Math.PI*2);c.fill();
+      c.strokeStyle="#a96b6b";c.lineWidth=1;c.beginPath();c.arc(0,-15,2.5,.2,Math.PI-.2);c.stroke();
+      // arms and delicate bouquet
+      c.strokeStyle="#e6b18f";c.lineWidth=4;c.lineCap="round";c.beginPath();c.moveTo(-8,-4);c.quadraticCurveTo(-14,4,-10,10);c.moveTo(8,-4);c.quadraticCurveTo(14,4,10,10);c.stroke();
+      c.fillStyle="#6b9a69";c.fillRect(9,8,2,9);c.fillStyle="#f0a9bb";for(let i=0;i<3;i++){c.beginPath();c.arc(8+i*3,7+(i%2)*2,2,0,Math.PI*2);c.fill();}
+    }else{
+      // navy tailored suit, jacket, shirt and tie
+      const suit=c.createLinearGradient(-12,-7,12,27);suit.addColorStop(0,"#405d91");suit.addColorStop(.55,"#243b6b");suit.addColorStop(1,"#18294e");
+      c.fillStyle=suit;c.beginPath();c.moveTo(-9,-7);c.lineTo(9,-7);c.quadraticCurveTo(15,8,13,27);c.lineTo(-13,27);c.quadraticCurveTo(-15,8,-9,-7);c.fill();
+      c.fillStyle="#f8f2e9";c.beginPath();c.moveTo(-5,-7);c.lineTo(0,1);c.lineTo(5,-7);c.lineTo(2,12);c.lineTo(-2,12);c.closePath();c.fill();
+      c.fillStyle="#bd4962";c.beginPath();c.moveTo(0,-1);c.lineTo(3,5);c.lineTo(0,17);c.lineTo(-3,5);c.closePath();c.fill();
+      c.strokeStyle="#d7c6aa";c.lineWidth=1;c.beginPath();c.moveTo(-7,1);c.lineTo(-2,8);c.moveTo(7,1);c.lineTo(2,8);c.stroke();
+      c.fillStyle="#e6b18f";c.fillRect(-3,-13,6,8);c.beginPath();c.ellipse(0,-20,8.5,10,0,0,Math.PI*2);c.fill();
+      c.fillStyle="#49352e";c.beginPath();c.arc(0,-24,9,Math.PI,Math.PI*2);c.quadraticCurveTo(10,-22,7,-15);c.lineTo(4,-17);c.lineTo(0,-18);c.lineTo(-5,-16);c.lineTo(-9,-18);c.closePath();c.fill();
+      c.fillStyle="#49352e";for(const [hx,hy,r] of [[-6,-28,3],[-2,-30,3],[3,-29,3],[7,-26,2.5]]){c.beginPath();c.arc(hx,hy,r,0,Math.PI*2);c.fill();}
+      c.fillStyle="#3b2a27";c.beginPath();c.arc(-3,-20,1,0,Math.PI*2);c.arc(3,-20,1,0,Math.PI*2);c.fill();
+      c.strokeStyle="#9e5e58";c.lineWidth=1;c.beginPath();c.arc(0,-16,2.5,.2,Math.PI-.2);c.stroke();
+      c.strokeStyle="#e6b18f";c.lineWidth=4;c.lineCap="round";c.beginPath();c.moveTo(-9,-3);c.lineTo(-13,8+(step?2:0));c.moveTo(9,-3);c.lineTo(13,8-(step?2:0));c.stroke();
+      c.fillStyle="#202c45";c.fillRect(-12,25,9,5);c.fillRect(3,25,9,5);
+      c.fillStyle="#d6b38c";c.fillRect(-12,29,10,3);c.fillRect(3,29,10,3);
+    }
+    // subtle highlight along silhouette
     c.restore();
   }
-  function drawBride(c,x,y,frame=0){
-    if(!couple.complete||!couple.naturalWidth){rect(c,x+10,y+20,28,38,"#fff4e9");rect(c,x+15,y+5,20,18,"#efb18c");return;}
-    const jumping=frame===2||frame===3||frame===4;
-    const bounce=jumping?(frame===2?-1:frame===3?-8:-4):Math.sin(frame*.8)*1.2;
-    const lean=jumping?(frame===3?-.09:.035):0;
-    c.save();c.imageSmoothingEnabled=false;
-    c.translate(Math.round(x+24),Math.round(y+32+bounce));c.rotate(lean);
-    // 96px-wide cells: bride standing (middle) and the original joyful leap (right).
-    c.drawImage(couple,jumping?192:96,0,96,128,-24,-32,48,64);
-    c.restore();
-  }
+  function drawGroom(c,x,y,frame=0,face=1){drawPersonBase(c,x,y,"groom",frame,face);}
+  function drawBride(c,x,y,frame=0){drawPersonBase(c,x,y,"bride",frame,1);}
   function drawHug(c,x,y,frame=0){
-    if(!couple.complete||!couple.naturalWidth){drawGroom(c,x,y,0,1);drawBride(c,x+18,y,0);return;}
-    const beat=frame%6,lean=beat<3?-.035:.035,bob=beat===2?-2:beat===3?-1:0;
-    c.save();c.imageSmoothingEnabled=false;
-    c.translate(Math.round(x+48),Math.round(y+32+bob));c.rotate(lean);
-    c.drawImage(couple,0,0,96,128,-48,-32,48,64);
-    c.drawImage(couple,96,0,96,128,-27,-32,48,64);
-    c.restore();
+    const bob=Math.sin(frame*Math.PI/3)*1.5;
+    drawPersonBase(c,x+8,y,"groom",frame%3,1);
+    drawPersonBase(c,x+31,y,"bride",frame%4,1);
+    c.save();c.strokeStyle="#e8b18e";c.lineWidth=4;c.lineCap="round";
+    c.beginPath();c.moveTo(x+19,y+24+bob);c.quadraticCurveTo(x+34,y+5+bob,x+45,y+20+bob);c.stroke();c.restore();
   }
-  function drawCouple(c,x,y,frame,face=1){
-    drawGroom(c,x,y,frame,face);drawBride(c,x+34,y,frame);
-  }
+  function drawCouple(c,x,y,frame,face=1){drawGroom(c,x,y,frame,face);drawBride(c,x+31,y,frame);}
   // Animated cover preview.
   const preview=$("#hero-game-preview"),pctx=preview?.getContext("2d");
-  if(pctx){pctx.imageSmoothingEnabled=false;let tick=0;const loop=()=>{tick++;drawWorld(pctx,480,270,0,tick,true);requestAnimationFrame(loop);};loop();}
+  if(pctx){pctx.imageSmoothingEnabled=true;let tick=0;const loop=()=>{tick++;drawWorld(pctx,480,270,0,tick,true);requestAnimationFrame(loop);};loop();}
 
   // Playable platform adventure with 12 memories, enemies, checkpoint and finish sequence.
   const canvas=$("#game"),ctx=canvas?.getContext("2d");
