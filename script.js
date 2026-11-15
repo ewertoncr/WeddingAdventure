@@ -30,70 +30,143 @@
   const worldWidth=2055;
   const hearts=[{x:108,y:181},{x:319,y:154},{x:443,y:128},{x:567,y:160},{x:714,y:134},{x:846,y:158},{x:988,y:128},{x:1140,y:155},{x:1290,y:127},{x:1435,y:155},{x:1585,y:127},{x:1785,y:177}];
   function drawWorld(c,w,h,camera,t,preview=false,player=null){
-    // Pixel-art world: every element is built on a crisp 2px grid, with layered parallax.
-    rect(c,0,0,w,h,"#79b8e9");
-    rect(c,0,0,w,76,"#91c9ef");
-    rect(c,0,76,w,42,"#c5e3e9");
-    // sun and stepped clouds
-    rect(c,370-camera*.025,25,24,24,"#ffe7a1");rect(c,366-camera*.025,31,32,12,"#fff0c2");
-    for(let i=0;i<6;i++){const x=((i*103-t*.16)%(w+100)+w+100)%(w+100)-45,y=29+(i%3)*22;
-      rect(c,x+8,y-5,20,7,"#f7fbf2");rect(c,x,y,38,9,"#fff9ed");rect(c,x+5,y+8,27,4,"#e7f2ef");}
-    // distant mountains: stepped silhouettes instead of smooth vector gradients
-    for(let i=0;i<7;i++){const x=i*92-(camera*.12%92),base=163+(i%2)*7,peak=65+(i%3)*13;
-      rect(c,x+22,base-peak,8,peak,"#91b4ce");rect(c,x+14,base-peak+14,8,peak-14,"#91b4ce");
-      rect(c,x+30,base-peak+8,8,peak-8,"#91b4ce");rect(c,x+6,base-peak+30,8,peak-30,"#91b4ce");
-      rect(c,x+14,base-peak+14,8,5,"#f1f2e8");rect(c,x+22,base-peak,8,7,"#f1f2e8");}
-    // distant hills and tiny castle silhouettes
-    for(let i=0;i<6;i++){const x=i*105-(camera*.22%105),y=157+(i%2)*8;
-      rect(c,x,y+8,76,28,i%2?"#75a98d":"#6d9e87");rect(c,x+12,y,49,12,i%2?"#75a98d":"#6d9e87");
-      rect(c,x+26,y-12,16,20,"#789b9b");rect(c,x+23,y-17,22,6,"#d5c6b0");}
-    // forest silhouettes in three parallax rows
-    for(let i=0;i<17;i++){const x=i*34-(camera*.38%34),y=185+(i%3)*5;
-      rect(c,x+10,y-27,5,29,"#765c4a");rect(c,x+3,y-37,19,13,i%2?"#3d8067":"#4a8e6d");
-      rect(c,x,y-29,25,12,i%2?"#4d966f":"#438463");rect(c,x+6,y-43,12,8,"#68aa79");
-      rect(c,x+5,y-33,5,4,"#8bc28b");}
-    // river ribbon, deliberately stepped like a 16-bit tile map
-    for(let i=0;i<13;i++){const x=i*40-(camera*.3%40),y=190+(i%3)*4;
-      rect(c,x,y,42,20,"#64b7d1");rect(c,x+4,y+3,32,3,"#b8e7e4");rect(c,x+15,y+12,18,2,"#8ad2df");}
-    // ground and platform sides
-    rect(c,0,205,w,45,"#72503f");rect(c,0,205,w,6,"#4f9b57");rect(c,0,211,w,4,"#86c66a");
-    for(let x=0;x<w;x+=16){rect(c,x,219,8,3,"#8c6046");rect(c,x+8,233,8,3,"#5c453d");}
-    platforms.forEach((p,i)=>{const x=Math.round(p.x-camera);if(x>w+30||x+p.w< -30)return;const y=p.y;
-      rect(c,x,y+4,p.w,49,"#80533e");rect(c,x,y+4,p.w,4,"#a66b4c");rect(c,x,y,p.w,7,"#4d984f");rect(c,x,y,p.w,3,"#9bd36d");
-      for(let q=8;q<p.w-4;q+=20){rect(c,x+q,y-4,3,5,"#5aab5e");rect(c,x+q+4,y-2,2,3,"#c4dc7d");}
-      for(let q=10;q<p.w-8;q+=32){rect(c,x+q,y+17,8,3,"#a56c4b");rect(c,x+q+14,y+32,7,3,"#65473e");}
-    });
-    // waterfall and bridge landmark
-    const fx=865-camera*.22;if(fx>-50&&fx<w+40){rect(c,fx,147,34,7,"#d8eee0");rect(c,fx+5,154,23,51,"#64c1d5");
-      for(let k=0;k<7;k++){const yy=154+(t*2+k*8)%48;rect(c,fx+4+(k*7)%22,yy,3,5,"#e7ffff");}
-      rect(c,fx-10,202,55,5,"#b7e8e4");rect(c,fx-5,207,45,3,"#4f9db5");}
-    // destination castle with battlements, stained-glass windows and a flower arch
-    const cx=1900-camera,g=205;if(cx>-170&&cx<w+170){
-      rect(c,cx+15,g-83,112,83,"#e9d7bb");rect(c,cx+20,g-78,102,78,"#f8e8cc");
-      rect(c,cx,g-111,34,111,"#f3dfc2");rect(c,cx+108,g-126,34,126,"#f3dfc2");
-      rect(c,cx-4,g-116,42,9,"#a85e7b");rect(c,cx+104,g-131,42,9,"#a85e7b");
-      rect(c,cx+6,g-130,6,14,"#c47a87");rect(c,cx+22,g-130,6,14,"#c47a87");
-      rect(c,cx+115,g-145,6,14,"#c47a87");rect(c,cx+131,g-145,6,14,"#c47a87");
-      rect(c,cx+45,g-103,51,103,"#fff0d7");rect(c,cx+52,g-50,37,50,"#76516b");
-      rect(c,cx+58,g-72,8,12,"#8fc4d5");rect(c,cx+75,g-72,8,12,"#8fc4d5");
-      rect(c,cx+10,g-80,11,17,"#8fc4d5");rect(c,cx+117,g-94,11,17,"#8fc4d5");
-      rect(c,cx+65,g-48,4,48,"#d7b879");rect(c,cx+64,g-54,7,6,"#f7d78a");
-      rect(c,cx+135,g-155,3,25,"#5d4960");rect(c,cx+138,g-153,18,10,"#e95d83");rect(c,cx+138,g-143,13,4,"#f6b2be");
-      // garden arch and pixel flowers
-      rect(c,cx-13,g-62,5,62,"#795844");rect(c,cx+100,g-62,5,62,"#795844");
-      rect(c,cx-8,g-70,12,5,"#795844");rect(c,cx+91,g-70,12,5,"#795844");rect(c,cx+4,g-78,88,5,"#795844");
-      for(let k=0;k<17;k++){const px=cx-7+k*6,py=g-78-Math.round(Math.sin(k/16*Math.PI)*15);
-        rect(c,px,py,4,4,["#f4a9bd","#fff0d3","#d8a9dc","#f2cf7d"][k%4]);rect(c,px+1,py+4,3,3,"#5c9663");}
+    // Rebuilt meadow: varied silhouettes, layered depth and textured pixel terrain.
+    const px=(n)=>Math.round(n);
+    const poly=(points,color)=>{
+      c.fillStyle=color;c.beginPath();c.moveTo(px(points[0][0]),px(points[0][1]));
+      for(let i=1;i<points.length;i++)c.lineTo(px(points[i][0]),px(points[i][1]));
+      c.closePath();c.fill();
+    };
+    const cloud=(x,y,scale=1)=>{
+      const q=scale;rect(c,x+8*q,y,18*q,5*q,"#f7fbf5");rect(c,x+2*q,y+4*q,31*q,7*q,"#fff9ed");
+      rect(c,x+8*q,y+10*q,20*q,3*q,"#dcecf0");rect(c,x+4*q,y+2*q,8*q,3*q,"#fffdf5");
+    };
+    const tree=(x,base,scale=1,variant=0,front=false)=>{
+      const q=scale, trunk=front?"#684638":"#765443",leaf=variant%3===0?"#397b5d":variant%3===1?"#438967":"#347456";
+      rect(c,x+10*q,base-29*q,7*q,31*q,trunk);rect(c,x+7*q,base-7*q,13*q,4*q,"#523b35");
+      // layered, stepped canopy with highlights and shaded underside
+      rect(c,x+1*q,base-45*q,25*q,16*q,leaf);
+      rect(c,x+5*q,base-53*q,18*q,12*q,variant%2?"#4b956b":"#55a071");
+      rect(c,x-3*q,base-39*q,33*q,13*q,leaf);
+      rect(c,x+4*q,base-57*q,10*q,7*q,variant%2?"#70b77a":"#68ad73");
+      rect(c,x+2*q,base-36*q,7*q,5*q,"#8bc987");
+      rect(c,x+19*q,base-31*q,8*q,5*q,front?"#2d684f":"#2e7055");
+      rect(c,x+7*q,base-20*q,4*q,3*q,"#8b6248");
+    };
+    // Sky with a warm horizon, distant haze and small pixel clouds.
+    rect(c,0,0,w,h,"#78b7e5");rect(c,0,0,w,74,"#8bc8ed");rect(c,0,74,w,43,"#b9dfe8");
+    rect(c,0,117,w,33,"#9acbdc");
+    const sunX=365-camera*.025;
+    rect(c,sunX-5,27,28,28,"#ffe5a0");rect(c,sunX,22,18,38,"#ffe5a0");
+    rect(c,sunX+4,31,11,18,"#fff2c7");
+    for(let i=0;i<5;i++){const x=((i*127-camera*.035-t*.08)%(w+120)+w+120)%(w+120)-55;cloud(x,23+(i%3)*21,.72+(i%2)*.18);}
+    // Far mountains: distinct stepped profiles rather than repeated vertical blocks.
+    for(let i=0;i<5;i++){
+      const x=i*126-(camera*.10%126)-18,base=158+(i%2)*7,peak=49+(i%3)*12;
+      poly([[x,base],[x+17,base-20],[x+29,base-peak+17],[x+42,base-peak],[x+54,base-peak+18],[x+70,base-12],[x+88,base]],i%2?"#87abc5":"#91b5cd");
+      poly([[x+29,base-peak+17],[x+42,base-peak],[x+54,base-peak+18],[x+48,base-peak+13],[x+42,base-peak+9],[x+36,base-peak+19]],"#edf2e9");
+      poly([[x+54,base-peak+18],[x+70,base-12],[x+88,base],[x+60,base]],"#779fbd");
+      rect(c,x+8,base-16,30,4,"#a8c4d2");
     }
-    // grass tufts, flower patches and drifting petals
-    for(let i=0;i<30;i++){const x=((i*31-camera*.8)%(w+20)+w+20)%(w+20)-10,y=202+(i%3)*3;
-      rect(c,x,y-5,2,5,"#34734b");rect(c,x-2,y-7,3,3,i%3?"#f4a9c2":"#ffe8a1");rect(c,x+2,y-6,3,3,i%2?"#fff0d7":"#d9b5e8");}
-    for(let i=0;i<12;i++){const x=((i*47-t*(.22+i%3*.04))%(w+20)+w+20)%(w+20)-10,y=112+(i*19%80);
-      rect(c,x,y,3,3,i%2?"#ffe6ed":"#fff4d7");}
+    // Rolling hills with small village roofs, layered at different speeds.
+    for(let i=0;i<6;i++){
+      const x=i*96-(camera*.19%96)-10,y=167+(i%3)*5;
+      poly([[x-10,205],[x+3,y+8],[x+27,y-8],[x+48,y+1],[x+68,y-11],[x+91,y+8],[x+105,205]],i%2?"#6f9f82":"#78a88a");
+      rect(c,x+25,y+1,25,13,"#688e83");rect(c,x+29,y-5,17,6,"#e8d7bd");
+      rect(c,x+34,y+5,4,9,"#b7d8d4");rect(c,x+43,y+5,4,9,"#b7d8d4");
+    }
+    // A winding stream broken into stepped banks, not a straight blue stripe.
+    const waterOffset=(camera*.28)%190;
+    for(let i=-1;i<5;i++){
+      const x=i*190-waterOffset;
+      poly([[x,176],[x+34,170],[x+78,174],[x+116,166],[x+151,173],[x+190,168],[x+190,191],[x+151,197],[x+111,190],[x+75,198],[x+34,191],[x,196]],"#4da8c4");
+      poly([[x+8,178],[x+38,174],[x+75,178],[x+112,171],[x+145,177],[x+178,173],[x+178,178],[x+144,182],[x+112,176],[x+76,184],[x+38,180],[x+8,184]],"#a5e0df");
+      rect(c,x+44,188,27,2,"#7dd0d7");rect(c,x+129,186,22,2,"#78c8d3");
+    }
+    // Forest in three parallax bands; individual tree silhouettes vary in scale.
+    for(let i=0;i<13;i++){
+      const x=i*48-(camera*.34%48)-12,base=202+(i%3)*2;
+      tree(x,base,.72+(i%3)*.10,i,false);
+    }
+    for(let i=0;i<8;i++){
+      const x=i*72-(camera*.49%72)-18,base=205+(i%2)*2;
+      tree(x,base,.95+(i%3)*.12,i+2,false);
+    }
+    // Distant flower garden, tiny fence posts and warm lanterns.
+    for(let i=0;i<16;i++){
+      const x=((i*43-camera*.55)%(w+40)+w+40)%(w+40)-20,y=197+(i%3)*3;
+      rect(c,x,y-7,2,8,"#397b53");rect(c,x-3,y-9,4,4,i%3?"#f3a8bd":"#ffe5a0");
+      rect(c,x+2,y-11,4,4,i%2?"#fff0df":"#d9b4e3");rect(c,x+1,y-4,2,3,"#7dbd73");
+    }
+    // Continuous ground slab, with strata, stones, roots and grass edge.
+    rect(c,0,205,w,45,"#704a3c");rect(c,0,205,w,6,"#3d8750");rect(c,0,211,w,4,"#83c86c");
+    rect(c,0,215,w,5,"#5b9e58");rect(c,0,220,w,30,"#704a3c");
+    for(let x=0;x<w;x+=24){
+      rect(c,x+2,224,10,3,"#895a43");rect(c,x+14,237,8,3,"#5c4039");
+      rect(c,x+5,245,13,3,"#80513f");
+      if((x/24)%3===0){rect(c,x+8,218,3,5,"#a46b4c");rect(c,x+11,220,2,3,"#b77a55");}
+    }
+    // Decorative stepping stones and tall grass tufts on the lip.
+    for(let i=0;i<26;i++){
+      const x=((i*31-camera*.78)%(w+30)+w+30)%(w+30)-15;
+      rect(c,x,202-(i%3)*2,3,8,"#34794d");rect(c,x+3,205-(i%2)*3,3,5,"#6bb65e");
+      if(i%2===0)rect(c,x+7,207,3,2,"#b5d88a");
+    }
+    // Platforms receive layered turf, soil strata, stones and hanging roots.
+    platforms.forEach((p,i)=>{
+      const x=Math.round(p.x-camera);if(x>w+30||x+p.w< -30)return;const y=p.y;
+      rect(c,x,y+5,p.w,49,"#704a3c");rect(c,x,y+5,p.w,4,"#9a6549");
+      rect(c,x,y,p.w,7,"#438d50");rect(c,x,y,p.w,3,"#a4d66e");
+      rect(c,x+3,y+8,p.w-6,2,"#8b5b43");
+      for(let q=8;q<p.w-5;q+=23){rect(c,x+q,y-5,3,7,"#39834d");rect(c,x+q+3,y-3,3,5,"#70b85f");}
+      for(let q=11;q<p.w-10;q+=31){
+        rect(c,x+q,y+19,9,3,"#9a6348");rect(c,x+q+14,y+34,7,3,"#563e39");
+        if((q+i)%2<1)rect(c,x+q+4,y+47,2,6,"#4d7650");
+      }
+      rect(c,x+2,y+12,Math.max(0,p.w-4),1,"#b77a53");
+    });
+    // Waterfall and stone bridge landmark.
+    const fx=865-camera*.22;
+    if(fx>-55&&fx<w+45){
+      rect(c,fx-5,148,43,7,"#dcece0");rect(c,fx,155,34,50,"#4daec6");
+      rect(c,fx+5,155,4,45,"#8bd7df");rect(c,fx+22,155,4,45,"#348eae");
+      for(let k=0;k<8;k++){const yy=155+(t*1.5+k*7)%47;rect(c,fx+4+(k*7)%25,yy,3,5,"#d8f8ed");}
+      rect(c,fx-13,201,52,5,"#b9dcd0");rect(c,fx-8,206,42,3,"#5a9eae");
+    }
+    // Castle destination: layered stonework, rose windows, roof tiles and a flower arch.
+    const cx=1900-camera,g=205;
+    if(cx>-175&&cx<w+175){
+      rect(c,cx+13,g-88,118,88,"#d9c3a4");rect(c,cx+19,g-83,106,83,"#f3dfbf");
+      rect(c,cx+3,g-113,38,113,"#e6d0ae");rect(c,cx+107,g-129,39,129,"#e6d0ae");
+      rect(c,cx+7,g-108,30,5,"#fff0d7");rect(c,cx+111,g-124,31,5,"#fff0d7");
+      rect(c,cx-2,g-119,48,9,"#9c5870");rect(c,cx+103,g-135,47,9,"#9c5870");
+      for(let k=0;k<4;k++){rect(c,cx+5+k*10,g-130,5,13,"#c47d82");rect(c,cx+111+k*9,g-146,5,13,"#c47d82");}
+      rect(c,cx+44,g-105,57,105,"#fff0d7");rect(c,cx+51,g-53,43,53,"#75516a");
+      rect(c,cx+58,g-78,10,14,"#83c3d2");rect(c,cx+78,g-78,10,14,"#83c3d2");
+      rect(c,cx+60,g-76,3,10,"#e7f5e9");rect(c,cx+80,g-76,3,10,"#e7f5e9");
+      rect(c,cx+64,g-50,16,50,"#a87572");rect(c,cx+67,g-48,10,48,"#e0b779");
+      rect(c,cx+69,g-56,6,6,"#fff0a8");
+      // stone joints and ivy
+      for(let k=0;k<5;k++){rect(c,cx+21+(k%2)*47,g-67+k*13,17,2,"#d2b996");}
+      for(let k=0;k<13;k++){const ax=cx-10+k*9,ay=g-77-Math.round(Math.sin(k/12*Math.PI)*17);
+        rect(c,ax,ay,5,5,["#ed9eb6","#fff0d8","#d5a6d8","#f4cf7c"][k%4]);rect(c,ax+1,ay+5,3,4,"#579564");
+      }
+      rect(c,cx+134,g-158,3,27,"#55465a");rect(c,cx+137,g-155,20,11,"#d84f79");rect(c,cx+137,g-144,15,4,"#f7b5c5");
+    }
+    // Floating petals and foreground glints move independently from the camera.
+    for(let i=0;i<12;i++){
+      const x=((i*53-t*(.18+i%3*.035))%(w+24)+w+24)%(w+24)-12,y=92+(i*23%93)+Math.sin(t*.025+i)*3;
+      rect(c,x,y,3,3,i%2?"#ffe5ec":"#fff0c6");
+    }
     if(preview)hearts.forEach((p,i)=>{const x=p.x-camera,y=p.y+Math.sin(t*.06+i)*3;if(x>-20&&x<w+20)drawHeart(c,x,y,1);});
-    if(player){const px=player.x-camera;for(let i=0;i<4;i++){const gx=px+((i*13+t*.7)%58)-20,gy=player.y+31;rect(c,gx,gy,2,3,"#d6ef9c");}}
-    if(player)drawGroom(c,player.x-camera,player.y-27,Math.abs(player.vx)>.25?1+Math.floor(t/7)%3:0,player.face);
-    else if(preview){const x=178+Math.sin(t*.015)*14,y=139+Math.sin(t*.09)*2;drawGroom(c,x,y,Math.floor(t/8)%3,1);drawBride(c,x+35,y,Math.floor(t/10)%4);}
+    if(player){
+      const px=player.x-camera;
+      for(let i=0;i<4;i++){const gx=px+((i*13+t*.7)%58)-20,gy=player.y+31;rect(c,gx,gy,2,3,"#d6ef9c");}
+      drawGroom(c,player.x-camera,player.y-27,Math.abs(player.vx)>.25?1+Math.floor(t/7)%3:0,player.face);
+    }else if(preview){
+      const x=178+Math.sin(t*.015)*14,y=139+Math.sin(t*.09)*2;
+      drawGroom(c,x,y,Math.floor(t/8)%3,1);drawBride(c,x+35,y,Math.floor(t/10)%4);
+    }
     rect(c,0,h-3,w,3,"#fff5df");
   }
   // Hand-built pixel sprites on a 2px grid: expressive faces, wedding clothes and readable silhouettes.
@@ -175,13 +248,13 @@
     const W=480,H=250,GRAVITY=.43;
     ctx.imageSmoothingEnabled=false;
     const keys={left:false,right:false};
-    const player={x:28,y:173,vx:0,vy:0,w:48,h:37,ground:false,face:1,celebrate:false,coyote:0,jumpBuffer:0};
+    const player={x:58,y:173,vx:0,vy:0,w:48,h:37,ground:false,face:1,celebrate:false,coyote:0,jumpBuffer:0};
     const pickups=hearts.map(p=>({...p,got:false}));
     const enemies=[{x:590,y:168,min:545,max:625,v:0.65,alive:true},{x:1190,y:162,min:1120,max:1215,v:0.72,alive:true},{x:1510,y:166,min:1460,max:1570,v:0.8,alive:true}];
-    let camera=0,tick=0,score=0,lives=3,playing=false,won=false,ending=false,endingStarted=0,checkpoint=28,raf=0,last=0,particles=[];
+    let camera=0,tick=0,score=0,lives=3,playing=false,won=false,ending=false,endingStarted=0,checkpoint=58,raf=0,last=0,particles=[];
     const scoreEl=$("#score"),overlay=$("#game-overlay"),message=$("#game-message"),level=$("#level-name"),lifeEl=$(".game-lives");
     function updateHud(){if(scoreEl)scoreEl.textContent=score+" / "+pickups.length;if(lifeEl)lifeEl.textContent="♥ ".repeat(lives).trim()||"♡";}
-    function reset(){player.x=28;player.y=173;player.vx=player.vy=0;player.ground=false;player.face=1;player.celebrate=false;player.coyote=0;player.jumpBuffer=0;camera=0;tick=0;score=0;lives=3;checkpoint=28;won=false;ending=false;endingStarted=0;playing=false;particles=[];pickups.forEach(p=>p.got=false);enemies.forEach(e=>e.alive=true);keys.left=keys.right=false;updateHud();if(message)message.textContent="Recolham as 12 memórias, evitem os guardiões e cheguem ao castelo.";const title=overlay?.querySelector("h3"),copy=overlay?.querySelector("p"),start=$("#start-game");if(title)title.innerHTML="A vossa história<br>começa aqui.";if(copy)copy.textContent="Uma aventura a dois, à procura de todas as memórias.";if(start)start.innerHTML="Começar a jogar <span>▶</span>";overlay?.classList.remove("hidden");if(level)level.textContent="THE MEADOW";}
+    function reset(){player.x=58;player.y=173;player.vx=player.vy=0;player.ground=false;player.face=1;player.celebrate=false;player.coyote=0;player.jumpBuffer=0;camera=0;tick=0;score=0;lives=3;checkpoint=28;won=false;ending=false;endingStarted=0;playing=false;particles=[];pickups.forEach(p=>p.got=false);enemies.forEach(e=>e.alive=true);keys.left=keys.right=false;updateHud();if(message)message.textContent="Recolham as 12 memórias, evitem os guardiões e cheguem ao castelo.";const title=overlay?.querySelector("h3"),copy=overlay?.querySelector("p"),start=$("#start-game");if(title)title.innerHTML="A vossa história<br>começa aqui.";if(copy)copy.textContent="Uma aventura a dois, à procura de todas as memórias.";if(start)start.innerHTML="Começar a jogar <span>▶</span>";overlay?.classList.remove("hidden");if(level)level.textContent="THE MEADOW";}
     function jump(){if(playing&&!won)player.jumpBuffer=9;}
     function sparkle(x,y,color=C.gold){for(let i=0;i<12;i++){const a=i*Math.PI/6;particles.push({x,y,vx:Math.cos(a)*1.4,vy:Math.sin(a)*1.4-1,life:28,color});}}
     function respawn(){lives--;updateHud();if(lives<=0){playing=false;overlay?.classList.remove("hidden");const h=overlay?.querySelector("h3"),p=overlay?.querySelector("p"),b=$("#start-game");if(h)h.textContent="A aventura continua.";if(p)p.textContent="As memórias continuam à vossa espera. Tentem novamente!";if(b)b.textContent="Jogar novamente ▶";return;}
