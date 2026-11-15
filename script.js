@@ -17,17 +17,23 @@
     rect(c,x+12,139,6,10,"#6d9bb7");rect(c,x+60,133,6,10,"#6d9bb7");rect(c,x+34,125,7,10,"#6d9bb7");
   }
   function heart(c,x,y,scale=1){const p=scale;rect(c,x+2*p,y,3*p,2*p,"#ff9ab6");rect(c,x+8*p,y,3*p,2*p,"#ff9ab6");rect(c,x,y+2*p,13*p,5*p,palette.pink);rect(c,x+2*p,y+7*p,9*p,3*p,palette.pink);rect(c,x+4*p,y+10*p,5*p,2*p,palette.pink);rect(c,x+3*p,y+2*p,3*p,2*p,"#ffd5e1");}
-  function sprite(c,x,y,bride,step=0,scale=1){c.save();c.translate(Math.round(x),Math.round(y));c.scale(scale,scale);
-    rect(c,-7,22,15,3,"#25375a66");
-    // shoes, legs and outfit with stepped 16-bit silhouette
-    rect(c,-5,16,4,7,bride?"#fff0e8":"#263e78");rect(c,2+(step?1:0),16,4,7,bride?"#fff0e8":"#263e78");
-    rect(c,-7+(step?1:0),22,7,3,"#67483d");rect(c,1-(step?1:0),22,7,3,"#67483d");
-    if(bride){rect(c,-7,9,14,9,"#fff7e9");rect(c,-9,14,18,8,"#f1d4d9");rect(c,-5,9,10,13,"#fffaf0");rect(c,-2,12,4,3,palette.pink);rect(c,-9,10,3,8,"#e8c3c9");}
-    else{rect(c,-7,9,14,10,"#31549b");rect(c,-2,9,5,12,palette.pink);rect(c,-9,10,3,8,"#31549b");rect(c,7,10,3,8,"#31549b");rect(c,-10,17,3,4,"#e9b18c");rect(c,8,17,3,4,"#e9b18c");}
-    rect(c,-3,6,6,5,"#d99b79");rect(c,-6,-3,12,11,"#efb58e");
-    if(bride){rect(c,-7,-5,14,5,"#59372f");rect(c,-8,-2,4,10,"#59372f");rect(c,4,-2,4,10,"#59372f");rect(c,-5,-7,10,3,"#59372f");rect(c,-4,-8,3,2,"#f6d66f");rect(c,1,-8,3,2,"#f6d66f");rect(c,5,-5,4,3,"#fff1dc");}
-    else{rect(c,-7,-5,14,5,"#56352e");rect(c,-6,-8,11,4,"#56352e");rect(c,-8,-2,4,8,"#56352e");rect(c,4,-2,4,7,"#56352e");}
-    rect(c,-4,1,2,2,palette.ink);rect(c,2,1,2,2,palette.ink);rect(c,-1,5,3,1,"#a95d55");c.restore();}
+  // Original groom/bride sprite sheet (4 frames per character, transparent PNG-like SVG).
+  const coupleSheet=new Image();
+  coupleSheet.src="/WeddingAdventure/assets/sprites/wedding-couple-16bit.svg";
+  function sprite(c,x,y,bride,step=0,scale=1){
+    c.save();c.imageSmoothingEnabled=false;
+    const frame=(Math.floor(performance.now()/145)+(Number(step)||0))%3;
+    if(coupleSheet.complete&&coupleSheet.naturalWidth){
+      c.drawImage(coupleSheet,frame*32,bride?40:0,32,40,
+        Math.round(x-16*scale),Math.round(y-16*scale),32*scale,40*scale);
+    }else{
+      rect(c,x-6,y+20,13,3,"#25375a66");
+      rect(c,x-5,y+8,11,13,bride?"#fff0e8":"#31549b");
+      rect(c,x-5,y-5,11,13,"#efb18c");
+      rect(c,x-6,y-7,13,5,bride?"#58372f":"#56352e");
+    }
+    c.restore();
+  }
   function drawScene(c,w,h,camera,t,heroX,heroY,gameMode){
     const sky=c.createLinearGradient(0,0,0,h);sky.addColorStop(0,palette.sky1);sky.addColorStop(.62,palette.sky2);sky.addColorStop(1,"#f6c5a2");c.fillStyle=sky;c.fillRect(0,0,w,h);
     rect(c,0,0,w,2,"#ffffff66");
