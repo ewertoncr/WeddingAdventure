@@ -1,31 +1,35 @@
 # Wedding Adventure
 
-Landing page inicial para um serviço de sites de casamento personalizados com jogos 2D exclusivos inspirados na história dos noivos.
+Experiência digital para casamentos: landing page premium, identidade romântica e demonstração original de videojogo 2D em pixel art 16-bit.
+
+## Experiência
+
+- Landing page responsiva com apresentação do conceito, processo, experiências e questionário inicial.
+- Prévia animada do jogo na capa.
+- Demonstração jogável em Canvas, com cenário pixel-art em camadas, castelo, plataformas, corações/memórias colecionáveis, guardiões, checkpoint e ecrã de conclusão.
+- Personagens originais em pixel art, com ciclo de caminhada, salto e celebração.
+- Controlos de teclado (setas / A-D / Espaço) e controlos táteis.
+- Questionário que gera um resumo copiável no próprio navegador.
 
 ## Estrutura
 
-- `index.html` — página, secções comerciais e questionário inicial.
-- `styles.css` — identidade visual responsiva.
-- `script.js` — demonstração jogável em Canvas, navegação mobile e resumo local do questionário.
+- `index.html` — conteúdo e estrutura da página.
+- `styles.css` — identidade visual e layout responsivo.
+- `script.js` — motor Canvas, mecânicas do jogo, navegação e questionário.
+- `assets/sprites/wedding-couple-16bit.svg` — atlas original dos personagens.
 
-## Ver localmente
+## Executar localmente
 
-Abra `index.html` num navegador. Não é necessário instalar dependências nem executar um servidor.
+Abrir `index.html` num navegador moderno. Não são necessárias dependências nem compilação.
 
-## Publicar com GitHub Pages
+## Publicar
 
-1. No repositório, abra **Settings → Pages**.
-2. Em **Build and deployment**, escolha **Deploy from a branch**.
-3. Selecione a branch `main` e a pasta `/ (root)).
-4. Guarde. O GitHub apresentará o endereço público quando a publicação terminar.
+O projeto está preparado para GitHub Pages na branch `main`, a partir da raiz do repositório.
 
-## Estado do protótipo e próximos passos
+## Limites importantes desta demonstração
 
-- A demonstração 2D é jogável com teclado e botões de toque.
-- O questionário cria um resumo copiável no próprio navegador.
-- Nesta versão, o formulário **não envia dados para um servidor nem guarda respostas online**.
-- Antes de recolher dados reais de casais, ligar um serviço de submissão seguro, definir retenção/acesso e publicar uma política de privacidade e informação RGPD.
-- Pacotes ainda sem preços: os valores devem ser definidos depois da validação comercial.
-- Música, imagens, personagens e níveis finais deverão ser licenciados ou criados especificamente para cada projeto.
-
-O repositório original `Jogodomel` não é alterado por este projeto.
+- O jogo é uma demo comercial jogável, não ainda um jogo personalizado completo para um casal específico.
+- O formulário prepara um resumo local e **não envia nem armazena respostas num servidor**.
+- Antes de receber dados reais, é necessário integrar um backend/formulário seguro, definir acessos e retenção e publicar informação de privacidade/RGPD.
+- Os pacotes apresentados são conceitos comerciais; preços, prazos e âmbito devem ser definidos em proposta.
+- Música, domínios próprios, alojamento e manutenção podem ser contratados/definidos por projeto.
