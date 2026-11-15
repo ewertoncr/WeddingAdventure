@@ -1,51 +1,394 @@
-<!doctype html>
-<html lang="pt-PT">
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#172c27">
-<meta name="description" content="Wedding Adventure — sites de casamento e videojogos 2D criados a partir da vossa história.">
-<title>Wedding Adventure — O amor é a maior aventura</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20261115-premium">
-</head>
-<body>
-<div class="announcement"><span>✦</span> CONVITES QUE SE TRANSFORMAM EM AVENTURAS <span>✦</span></div>
-<header class="site-header"><a class="brand" href="#inicio"><span class="brand-symbol">W<span>✦</span>A</span><span class="brand-name">WEDDING<br>ADVENTURE</span></a>
-<button class="menu-toggle" aria-label="Abrir menu" aria-expanded="false">☰</button>
-<nav class="nav"><a href="#conceito">O conceito</a><a href="#jogo">O jogo</a><a href="#experiencia">Como funciona</a><a href="#pacotes">Experiências</a><a class="nav-cta" href="#criar">Criar a nossa história <span>↗</span></a></nav></header>
-<main>
-<section class="hero" id="inicio">
-<div class="hero-copy"><div class="eyebrow"><span class="eyebrow-line"></span> UM CONVITE FORA DO COMUM <span class="eyebrow-star">✧</span></div>
-<h1>O vosso amor.<br><em>A vossa aventura.</em></h1>
-<p class="hero-lead">E se o convite de casamento fosse também um videojogo? Criamos experiências digitais únicas onde a vossa história ganha vida — para jogar, partilhar e recordar.</p>
-<div class="hero-actions"><a class="button button-gold" href="#criar">Criar a nossa aventura <span>↗</span></a><a class="play-link" href="#jogo"><span class="play-icon">▶</span> Jogar demonstração</a></div>
-<div class="hero-proof"><span>✦</span> Desenhado à medida <i></i> Para jogar em qualquer ecrã <i></i> Feito para recordar</div></div>
-<div class="hero-visual"><div class="hero-image-frame"><div class="hero-scene-sky"></div><div class="hero-moon"></div><div class="hero-cloud cloud-a"></div><div class="hero-cloud cloud-b"></div><div class="hero-mountain mountain-a"></div><div class="hero-mountain mountain-b"></div><div class="hero-castle"><span class="castle-flag">♥</span><span class="castle-tower tower-a"></span><span class="castle-tower tower-b"></span><span class="castle-main"></span></div><div class="hero-bridge"></div><div class="hero-avatar avatar-a"><span class="avatar-head"></span><span class="avatar-body"></span></div><div class="hero-avatar avatar-b"><span class="avatar-head"></span><span class="avatar-body"></span></div><div class="hero-visual-label"><small>WORLD 01 · THE BEGINNING</small><strong>Era uma vez… vocês.</strong><span>Uma história que merece ser vivida.</span></div><div class="floating-tag tag-one">♥ &nbsp; PLAYER 01 + 02</div><div class="floating-tag tag-two">LEVEL 01 / ∞</div></div><div class="visual-caption"><span>UMA NOVA FORMA DE CELEBRAR</span><span>PORTUGAL · BRASIL · ONLINE</span></div></div>
-</section>
-<div class="marquee"><div>O VOSSO CONVITE É O INÍCIO DA AVENTURA <span>✦</span> CADA CASAL, UM UNIVERSO <span>✦</span> O VOSSO CONVITE É O INÍCIO DA AVENTURA <span>✦</span> CADA CASAL, UM UNIVERSO <span>✦</span></div></div>
-<section class="intro section-wrap" id="conceito"><div class="section-kicker">01 / MAIS DO QUE UM CONVITE</div><div class="intro-grid"><h2>Não contem apenas<br>a vossa história.<br><em>Deixem-nos jogá-la.</em></h2><div><p class="large-copy">Imaginem os vossos convidados a entrar num mundo criado a partir das vossas memórias.</p><p>Um site elegante reúne tudo sobre o grande dia. Um jogo 2D original transforma os momentos mais especiais numa aventura interativa. Duas experiências, uma só história: a vossa.</p><a class="underlined-link" href="#jogo">Descobrir a demonstração <span>↗</span></a></div></div>
-<div class="feature-grid"><article class="feature"><span class="feature-index">01</span><div class="feature-icon">⌘</div><h3>Um site só vosso</h3><p>Design exclusivo, informações do casamento, localização, programação, galeria e confirmação de presença.</p></article><article class="feature"><span class="feature-index">02</span><div class="feature-icon">✧</div><h3>Um jogo com significado</h3><p>Personagens inspirados no casal, cenários especiais, desafios, colecionáveis e surpresas escondidas.</p></article><article class="feature"><span class="feature-index">03</span><div class="feature-icon">♡</div><h3>Uma memória para sempre</h3><p>Uma experiência que os convidados podem viver antes do casamento e recordar muito depois da festa.</p></article></div></section>
-<section class="game-section" id="jogo"><div class="game-heading"><div><div class="section-kicker section-kicker-light">02 / EXPERIMENTEM AGORA</div><h2>Uma pequena amostra.<br><em>Uma grande aventura.</em></h2></div><p>Entrem no mundo Wedding Adventure. Recolham as memórias, ultrapassem os obstáculos e cheguem juntos ao castelo.</p></div>
-<div class="game-window"><div class="game-bar"><div class="game-brand"><span class="game-brand-icon">✦</span> WEDDING ADVENTURE <span class="demo-pill">DEMO PLAYABLE</span></div><div class="game-status"><span class="status-dot"></span> WORLD 01 <b id="level-name">THE MEADOW</b></div><div class="game-lives">♥ ♥ ♥</div></div>
-<div class="game-stage"><canvas id="game" width="960" height="500" aria-label="Demonstração de jogo de plataformas 2D. Use as setas ou A e D para mover e espaço para saltar."></canvas><div class="game-overlay" id="game-overlay"><div class="overlay-card"><span class="overlay-kicker">WEDDING ADVENTURE PRESENTS</span><h3>A vossa história<br>começa aqui.</h3><p>Uma aventura a dois, à procura de todas as memórias.</p><button class="button button-gold" id="start-game">Começar a jogar <span>▶</span></button></div></div><div class="game-hud"><span>MEMÓRIAS <b id="score">0 / 8</b></span><span>✦ ENCONTREM O CAMINHO ATÉ AO CASTELO</span><span>WORLD 01</span></div></div>
-<div class="game-toolbar"><div class="game-instructions"><strong id="game-message">Preparados para a aventura?</strong><small>← → ou A / D para mover &nbsp;·&nbsp; Espaço / ↑ para saltar</small></div><div class="mobile-controls"><button data-key="left" aria-label="Esquerda">←</button><button data-key="jump" aria-label="Saltar">↑</button><button data-key="right" aria-label="Direita">→</button></div><button class="restart-button" id="reset-game">↻ Reiniciar</button></div></div><p class="game-note">ESTA É APENAS UMA DEMONSTRAÇÃO. O VOSSO JOGO TERÁ PERSONAGENS, CENÁRIOS E UMA HISTÓRIA CRIADOS DE RAIZ PARA VOCÊS.</p></section>
-<section class="process section-wrap" id="experiencia"><div class="section-kicker">03 / DO SONHO À EXPERIÊNCIA</div><h2>Três passos para<br><em>um mundo só vosso.</em></h2><div class="steps"><article><span>01</span><div class="step-line"></div><h3>Contem-nos a vossa história</h3><p>Queremos conhecer como se encontraram, os vossos lugares especiais, gostos e memórias.</p></article><article><span>02</span><div class="step-line"></div><h3>Desenhamos a aventura</h3><p>Criamos o conceito, o visual, os personagens, o site e as fases do vosso jogo.</p></article><article><span>03</span><div class="step-line"></div><h3>Partilhem com quem amam</h3><p>Recebem um endereço único para enviar aos convidados e começar a celebração.</p></article></div></section>
-<section class="pricing" id="pacotes"><div class="section-wrap"><div class="section-kicker">04 / ESCOLHAM A VOSSA EXPERIÊNCIA</div><h2>Pequena ou épica.<br><em>Sempre inesquecível.</em></h2><p class="pricing-intro">Cada história merece o seu próprio universo. A experiência é construída à medida do que imaginam.</p><div class="price-grid"><article class="price-card"><span class="price-label">01 / ESSENCIAL</span><div class="price-symbol">✧</div><h3>O convite especial</h3><p>Um espaço digital elegante para contar aos convidados tudo sobre o grande dia.</p><ul><li>Site exclusivo e responsivo</li><li>Informações e localização</li><li>Galeria de fotografias</li><li>Estrutura para confirmação de presença</li></ul><a href="#criar" class="price-link">Quero saber mais <span>↗</span></a></article><article class="price-card price-featured"><span class="featured-ribbon">A EXPERIÊNCIA MAIS PEDIDA</span><span class="price-label">02 / AVENTURA</span><div class="price-symbol">♡</div><h3>O jogo é sobre vocês</h3><p>O site de casamento ganha vida com um videojogo 2D inspirado na vossa história.</p><ul><li>Tudo do formato Essencial</li><li>Personagens personalizados</li><li>Jogo 2D com fases e desafios</li><li>Memórias e mensagens escondidas</li></ul><a href="#criar" class="price-link">Quero a nossa aventura <span>↗</span></a></article><article class="price-card"><span class="price-label">03 / EXCLUSIVO</span><div class="price-symbol">♛</div><h3>Um universo inteiro</h3><p>Uma experiência expandida, com mais mundos, narrativa e detalhes especiais.</p><ul><li>Tudo do formato Aventura</li><li>Vários mundos e fases</li><li>Narrativa personalizada</li><li>Detalhes e surpresas exclusivas</li></ul><a href="#criar" class="price-link">Vamos imaginar juntos <span>↗</span></a></article></div><p class="price-disclaimer">Cada projeto recebe uma proposta personalizada. Os valores são definidos após conhecermos a dimensão da experiência.</p></div></section>
-<section class="form-section" id="criar"><div class="form-layout"><div class="form-aside"><div class="section-kicker section-kicker-light">05 / A VOSSA VEZ</div><h2>Vamos transformar<br>o vosso amor <em>numa aventura?</em></h2><p>Este é o primeiro passo. Respondam ao nosso questionário e vamos começar a imaginar o vosso universo.</p><div class="aside-quote">“Não há duas histórias iguais. Por isso, não há duas Wedding Adventures iguais.”<span>— WEDDING ADVENTURE</span></div></div>
-<form id="couple-form" class="couple-form"><div class="form-progress"><span>QUESTIONÁRIO CRIATIVO</span><span>10 PERGUNTAS</span></div>
-<div class="field-row"><label>Como se chamam? <input name="names" required placeholder="Ex.: Ana & Miguel"></label><label>Data do casamento <input name="date" type="date"></label></div>
-<label>Qual é o melhor e-mail para contacto? <input name="email" type="email" required placeholder="vossoemail@exemplo.com"></label>
-<label>Como se conheceram? <textarea name="meet" rows="3" placeholder="Contem-nos como tudo começou…"></textarea></label>
-<label>Quais são as 3 memórias mais especiais da vossa relação? <textarea name="memories" rows="3" placeholder="Uma viagem, um encontro, um pedido especial…"></textarea></label>
-<label>Que universo visual combina convosco? <select name="style"><option value="">Escolham uma inspiração</option><option>Fantasia e conto de fadas</option><option>Aventura clássica em 2D</option><option>Romântico e delicado</option><option>Pixel art retro</option><option>Divertido e descontraído</option><option>Minimalista e moderno</option><option>Surpreendam-nos!</option></select></label>
-<label>Que lugares devem fazer parte do jogo? <textarea name="places" rows="2" placeholder="Cidade, praia, local do primeiro encontro, viagem…"></textarea></label>
-<label>Como imaginam os vossos personagens? <textarea name="characters" rows="2" placeholder="Aparência, roupas, animais de estimação, poderes…"></textarea></label>
-<label>Que hobbies, piadas internas ou desafios podemos incluir? <textarea name="challenges" rows="2" placeholder="Pequenos detalhes que só vocês entendem…"></textarea></label>
-<label>Existe uma música ou mensagem que não pode faltar? <textarea name="music" rows="2" placeholder="Uma dedicatória, música especial ou frase…"></textarea></label>
-<label class="consent"><input type="checkbox" name="consent" required><span>Autorizamos o contacto sobre este projeto e compreendemos que este formulário demonstrativo prepara um resumo local, sem enviar nem armazenar os dados num servidor.</span></label>
-<button class="button button-dark submit-button" type="submit">Preparar o nosso resumo <span>↗</span></button><p class="form-note">Nesta versão, as respostas ficam no vosso dispositivo. O formulário ainda não envia dados online.</p><div id="form-result" class="form-result" hidden aria-live="polite"></div></form></div></section>
-</main>
-<footer><a class="brand footer-brand" href="#inicio"><span class="brand-symbol">W<span>✦</span>A</span><span class="brand-name">WEDDING<br>ADVENTURE</span></a><p>A vossa história merece ser jogada.</p><a href="#criar">Vamos criar? ↗</a><small>© <span id="year"></span> Wedding Adventure. Feito para histórias extraordinárias.</small></footer>
-<script src="script.js?v=20261115-premium"></script>
-</body></html>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#5b8aff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PolyWork">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="./icons/icon-512.png">
+
+<title>PolyWork</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root, [data-theme="ocean"] {
+  --bg: #0b0d12; --card: #141822; --card2: #1c2230;
+  --primary: #5b8aff; --primary-dim: rgba(91,138,255,0.14);
+  --accent: #22c55e; --accent-dim: rgba(34,197,94,0.14);
+  --gold: #fbbf24; --gold-dim: rgba(251,191,36,0.14);
+  --danger: #ef4444; --xp: #a78bfa;
+  --text: #f1f5f9; --muted: #8b95a8; --border: #2a3142;
+  --grad: linear-gradient(135deg,#5b8aff,#22c55e);
+}
+[data-theme="midnight"] {
+  --bg: #0a0a12; --card: #12121e; --card2: #1a1a2e;
+  --primary: #a78bfa; --primary-dim: rgba(167,139,250,0.16);
+  --accent: #c084fc; --accent-dim: rgba(192,132,252,0.14);
+  --gold: #f0abfc; --gold-dim: rgba(240,171,252,0.14);
+  --danger: #f472b6; --xp: #e879f9;
+  --text: #f5f3ff; --muted: #a5a3c2; --border: #2e2e48;
+  --grad: linear-gradient(135deg,#a78bfa,#e879f9);
+}
+[data-theme="forest"] {
+  --bg: #0a100e; --card: #121c18; --card2: #1a2a22;
+  --primary: #34d399; --primary-dim: rgba(52,211,153,0.14);
+  --accent: #6ee7b7; --accent-dim: rgba(110,231,183,0.14);
+  --gold: #a3e635; --gold-dim: rgba(163,230,53,0.14);
+  --danger: #f87171; --xp: #4ade80;
+  --text: #ecfdf5; --muted: #86a89a; --border: #243830;
+  --grad: linear-gradient(135deg,#34d399,#a3e635);
+}
+[data-theme="sunset"] {
+  --bg: #120c0a; --card: #1c1410; --card2: #2a1e16;
+  --primary: #f97316; --primary-dim: rgba(249,115,22,0.14);
+  --accent: #fb923c; --accent-dim: rgba(251,146,60,0.14);
+  --gold: #fbbf24; --gold-dim: rgba(251,191,36,0.14);
+  --danger: #ef4444; --xp: #f59e0b;
+  --text: #fff7ed; --muted: #b8a090; --border: #3d2e24;
+  --grad: linear-gradient(135deg,#f97316,#fbbf24);
+}
+[data-theme="neo"] {
+  --bg: #05050a; --card: #0c0c14; --card2: #141422;
+  --primary: #22d3ee; --primary-dim: rgba(34,211,238,0.14);
+  --accent: #f472b6; --accent-dim: rgba(244,114,182,0.14);
+  --gold: #eab308; --gold-dim: rgba(234,179,8,0.14);
+  --danger: #ff2d55; --xp: #a3e635;
+  --text: #ecfeff; --muted: #7a8a9a; --border: #1e2a35;
+  --grad: linear-gradient(135deg,#22d3ee,#f472b6);
+}
+[data-theme="minimal"] {
+  --bg: #111113; --card: #1a1a1e; --card2: #242428;
+  --primary: #e4e4e7; --primary-dim: rgba(228,228,231,0.1);
+  --accent: #a1a1aa; --accent-dim: rgba(161,161,170,0.12);
+  --gold: #d4d4d8; --gold-dim: rgba(212,212,216,0.12);
+  --danger: #f87171; --xp: #fafafa;
+  --text: #fafafa; --muted: #71717a; --border: #3f3f46;
+  --grad: linear-gradient(135deg,#e4e4e7,#a1a1aa);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden;
+  transition: background 0.3s, color 0.3s;
+}
+.app { max-width: 440px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
+
+/* LOGIN */
+.login-screen {
+  position: fixed; inset: 0; background: var(--bg); z-index: 500;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 32px 24px; max-width: 440px; margin: 0 auto; left: 0; right: 0;
+}
+.login-screen.hide { display: none; }
+.login-mascot { width: 100px; height: 100px; margin-bottom: 6px; animation: float 3s ease-in-out infinite; }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+.login-title {
+  font-size: 1.55rem; font-weight: 800; margin-bottom: 4px;
+  background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.login-sub { color: var(--muted); font-size: 0.88rem; margin-bottom: 28px; text-align: center; line-height: 1.4; }
+.google-btn {
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  width: 100%; max-width: 320px; padding: 13px 18px;
+  background: #fff; color: #333; border: none; border-radius: 12px;
+  font-size: 0.92rem; font-weight: 600; cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+.google-btn:active { transform: scale(0.97); }
+.google-btn svg { width: 20px; height: 20px; }
+.guest-btn {
+  margin-top: 10px; background: none; border: 1px solid var(--border);
+  color: var(--muted); padding: 11px 18px; border-radius: 12px;
+  font-size: 0.86rem; cursor: pointer; width: 100%; max-width: 320px;
+}
+.login-features { margin-top: 28px; display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 320px; }
+.login-feat { display: flex; align-items: center; gap: 10px; font-size: 0.8rem; color: var(--muted); }
+.login-feat span { font-size: 1.05rem; }
+
+/* HEADER */
+header {
+  background: var(--card); padding: 10px 14px 8px;
+  border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50;
+  transition: background 0.3s;
+}
+.header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.logo { font-weight: 800; font-size: 0.95rem; display: flex; align-items: center; gap: 5px; }
+.logo span { background: var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.header-stats { display: flex; gap: 6px; align-items: center; }
+.hstat {
+  background: var(--card2); border-radius: 20px; padding: 3px 8px;
+  font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; gap: 3px;
+}
+.hstat.xp { color: var(--xp); }
+.hstat.streak { color: #fb923c; }
+.user-pill {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--card2); border-radius: 24px; padding: 4px 10px 4px 4px;
+  cursor: pointer; border: 1px solid var(--border);
+}
+.user-avatar {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--grad); display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 800; color: #fff;
+}
+.user-name { font-size: 0.74rem; font-weight: 600; }
+.xp-bar-wrap { background: var(--card2); height: 6px; border-radius: 3px; overflow: hidden; }
+.xp-bar { height: 100%; background: var(--grad); border-radius: 3px; transition: width 0.5s ease; }
+.xp-labels { display: flex; justify-content: space-between; font-size: 0.62rem; color: var(--muted); margin-top: 2px; }
+
+/* NAV */
+nav {
+  display: flex; background: var(--card); border-top: 1px solid var(--border);
+  position: sticky; bottom: 0; z-index: 50; transition: background 0.3s;
+}
+nav button {
+  flex: 1; background: none; border: none; color: var(--muted);
+  padding: 8px 2px; font-size: 0.6rem; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+}
+nav button.active { color: var(--primary); }
+nav button svg { width: 20px; height: 20px; }
+
+main { flex: 1; padding: 12px 14px; overflow-y: auto; }
+.screen { display: none; animation: fadeUp 0.2s ease; }
+.screen.active { display: block; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
+
+.card {
+  background: var(--card); border-radius: 15px; padding: 13px;
+  margin-bottom: 10px; border: 1px solid var(--border); transition: background 0.3s, border-color 0.3s;
+}
+.card-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 3px; display: flex; align-items: center; gap: 6px; }
+.card-sub { font-size: 0.74rem; color: var(--muted); margin-bottom: 10px; }
+
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  width: 100%; padding: 12px; border-radius: 12px; border: none;
+  font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.12s;
+}
+.btn:active { transform: scale(0.97); }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-accent { background: var(--accent); color: #111; }
+.btn-ghost { background: var(--card2); color: var(--text); border: 1px solid var(--border); }
+.btn:disabled { opacity: 0.4; }
+
+/* MASCOT */
+.mascot-bar {
+  display: flex; align-items: center; gap: 11px;
+  background: var(--card); border: 1px solid var(--border); border-radius: 15px;
+  padding: 11px 13px; margin-bottom: 10px; position: relative; overflow: hidden;
+}
+.mascot-svg { width: 52px; height: 52px; flex-shrink: 0; }
+.mascot-svg svg { width: 100%; height: 100%; }
+.mascot-speech { flex: 1; }
+.mascot-speech .mascot-name { font-size: 0.66rem; font-weight: 700; color: var(--primary); margin-bottom: 2px; }
+.mascot-speech p { font-size: 0.82rem; line-height: 1.35; }
+.mascot-mood { position: absolute; top: 8px; right: 10px; font-size: 0.95rem; }
+
+/* GAME */
+.game-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 7px; margin-bottom: 10px; }
+.game-stat {
+  background: var(--card2); border-radius: 12px; padding: 10px 6px; text-align: center;
+  border: 1px solid var(--border);
+}
+.game-stat .val { font-size: 1.2rem; font-weight: 800; }
+.game-stat .lbl { font-size: 0.62rem; color: var(--muted); margin-top: 1px; }
+.game-stat.xp .val { color: var(--xp); }
+.game-stat.streak .val { color: #fb923c; }
+.game-stat.badges .val { color: var(--gold); }
+
+.rank-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 15px; padding: 13px;
+  display: flex; align-items: center; gap: 11px; margin-bottom: 10px;
+}
+.rank-icon {
+  width: 46px; height: 46px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; flex-shrink: 0;
+  background: var(--primary-dim); border: 2px solid var(--primary);
+}
+.rank-info { flex: 1; }
+.rank-info h3 { font-size: 0.9rem; font-weight: 700; }
+.rank-info p { font-size: 0.72rem; color: var(--muted); }
+.rank-bar { margin-top: 4px; background: var(--card2); height: 5px; border-radius: 3px; overflow: hidden; }
+.rank-fill { height: 100%; background: var(--grad); border-radius: 3px; transition: width 0.4s; }
+
+/* ITEMS */
+.item {
+  display: flex; align-items: center; gap: 10px; padding: 10px;
+  background: var(--card2); border-radius: 12px; margin-bottom: 6px;
+  cursor: pointer; border: 1.5px solid transparent; transition: all 0.12s;
+}
+.item:hover { border-color: var(--primary); }
+.item.done { opacity: 0.6; }
+.item.locked { opacity: 0.3; cursor: not-allowed; }
+.item-icon {
+  width: 38px; height: 38px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; flex-shrink: 0;
+}
+.item-icon.blue { background: var(--primary-dim); }
+.item-icon.green { background: var(--accent-dim); }
+.item-icon.gold { background: var(--gold-dim); }
+.item-body h4 { font-size: 0.84rem; font-weight: 650; }
+.item-body p { font-size: 0.68rem; color: var(--muted); }
+.item-xp {
+  margin-left: auto; background: var(--primary-dim); color: var(--primary);
+  font-size: 0.66rem; font-weight: 700; padding: 3px 7px; border-radius: 7px; white-space: nowrap;
+}
+.item.done .item-xp { background: var(--accent-dim); color: var(--accent); }
+
+/* LANG SELECTOR */
+.lang-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 10px; }
+.lang-btn {
+  background: var(--card2); border: 2px solid var(--border); border-radius: 12px;
+  padding: 10px 4px; text-align: center; cursor: pointer; transition: all 0.15s;
+}
+.lang-btn.active { border-color: var(--primary); background: var(--primary-dim); }
+.lang-btn .flag { font-size: 1.4rem; }
+.lang-btn .lbl { font-size: 0.6rem; margin-top: 3px; font-weight: 600; color: var(--muted); }
+.lang-btn.active .lbl { color: var(--primary); }
+
+/* THEME SELECTOR */
+.theme-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.theme-btn {
+  border: 2px solid var(--border); border-radius: 12px; padding: 12px 8px;
+  text-align: center; cursor: pointer; transition: all 0.15s; background: var(--card2);
+}
+.theme-btn.active { border-color: var(--primary); }
+.theme-preview {
+  width: 100%; height: 28px; border-radius: 8px; margin-bottom: 6px;
+  display: flex; overflow: hidden;
+}
+.theme-preview span { flex: 1; }
+.theme-btn .tname { font-size: 0.72rem; font-weight: 700; }
+
+/* ACHIEVEMENTS */
+.ach-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
+.ach-item {
+  text-align: center; padding: 12px 5px; border-radius: 13px;
+  background: var(--card2); border: 1px solid var(--border);
+}
+.ach-item.unlocked { border-color: var(--gold); background: var(--gold-dim); }
+.ach-item.locked { opacity: 0.32; filter: grayscale(1); }
+.ach-item .icon { font-size: 1.5rem; margin-bottom: 3px; }
+.ach-item .name { font-size: 0.66rem; font-weight: 600; line-height: 1.2; }
+.ach-item .desc { font-size: 0.58rem; color: var(--muted); margin-top: 2px; }
+
+/* LESSON */
+.back-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.back-btn { background: none; border: none; color: var(--primary); font-size: 0.84rem; cursor: pointer; font-weight: 600; }
+.pill { font-size: 0.66rem; font-weight: 700; padding: 3px 9px; border-radius: 20px; background: var(--primary-dim); color: var(--primary); }
+.section-type { font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.4px; color: var(--primary); font-weight: 700; margin-bottom: 7px; }
+.q { font-size: 0.95rem; margin-bottom: 11px; line-height: 1.4; }
+.opt {
+  background: var(--card2); border: 2px solid var(--border); border-radius: 12px;
+  padding: 11px 12px; margin-bottom: 6px; cursor: pointer; font-size: 0.86rem;
+}
+.opt:hover { border-color: var(--primary); }
+.opt.ok { border-color: var(--accent); background: var(--accent-dim); }
+.opt.bad { border-color: var(--danger); background: rgba(239,68,68,0.1); }
+.feedback { padding: 8px 11px; border-radius: 10px; margin-top: 7px; font-size: 0.8rem; display: none; }
+.feedback.show { display: block; }
+.feedback.ok { background: var(--accent-dim); border: 1px solid var(--accent); color: #86efac; }
+.feedback.bad { background: rgba(239,68,68,0.1); border: 1px solid var(--danger); color: #fca5a5; }
+.speak-box { background: var(--card2); border-radius: 14px; padding: 18px; text-align: center; margin-bottom: 8px; }
+.speak-prompt { font-size: 0.98rem; margin-bottom: 12px; line-height: 1.4; }
+.speak-example { background: var(--card); border-radius: 10px; padding: 10px; margin-top: 8px; font-size: 0.82rem; color: var(--muted); text-align: left; }
+.chat-box { display: flex; flex-direction: column; gap: 5px; margin-bottom: 8px; max-height: 260px; overflow-y: auto; }
+.bubble { max-width: 88%; padding: 8px 12px; border-radius: 14px; font-size: 0.85rem; line-height: 1.4; }
+.bubble.bot { background: var(--card2); border-bottom-left-radius: 4px; align-self: flex-start; }
+.bubble.user { background: var(--primary); border-bottom-right-radius: 4px; align-self: flex-end; margin-left: auto; color: #fff; }
+.bubble.cue { background: var(--gold-dim); border: 1px solid rgba(251,191,36,0.3); color: #fcd34d; font-size: 0.78rem; align-self: center; max-width: 95%; }
+
+/* PHONE */
+.phone-overlay {
+  position: fixed; inset: 0; background: #080a0e; z-index: 200;
+  display: none; flex-direction: column; align-items: center;
+  justify-content: space-between; padding: 48px 24px 40px;
+  max-width: 440px; margin: 0 auto; left: 0; right: 0;
+}
+.phone-overlay.on { display: flex; }
+.phone-timer { font-size: 0.8rem; color: var(--muted); letter-spacing: 1px; }
+.phone-timer.live { color: var(--accent); }
+.phone-center { text-align: center; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; }
+.phone-avatar {
+  width: 105px; height: 105px; border-radius: 50%;
+  background: var(--grad); display: flex; align-items: center; justify-content: center;
+  font-size: 2.6rem; margin-bottom: 12px;
+}
+.phone-avatar.ringing { animation: pulse-ring 1.5s infinite; }
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(91,138,255,0.45); }
+  70% { box-shadow: 0 0 0 20px rgba(91,138,255,0); }
+  100% { box-shadow: 0 0 0 0 rgba(91,138,255,0); }
+}
+.phone-name { font-size: 1.35rem; font-weight: 800; }
+.phone-role { font-size: 0.85rem; color: var(--muted); margin-top: 3px; }
+.phone-status-text { margin-top: 16px; font-size: 0.9rem; color: var(--muted); min-height: 42px; padding: 0 12px; line-height: 1.4; }
+.phone-status-text.speaking { color: var(--accent); }
+.phone-status-text.listening { color: var(--primary); }
+.phone-status-text.hint { color: var(--gold); font-size: 0.84rem; }
+.wave { display: none; gap: 3px; justify-content: center; margin-top: 10px; height: 20px; align-items: center; }
+.wave.on { display: flex; }
+.wave span { width: 3px; background: var(--accent); border-radius: 2px; animation: wave 0.8s ease-in-out infinite; }
+.wave span:nth-child(1){height:7px} .wave span:nth-child(2){height:14px;animation-delay:.1s}
+.wave span:nth-child(3){height:18px;animation-delay:.2s} .wave span:nth-child(4){height:12px;animation-delay:.3s}
+.wave span:nth-child(5){height:8px;animation-delay:.4s}
+@keyframes wave { 0%,100%{transform:scaleY(.5)} 50%{transform:scaleY(1.2)} }
+.phone-btns { display: flex; gap: 22px; align-items: center; justify-content: center; }
+.pbtn {
+  width: 60px; height: 60px; border-radius: 50%; border: none;
+  font-size: 1.4rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.pbtn:active { transform: scale(0.9); }
+.pbtn.accept { background: var(--accent); color: #fff; width: 68px; height: 68px; font-size: 1.6rem; }
+.pbtn.end { background: var(--danger); color: #fff; }
+.pbtn.mic { background: var(--primary); color: #fff; width: 72px; height: 72px; font-size: 1.8rem; }
+.pbtn.mic.recording { background: var(--danger); animation: pulse-mic 1s infinite; }
+@keyframes pulse-mic {
+  0% { box-shadow: 0 0 0 0 rgba(239,68,68,0.45); }
+  70% { box-shadow: 0 0 0 12px rgba(239,68,68,0); }
+  100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); }
+}
+.pbtn.secondary { background: var(--card2); color: var(--text); border: 1px solid var(--border); width: 48px; height: 48px; font-size: 1.1rem; }
+.phone-xp-gain {
+  position: absolute; top: 28%; left: 50%; transform: translateX(-50%);
+  font-size: 1.25rem; font-weight: 800; color: var(--gold); opacity: 0; pointer-events: none;
+}
+.phone-xp-gain.show { animation: xpFloat 1.2s ease forwards; }
+@keyframes xpFloat { 0%{opacity:1;transform:translateX(-50%) translateY(0)} 100%{opacity:0;transform:translateX(-50%) translateY(-40px)} }
+
+.toast {
+  position: fixed; top: 16px; left: 50%; transform: translateX(-50%) translateY(-80px);
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 10px 16px; z-index: 400; font-weight: 700; font-size: 0.85rem;
+  display: flex; align-items: center; gap: 6px; opacity: 0; transition: all 0.3s;
+  box-shadow: 0 8px 26px rgba(0,0,0,0.4); max-width: 90%;
+}
+.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+.confetti-box { position: fixed; inset: 0; pointer-events: none; z-index: 350; overflow: hidden; }
+.confetti { position: absolute; width: 7px; height: 7px; border-radius: 2px; animation: confetti-fall 2s ease-out forwards; }
+@keyframes confetti-fall {
+  0% { transform: translateY(-20px) rotate(0); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+.hidden { display: none !important; }
+.text-muted { color: var(--muted); }
+.mt-8 { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.mb-8 { margin-bottom: 8px; }
+
+/* PWA install */
+.install-banner {
+  display: none; align-items: center; gap: 10px;
+  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 12px; margin-bottom: 10px;
+}
+.install-banner
