@@ -14,7 +14,7 @@
 
   const canvas = $("#game"), ctx = canvas?.getContext("2d");
   if (ctx) {
-    const W = 960, H = 500, WORLD = 2600, gravity = .62;
+    const W = 960, H = 500, WORLD = 2600, gravity = .62;\n    ctx.imageSmoothingEnabled = false;
     let camera = 0, tick = 0, score = 0, started = false, won = false;
     let particles = [], lastTime = 0;
     const keys = { left:false, right:false };
@@ -137,44 +137,32 @@
       ctx.restore();
     }
     function drawPlayer() {
-      const x=player.x,y=player.y, moving=Math.abs(player.vx)>.35;
-      const run=moving&&player.ground?Math.sin(tick*.28):0;
-      const bob=player.ground?(moving?Math.abs(Math.sin(tick*.28))*1.8:Math.sin(tick*.07)*1.2):0;
-      ctx.save();ctx.translate(x+17,y+bob);
-      if(player.face<0){ctx.scale(-1,1);}
-      // shadow
-      ctx.globalAlpha=player.ground?.22:.12;ellipse(0,61,18,5,"#24392e");ctx.globalAlpha=1;
-      // legs and shoes
-      ctx.save();ctx.translate(0,39);
-      ctx.rotate(run*.24);rounded(-10,0,8,17,4,"#405246");rounded(-12,13,14,7,4,"#795b49");
-      ctx.restore();
-      ctx.save();ctx.translate(7,39);ctx.rotate(-run*.24);
-      rounded(0,0,8,17,4,"#405246");rounded(-2,13,14,7,4,"#795b49");ctx.restore();
-      // body coat
-      ctx.fillStyle="#f1e7d5";ctx.beginPath();ctx.moveTo(-10,22);ctx.quadraticCurveTo(-13,30,-15,48);
-      ctx.quadraticCurveTo(0,53,15,48);ctx.quadraticCurveTo(13,30,10,22);ctx.closePath();ctx.fill();
-      ctx.fillStyle="#c4877e";ctx.beginPath();ctx.moveTo(-2,22);ctx.lineTo(3,22);ctx.lineTo(5,47);ctx.lineTo(-4,47);ctx.closePath();ctx.fill();
-      ctx.fillStyle="#d9b97e";ellipse(0,31,2,2,"#d9b97e");ellipse(0,38,2,2,"#d9b97e");
-      // arms
-      ctx.save();ctx.translate(-10,27);ctx.rotate(moving?Math.sin(tick*.28)*.28:-.08);
-      rounded(-3,0,7,19,4,"#f1e7d5");ellipse(0,18,4,4,"#d9a681");ctx.restore();
-      ctx.save();ctx.translate(10,27);ctx.rotate(moving?-Math.sin(tick*.28)*.28:.08);
-      rounded(-3,0,7,19,4,"#f1e7d5");ellipse(0,18,4,4,"#d9a681");ctx.restore();
-      // neck and head
-      rounded(-4,17,8,8,3,"#d9a681");
-      ellipse(0,10,12,14,"#e2b18d");
-      // hair silhouette and fringe
-      ctx.fillStyle="#49372f";ctx.beginPath();ctx.moveTo(-12,10);
-      ctx.quadraticCurveTo(-15,-8,-2,-7);ctx.quadraticCurveTo(10,-12,13,1);
-      ctx.quadraticCurveTo(14,8,10,13);ctx.quadraticCurveTo(8,4,5,3);
-      ctx.quadraticCurveTo(-1,7,-8,4);ctx.lineTo(-10,16);ctx.closePath();ctx.fill();
-      // ear, eye, smile, highlights
-      ellipse(-11,11,2.4,3.3,"#d9a681");ellipse(10,11,2.4,3.3,"#d9a681");
-      ellipse(5,10,1.4,1.8,"#342f2a");
-      ctx.strokeStyle="#9a5d51";ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(3,16,3,.2,1.7);ctx.stroke();
-      ctx.fillStyle="#fff0d9";ctx.beginPath();ctx.arc(-4,0,3,0,7);ctx.fill();
-      // tiny hair curl
-      ctx.strokeStyle="#715044";ctx.lineWidth=2;ctx.beginPath();ctx.arc(-3,-5,5,3.3,5.8);ctx.stroke();
+      const x=Math.round(player.x), y=Math.round(player.y), moving=Math.abs(player.vx)>.35;
+      const step=moving&&player.ground?(Math.floor(tick/5)%2):0;
+      const px=(a,b,w,h,c)=>{ctx.fillStyle=c;ctx.fillRect(Math.round(a),Math.round(b),w,h);};
+      ctx.save();ctx.translate(x+17,y);
+      if(player.face<0)ctx.scale(-1,1);
+      // pixel-art shadow
+      px(-12,59,25,4,"#304b4560");
+      // shoes and legs
+      px(-10,44,8,10,"#293b67");px(2,44,8,10,"#293b67");
+      px(-12+(step?2:0),53,12,6,"#60483e");px(0-(step?2:0),53,13,6,"#60483e");
+      // trousers and jacket
+      px(-11,27,22,20,"#29457f");px(-7,27,14,19,"#f4e9df");
+      px(-2,28,5,18,"#e94b78");px(-1,33,3,3,"#ffd36e");px(-1,40,3,3,"#ffd36e");
+      // arms with tiny hand pixels
+      px(-16,29,6,15,"#e94b78");px(10,29,6,15,"#e94b78");
+      px(-16,42,6,5,"#e6ad88");px(10,42,6,5,"#e6ad88");
+      // neck and face
+      px(-5,21,10,8,"#d99a76");px(-11,5,22,20,"#e9b18c");
+      // hair cap, fringe and side locks
+      px(-12,3,24,8,"#56372f");px(-10,0,17,5,"#56372f");
+      px(-13,8,5,12,"#56372f");px(8,8,5,10,"#56372f");
+      px(-7,10,3,4,"#fff3dc");px(5,10,3,4,"#fff3dc");
+      px(-6,11,2,3,"#27324d");px(6,11,2,3,"#27324d");
+      px(1,17,5,2,"#a95d55");
+      // small heart badge
+      px(1,31,3,3,"#fff1c7");
       ctx.restore();
     }
     function draw() {
