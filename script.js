@@ -99,8 +99,9 @@
   // Hand-built pixel sprites on a 2px grid: expressive faces, wedding clothes and readable silhouettes.
   function drawPersonBase(c,x,y,kind,pose=0,face=1){
     c.save();c.translate(Math.round(x+24),Math.round(y+32));if(face<0)c.scale(-1,1);
-    const bride=kind==="bride",jump=pose===3||pose===4,step=pose===1||pose===2;
-    const bob=jump?-5:step?(pose===1?-1:1):0;c.translate(0,bob);
+    const bride=kind==="bride",jump=pose===3||pose===4,step=pose===1||pose===2,idle=pose>=5;
+    const idleBob=idle?[0,-1,0,1][(pose-5)%4]:0;
+    const bob=jump?-5:step?(pose===1?-1:1):idleBob;c.translate(0,bob);
     // contact shadow
     rect(c,-13,29,26,3,"#293b5a55");rect(c,-8,32,16,2,"#293b5a33");
     if(bride){
@@ -118,6 +119,7 @@
       rect(c,-2,-5,4,14,"#e9d5df");rect(c,-13,20,4,4,"#fffdf6");rect(c,9,20,4,4,"#fffdf6");
       // arms raised on celebration frames, otherwise open for the embrace
       if(jump){rect(c,-14,-3,5,10,"#edbd9e");rect(c,-18,-12,5,11,"#edbd9e");rect(c,-19,-15,5,4,"#edbd9e");rect(c,9,-3,5,10,"#edbd9e");rect(c,13,-12,5,11,"#edbd9e");rect(c,14,-15,5,4,"#edbd9e");}
+      else if(step){const arm=pose===1?2:-1;rect(c,-13,-2+arm,5,13,"#edbd9e");rect(c,-15,9+arm,7,4,"#edbd9e");rect(c,8,-2-arm,5,13,"#edbd9e");rect(c,8,9-arm,7,4,"#edbd9e");}
       else{rect(c,-13,-2,5,13,"#edbd9e");rect(c,-15,9,7,4,"#edbd9e");rect(c,8,-2,5,13,"#edbd9e");rect(c,8,9,7,4,"#edbd9e");}
       // bouquet
       rect(c,11,7,3,8,"#4f8b60");rect(c,8,4,4,4,"#f5a8bb");rect(c,13,3,4,4,"#fff0d4");rect(c,15,7,4,4,"#e88da9");
@@ -130,7 +132,9 @@
       rect(c,-9,-6,18,5,"#f7f1e9");rect(c,-12,-2,24,17,"#2e477b");rect(c,-14,3,5,14,"#23375f");rect(c,9,3,5,14,"#23375f");
       rect(c,-5,-5,10,15,"#fff7ed");rect(c,-2,-4,4,12,"#d74f79");rect(c,-1,8,2,5,"#a83d66");
       rect(c,-10,12,20,4,"#405b91");rect(c,-12,16,24,5,"#243a68");
-      rect(c,-10,20,8,8,"#202c45");rect(c,2,20,8,8,"#202c45");rect(c,-11,27,10,4,"#d5b58f");rect(c,2,27,10,4,"#d5b58f");
+      const stride=step?(pose===1?3:-3):0;
+      rect(c,-10+stride,20,8,8,"#202c45");rect(c,2-stride,20,8,8,"#202c45");
+      rect(c,-11+stride,27,10,4,"#d5b58f");rect(c,2-stride,27,10,4,"#d5b58f");
       // boutonniere and pocket square
       rect(c,7,1,3,3,"#fff4df");rect(c,8,5,3,3,"#e9a1b2");rect(c,-10,1,3,4,"#e7d4b6");
       if(jump){rect(c,-15,-2,5,9,"#edbd9e");rect(c,-19,-11,5,11,"#edbd9e");rect(c,-20,-14,5,4,"#edbd9e");rect(c,10,-2,5,9,"#edbd9e");rect(c,14,-11,5,11,"#edbd9e");rect(c,15,-14,5,4,"#edbd9e");}
@@ -159,18 +163,24 @@
     const W=480,H=250,GRAVITY=.43;
     ctx.imageSmoothingEnabled=false;
     const keys={left:false,right:false};
-    const player={x:28,y:173,vx:0,vy:0,w:48,h:37,ground:false,face:1,celebrate:false};
+    const player={x:28,y:173,vx:0,vy:0,w:48,h:37,ground:false,face:1,celebrate:false,coyote:0,jumpBuffer:0};
     const pickups=hearts.map(p=>({...p,got:false}));
     const enemies=[{x:590,y:168,min:545,max:625,v:0.65,alive:true},{x:1190,y:162,min:1120,max:1215,v:0.72,alive:true},{x:1510,y:166,min:1460,max:1570,v:0.8,alive:true}];
     let camera=0,tick=0,score=0,lives=3,playing=false,won=false,ending=false,endingStarted=0,checkpoint=28,raf=0,last=0,particles=[];
     const scoreEl=$("#score"),overlay=$("#game-overlay"),message=$("#game-message"),level=$("#level-name"),lifeEl=$(".game-lives");
     function updateHud(){if(scoreEl)scoreEl.textContent=score+" / "+pickups.length;if(lifeEl)lifeEl.textContent="♥ ".repeat(lives).trim()||"♡";}
-    function reset(){player.x=28;player.y=173;player.vx=player.vy=0;player.ground=false;player.face=1;player.celebrate=false;camera=0;tick=0;score=0;lives=3;checkpoint=28;won=false;ending=false;endingStarted=0;playing=false;particles=[];pickups.forEach(p=>p.got=false);enemies.forEach(e=>e.alive=true);keys.left=keys.right=false;updateHud();if(message)message.textContent="Recolham as 12 memórias, evitem os guardiões e cheguem ao castelo.";const title=overlay?.querySelector("h3"),copy=overlay?.querySelector("p"),start=$("#start-game");if(title)title.innerHTML="A vossa história<br>começa aqui.";if(copy)copy.textContent="Uma aventura a dois, à procura de todas as memórias.";if(start)start.innerHTML="Começar a jogar <span>▶</span>";overlay?.classList.remove("hidden");if(level)level.textContent="THE MEADOW";}
-    function jump(){if(playing&&!won&&player.ground){player.vy=-8.3;player.ground=false;}}
+    function reset(){player.x=28;player.y=173;player.vx=player.vy=0;player.ground=false;player.face=1;player.celebrate=false;player.coyote=0;player.jumpBuffer=0;camera=0;tick=0;score=0;lives=3;checkpoint=28;won=false;ending=false;endingStarted=0;playing=false;particles=[];pickups.forEach(p=>p.got=false);enemies.forEach(e=>e.alive=true);keys.left=keys.right=false;updateHud();if(message)message.textContent="Recolham as 12 memórias, evitem os guardiões e cheguem ao castelo.";const title=overlay?.querySelector("h3"),copy=overlay?.querySelector("p"),start=$("#start-game");if(title)title.innerHTML="A vossa história<br>começa aqui.";if(copy)copy.textContent="Uma aventura a dois, à procura de todas as memórias.";if(start)start.innerHTML="Começar a jogar <span>▶</span>";overlay?.classList.remove("hidden");if(level)level.textContent="THE MEADOW";}
+    function jump(){if(playing&&!won)player.jumpBuffer=9;}
     function sparkle(x,y,color=C.gold){for(let i=0;i<12;i++){const a=i*Math.PI/6;particles.push({x,y,vx:Math.cos(a)*1.4,vy:Math.sin(a)*1.4-1,life:28,color});}}
     function respawn(){lives--;updateHud();if(lives<=0){playing=false;overlay?.classList.remove("hidden");const h=overlay?.querySelector("h3"),p=overlay?.querySelector("p"),b=$("#start-game");if(h)h.textContent="A aventura continua.";if(p)p.textContent="As memórias continuam à vossa espera. Tentem novamente!";if(b)b.textContent="Jogar novamente ▶";return;}
       player.x=checkpoint;player.y=checkpoint>1000?120:173;player.vx=player.vy=0;message.textContent="Respirem fundo — ainda têm "+lives+" vidas!";}
-    function drawEnemy(e){const x=e.x-camera;if(x< -30||x>W+30||!e.alive)return;rect(ctx,x+3,e.y+25,21,4,"#28385c66");rect(ctx,x+4,e.y+9,18,15,"#8b5a91");rect(ctx,x+1,e.y+13,24,10,"#a96a9d");rect(ctx,x+6,e.y+4,14,8,"#c68eb7");rect(ctx,x+7,e.y+10,3,4,C.white);rect(ctx,x+16,e.y+10,3,4,C.white);rect(ctx,x+8,e.y+11,2,2,C.dark);rect(ctx,x+17,e.y+11,2,2,C.dark);rect(ctx,x+9,e.y+20,3,3,C.gold);rect(ctx,x+16,e.y+20,3,3,C.gold);}
+    function drawEnemy(e){const x=Math.round(e.x-camera),y=e.y+Math.sin(tick*.12+e.x)*2;if(x< -30||x>W+30||!e.alive)return;
+      // Animated clock guardian: a readable clock face, ticking hands and tiny feet.
+      rect(ctx,x+3,y+26,21,4,"#28385c55");rect(ctx,x+5,y+7,17,17,"#6d5570");rect(ctx,x+2,y+5,23,19,"#b9b6b0");rect(ctx,x+5,y+2,17,4,"#e9d9bf");
+      rect(ctx,x+7,y+9,3,3,"#fff7df");rect(ctx,x+17,y+9,3,3,"#fff7df");rect(ctx,x+8,y+10,2,2,"#27334f");rect(ctx,x+18,y+10,2,2,"#27334f");
+      rect(ctx,x+12,y+13,2,6,"#9d4d68");rect(ctx,x+12,y+13,6,2,"#9d4d68");rect(ctx,x+9,y+19,10,2,"#9d4d68");
+      const foot=Math.floor(tick/8)%2;rect(ctx,x+6-foot,y+24,5,5,"#51445d");rect(ctx,x+17+foot,y+24,5,5,"#51445d");
+      rect(ctx,x+1,y+12,4,3,"#d6b17a");rect(ctx,x+23,y+12,4,3,"#d6b17a");}
     function draw(){
       drawWorld(ctx,W,H,camera,tick,false,null);
       pickups.forEach(p=>{if(!p.got){const x=p.x-camera;if(x>-20&&x<W+20){drawHeart(ctx,x,p.y+Math.sin(tick*.09+p.x)*2,1);drawSpark(ctx,x+7,p.y-6,tick);}}});
@@ -192,7 +202,7 @@
         }
       }else{
         if(player.x>1500)drawBride(ctx,1900-camera,126,0);
-        drawGroom(ctx,player.x-camera,player.y-27,!player.ground?3:Math.abs(player.vx)>.25?1+Math.floor(tick/6)%3:5+Math.floor(tick/12)%4,player.face);
+        drawGroom(ctx,player.x-camera,player.y-27,!player.ground?3:Math.abs(player.vx)>.25?1+Math.floor(tick/5)%2:5+Math.floor(tick/16)%4,player.face);
       }
       // In-game status panel.
       rect(ctx,7,7,120,22,"#1d2b50dd");drawHeart(ctx,13,12,.7);ctx.fillStyle=C.white;ctx.font="bold 8px monospace";ctx.fillText(score+" / "+pickups.length+" MEMORIAS",28,22);
@@ -209,6 +219,8 @@
         player.vx=clamp(player.vx,-2.65,2.65);player.x=clamp(player.x+player.vx*dt,0,worldWidth-player.w);
         player.vy+=GRAVITY*dt;player.y+=player.vy*dt;player.ground=false;
         platforms.forEach(p=>{const overlap=player.x+player.w>p.x&&player.x<p.x+p.w,bottom=player.y+player.h;if(overlap&&player.vy>=0&&prevBottom<=p.y+5&&bottom>=p.y&&bottom<=p.y+18){player.y=p.y-player.h;player.vy=0;player.ground=true;}});
+        if(player.ground)player.coyote=8;else player.coyote=Math.max(0,player.coyote-dt);
+        if(player.jumpBuffer>0){player.jumpBuffer=Math.max(0,player.jumpBuffer-dt);if(player.ground||player.coyote>0){player.vy=-8.3;player.ground=false;player.coyote=0;player.jumpBuffer=0;}}
         if(player.y>H+45)respawn();
         pickups.forEach(p=>{if(!p.got&&Math.abs(player.x+24-p.x)<17&&Math.abs(player.y+17-p.y)<22){p.got=true;score++;updateHud();sparkle(p.x,p.y);message.textContent="Memória encontrada! "+score+" de "+pickups.length+" ♥";}});
         enemies.forEach(e=>{if(!e.alive)return;e.x+=e.v*dt;if(e.x<e.min||e.x>e.max)e.v*=-1;
