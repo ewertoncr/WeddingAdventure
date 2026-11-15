@@ -48,6 +48,23 @@
     for(let i=0;i<52;i++){const x=((i*31-camera*.92)%(w+24)+w+24)%(w+24);rect(c,x,204,2,7,"#34724e");rect(c,x-2,201,4,3,i%3===0?"#fff0a8":i%2?"#ff9fbd":"#e9e5e0");}
     // Floating hearts for the cover and game world.
     if(preview)hearts.forEach((p,i)=>{const x=p.x-camera,y=p.y+Math.sin(t*.08+i)*2;if(x>-20&&x<w+20)drawHeart(c,x,y,1);});
+    // Waterfall and turquoise river inspired by the supplied castle scene.
+    const fallX=865-camera*.22;
+    if(fallX>-70&&fallX<w+40){
+      rect(c,fallX,157,28,10,"#e4f3ff");rect(c,fallX+4,164,22,42,"#8bd0f3");
+      rect(c,fallX+8,166,5,37,"#d2f2ff");rect(c,fallX+17,170,4,31,"#b7e7ff");
+      rect(c,fallX-3,202,36,5,"#d9f5ff");rect(c,fallX+2,207,29,3,"#72c6e8");
+      for(let k=0;k<5;k++){rect(c,fallX-7+k*8,198+(k%2)*4,3,3,"#f5ffff");}
+    }
+    // A flower-covered wedding pergola at the castle entrance.
+    const archX=1810-camera;
+    if(archX>-80&&archX<w+100){
+      rect(c,archX,143,7,62,"#8a563f");rect(c,archX+66,143,7,62,"#8a563f");
+      rect(c,archX-4,138,82,7,"#9b6244");rect(c,archX+4,133,65,5,"#e8d5b8");
+      for(let k=0;k<11;k++){const fx=archX+4+k*6,fy=132+Math.sin(k*.45)*7;rect(c,fx,fy,5,5,k%3===0?"#f7d77d":k%2?"#f28ca8":"#fff0e6");rect(c,fx+2,fy-3,3,3,"#6eaa62");}
+      rect(c,archX+18,142,3,28,"#fff0df");rect(c,archX+48,142,3,28,"#fff0df");
+      rect(c,archX+18,169,33,3,"#fff0df");
+    }
     // Decorative castle appears at the destination only.
     const castleX=1900-camera;if(castleX>-150&&castleX<w+150)drawCastle(c,castleX,205);
     // Checkpoint flag.
