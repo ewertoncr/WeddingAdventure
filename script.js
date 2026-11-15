@@ -114,7 +114,17 @@
         }else{
           const hugFrame=3+Math.floor((elapsed-105)/18)%3;
           // The final atlas poses bring the groom and bride together in a close embrace.
-          if(couple.complete&&couple.naturalWidth){ctx.save();ctx.imageSmoothingEnabled=false;ctx.drawImage(couple,hugFrame*48,0,48,64,gx-2,player.y-47,48,64);ctx.drawImage(couple,hugFrame*48,64,48,64,gx+28,player.y-46,48,64);ctx.restore();}
+          if(couple.complete&&couple.naturalWidth){
+            ctx.save();ctx.imageSmoothingEnabled=false;
+            drawGroom(ctx,gx+5,player.y-47,0,1);drawBride(ctx,gx+25,player.y-46,0);
+            // Pixel-art arms wrap around shoulders and waist to make the embrace readable.
+            ctx.lineCap="round";ctx.lineJoin="round";
+            ctx.strokeStyle="#263e78";ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(gx+37,player.y-19);ctx.quadraticCurveTo(gx+57,player.y-4,gx+66,player.y-20);ctx.stroke();
+            ctx.strokeStyle="#e7ad8e";ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(gx+66,player.y-20);ctx.lineTo(gx+69,player.y-24);ctx.stroke();
+            ctx.strokeStyle="#f0dcd6";ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(gx+43,player.y-35);ctx.quadraticCurveTo(gx+31,player.y-55,gx+20,player.y-36);ctx.stroke();
+            ctx.strokeStyle="#e7ad8e";ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(gx+20,player.y-36);ctx.lineTo(gx+18,player.y-31);ctx.stroke();
+            ctx.restore();
+          }
           for(let i=0;i<5;i++){const hx=gx+22+i*15,hy=94+Math.sin(tick*.12+i*1.4)*10-(i%2)*14;drawHeart(ctx,hx,hy,.65+(i%2)*.15);}
           if(Math.floor(elapsed/14)%2===0){drawSpark(ctx,gx+61,79,tick);drawSpark(ctx,gx+8,93,tick+3);}
         }
