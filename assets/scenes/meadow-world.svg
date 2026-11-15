@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2048" height="500" viewBox="0 0 2048 500" shape-rendering="crispEdges">
+<defs>
+ <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#79bce8"/><stop offset=".56" stop-color="#b8dce7"/><stop offset="1" stop-color="#f4d8c5"/></linearGradient>
+ <linearGradient id="water" x2="0" y2="1"><stop stop-color="#a4e5e2"/><stop offset="1" stop-color="#318eaf"/></linearGradient>
+ <pattern id="stone" width="44" height="24" patternUnits="userSpaceOnUse"><rect width="44" height="24" fill="#e6d1b3"/><path d="M0 1h44M0 12h18m8 0h18M12 1v11m21 0v12" stroke="#c5ad91" stroke-width="2"/></pattern>
+ <pattern id="roof" width="20" height="12" patternUnits="userSpaceOnUse"><rect width="20" height="12" fill="#a95470"/><path d="M0 2h20M5 2v10m10-10v10" stroke="#d88991" stroke-width="2"/></pattern>
+</defs>
+<rect width="2048" height="500" fill="url(#sky)"/>
+<!-- distant sun and drifting clouds -->
+<rect x="1530" y="42" width="92" height="92" fill="#ffe5a2"/><rect x="1545" y="28" width="62" height="120" fill="#ffe5a2"/><rect x="1560" y="52" width="34" height="66" fill="#fff2c9"/>
+<g fill="#fff8eb"><path d="M130 75h92v16h-92zM148 57h58v18h-58zM1100 88h120v16h-120zM1124 70h70v18h-70zM1810 60h95v16h-95zM1830 43h54v17h-54z"/></g>
+<g fill="#d9e9e8"><path d="M130 91h92v7h-92zM1100 104h120v7h-120zM1810 76h95v7h-95z"/></g>
+<!-- distant alpine silhouettes -->
+<path d="M0 302L92 176l54 64 65-103 85 165 90-113 77 113 93-161 92 161 100-128 85 128 95-175 98 175 96-124 95 124 100-151 102 151 104-113 98 113v72H0z" fill="#8daec5"/>
+<path d="M0 302l92-126 54 64-39-15-16-25-17 27-19-7-55 82zm206 0 90-165 85 165-44-21-40-83-22 36-23-18-18 31zm455 0 93-161 92 161-50-23-41-80-25 37-23-20-19 31zm380 0 95-175 98 175-54-26-44-86-25 38-24-20-18 34z" fill="#f1eee2"/>
+<path d="M0 302l92-126 54 64-42-20-12-17-17 27-21-8zM206 302l90-165 85 165-46-25-39-78-23 37-22-17z" fill="#d8e7e2"/>
+<path d="M0 312q190-50 360 0t360 0 360 0 360 0 360 0 360 0v75H0z" fill="#82ad91"/>
+<path d="M0 346q180-36 350 0t360 0 360 0 360 0 360 0 360 0v54H0z" fill="#6f9c7c"/>
+<!-- river and waterfall -->
+<path d="M0 350q170-34 330 0t330 0 330 0 330 0 330 0 398 0v55q-190 25-370 0t-360 0-360 0-360 0-268 0z" fill="url(#water)"/>
+<path d="M0 356q170-34 330 0t330 0 330 0 330 0 330 0 398 0" fill="none" stroke="#d0f0df" stroke-width="9"/>
+<path d="M1130 276h82v112h-82z" fill="#d8e6d9"/><path d="M1144 288h55v104h-55z" fill="#75c5d1"/><path d="M1151 288h9v104h-9z" fill="#c5f0e6"/>
+<path d="M1090 389h160v13h-160z" fill="#d6c5a7"/><path d="M1100 402h140v8h-140z" fill="#816c59"/>
+<!-- far woodland -->
+<g fill="#477d69"><path d="M0 392l36-88 40 88 40-105 48 105 43-88 40 88v65H0z"/><path d="M300 397l44-105 50 105 44-91 48 91v60H300z"/><path d="M690 397l48-114 54 114 42-92 52 92v60H690z"/><path d="M1050 399l50-108 52 108 50-91 49 91v58h-201z"/><path d="M1460 399l50-116 55 116 43-90 54 90v58h-202z"/><path d="M1780 399l50-108 54 108 46-91 51 91v58h-201z"/></g>
+<g fill="#609b73"><path d="M0 393l36-88 40 88-35-24-6-24-9 24zM300 397l44-105 50 105-43-28-7-30-12 31zM690 397l48-114 54 114-50-30-5-35-13 34zM1460 399l50-116 55 116-49-29-7-36-13 34z"/></g>
+<!-- distant village and bridge -->
+<g><path d="M410 358h76v52h-76z" fill="#e6d6bd"/><path d="M399 360l48-37 50 37z" fill="#9f6170"/><path d="M428 378h12v19h-12zM457 378h12v19h-12z" fill="#8bb8c4"/>
+<path d="M570 369h88v42h-88z" fill="#ead9bf"/><path d="M558 371l55-42 56 42z" fill="#a65f71"/>
+<path d="M720 391q95-57 190 0" fill="none" stroke="#d8c2a0" stroke-width="17"/><path d="M720 390q95-57 190 0" fill="none" stroke="#8b715d" stroke-width="4"/></g>
+<!-- castle on the far right -->
+<g transform="translate(1710 72)">
+ <path d="M36 340V154h78V340M240 340V128h82V340M93 340V210h190v130" fill="url(#stone)" stroke="#bda68a" stroke-width="5"/>
+ <path d="M20 160h108V90H20zM224 132h112V55H224z" fill="url(#roof)" stroke="#804b62" stroke-width="5"/>
+ <path d="M5 92l69-48 69 48zM210 58l70-48 70 48z" fill="#8f526c" stroke="#70445c" stroke-width="5"/>
+ <path d="M142 340V190h100v150" fill="#f8e9d2" stroke="#c4ad91" stroke-width="5"/>
+ <path d="M163 340v-78a30 30 0 0 1 60 0v78" fill="#72516a"/><path d="M180 340v-78a13 13 0 0 1 26 0v78" fill="#c48b72"/>
+ <g fill="#7bb8c8" stroke="#fff0d8" stroke-width="5"><path d="M53 182h35v48H53zM261 164h37v50h-37zM170 212h36v44h-36z"/></g>
+ <g fill="#f6e7c8"><path d="M44 255h23v10H44zM264 238h24v10h-24zM169 282h35v8h-35z"/></g>
+ <path d="M4 93h112v12H4zM211 58h111v12H211z" fill="#f4dcae"/>
+ <path d="M75 44V0h5v44zM280 10v-38h5v38z" fill="#604c61"/><path d="M80 2h56v32H80zM285-34h54v29h-54z" fill="#e24f7a"/>
+ <path d="M-20 340q30-55 60 0M310 340q34-65 68 0" fill="none" stroke="#478c5e" stroke-width="13"/>
+ <g fill="#e95b83"><circle cx="-10" cy="295" r="9"/><circle cx="24" cy="279" r="8"/><circle cx="337" cy="295" r="9"/><circle cx="367" cy="279" r="8"/></g>
+</g>
+<!-- warm atmospheric foreground haze -->
+<rect y="430" width="2048" height="70" fill="#e3c9a9" opacity=".12"/>
+</svg>

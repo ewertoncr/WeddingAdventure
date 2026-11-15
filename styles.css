@@ -209,3 +209,10 @@ footer{padding:25px 6vw;background:#17254d}
 /* Pixel-art rendering: preserve the hand-authored sprite edges when canvases scale. */
 .hero-image-frame #hero-game-preview{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;image-rendering:pixelated;z-index:0}
 .game-stage canvas{image-rendering:pixelated;image-rendering:crisp-edges}
+
+/* Full visual rebuild: wide high-resolution game viewport */
+.hero-image-frame{aspect-ratio:1.92!important}
+#hero-game-preview{width:100%;height:100%;object-fit:cover;image-rendering:pixelated}
+.game-stage canvas{width:100%;height:auto;aspect-ratio:960/500;image-rendering:pixelated;display:block}
+.game-stage{background:#8fc9e8;overflow:hidden}
+@media(max-width:540px){.game-stage canvas{aspect-ratio:960/500}}

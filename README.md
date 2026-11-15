@@ -15,7 +15,7 @@ Experiência digital para casamentos: landing page premium, identidade romântic
 
 - `index.html` — conteúdo e estrutura da página.
 - `styles.css` — identidade visual e layout responsivo.
-- `script.js` — motor Canvas, mecânicas do jogo, navegação e questionário.
+- `script.js` — motor Canvas reconstruído, mecânicas, navegação e questionário.\n- `assets/scenes/meadow-world.svg` — panorama original em camadas do primeiro mundo.
 - `assets/sprites/wedding-couple-16bit.svg` — atlas original dos personagens.
 
 ## Executar localmente
