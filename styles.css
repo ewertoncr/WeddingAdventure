@@ -221,11 +221,11 @@ footer{padding:25px 6vw;background:#17254d}
 #hero-game-preview,.game-stage canvas{image-rendering:auto!important;display:block}
 .hero-image-frame{aspect-ratio:16/9!important;overflow:hidden}
 .hero-image-frame #hero-game-preview{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;image-rendering:auto!important}
-.game-stage{aspect-ratio:16/9;background:#9ec9d0;border:0;box-shadow:none;overflow:hidden}
+.game-stage{background:#9ec9d0;border:0;box-shadow:none;overflow:hidden}
 .game-stage canvas{width:100%;height:auto;aspect-ratio:16/9;object-fit:contain;image-rendering:auto!important}
 .game-overlay{background:linear-gradient(120deg,#142c2b77,#233c3477);backdrop-filter:blur(2px)}
 .overlay-card{border:1px solid #e9d8bc;border-radius:22px;box-shadow:0 28px 70px #14231f55;padding:38px 32px;width:min(440px,88%)}
 .overlay-card h3{font-size:clamp(30px,3vw,42px);line-height:1.12}
 .game-hud{background:#f8f3e9}.game-bar{height:48px}
 .mobile-controls button,.restart-button{border-radius:12px}
-@media(max-width:650px){.game-stage{aspect-ratio:16/9}.game-stage canvas{aspect-ratio:16/9}.overlay-card{padding:22px 18px}.overlay-card h3{font-size:27px}}
+@media(max-width:650px){.game-stage canvas{aspect-ratio:16/9}.overlay-card{padding:22px 18px}.overlay-card h3{font-size:27px}}
