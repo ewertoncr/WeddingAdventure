@@ -8,7 +8,7 @@
 
   // Original pixel-art engine: crisp tile rendering, layered scenery and an animated couple atlas.
   const C={sky:"#76a9e5",sky2:"#d9d9e8",sun:"#fff0b9",cloud:"#fff8e8",far:"#9bafd0",far2:"#728fb2",hill:"#507c72",hill2:"#396653",leaf:"#2c694f",leaf2:"#43865a",leaf3:"#78ad61",trunk:"#775044",soil:"#89553e",soil2:"#a96b49",grass:"#4b984f",grass2:"#83ce68",stone:"#e8d4ad",gold:"#ffe18a",pink:"#ed4d80",dark:"#24345b",white:"#fff5e6",shadow:"#263b5c"};
-  const couple=new Image();couple.src="/WeddingAdventure/assets/sprites/couple-atlas.webp?v=3";
+  const couple=new Image();couple.decoding="async";couple.src="/WeddingAdventure/assets/sprites/wedding-couple-16bit.svg?v=1";
   const rect=(c,x,y,w,h,color)=>{c.fillStyle=color;c.fillRect(Math.round(x),Math.round(y),Math.ceil(w),Math.ceil(h));};
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   function drawCloud(c,x,y,s=1){rect(c,x+7*s,y,25*s,7*s,C.cloud);rect(c,x,y+6*s,42*s,8*s,C.cloud);rect(c,x+13*s,y-6*s,19*s,9*s,C.cloud);}
@@ -98,8 +98,20 @@
   }
   // Hand-built pixel sprites on a 2px grid: expressive faces, wedding clothes and readable silhouettes.
   function drawPersonBase(c,x,y,kind,pose=0,face=1){
+    const bride=kind==="bride";
+    // Original 48x64 sprite atlas: five distinct poses for each character.
+    // The hand-built renderer below remains as a fallback if the SVG cannot load.
+    if(couple.complete&&couple.naturalWidth>=240){
+      const frame=pose===1?1:pose===2?2:pose===3?3:pose===4?4:pose>=5?([0,1,0,2][(pose-5)%4]):0;
+      const sx=frame*48,sy=bride?64:0;
+      c.save();
+      if(face<0){c.translate(Math.round(x+48),Math.round(y));c.scale(-1,1);c.drawImage(couple,sx,sy,48,64,0,0,48,64);}
+      else c.drawImage(couple,sx,sy,48,64,Math.round(x),Math.round(y),48,64);
+      c.restore();
+      return;
+    }
     c.save();c.translate(Math.round(x+24),Math.round(y+32));if(face<0)c.scale(-1,1);
-    const bride=kind==="bride",jump=pose===3||pose===4,step=pose===1||pose===2,idle=pose>=5;
+    const jump=pose===3||pose===4,step=pose===1||pose===2,idle=pose>=5;
     const idleBob=idle?[0,-1,0,1][(pose-5)%4]:0;
     const bob=jump?-5:step?(pose===1?-1:1):idleBob;c.translate(0,bob);
     // contact shadow
@@ -189,14 +201,19 @@
       if(ending){
         const elapsed=tick-endingStarted,gx=player.x-camera,bx=1900-camera;
         if(elapsed<105){
-          drawGroom(ctx,gx,player.y-27,elapsed>55?2:1,1);
-          const phase=Math.floor((elapsed%72)/24),brideFrame=phase===0?1:phase===1?3:phase===2?2:4;
-          const brideY=phase===1?112:phase===0?141:phase===2?119:135;
-          drawBride(ctx,bx,brideY,brideFrame);
-          if(elapsed>42){drawHeart(ctx,bx+8,90+Math.sin(tick*.18)*4,.8);drawHeart(ctx,bx+35,75+Math.sin(tick*.15+1)*4,.65);}
+          // The groom and bride visibly close the distance before the embrace.
+          const approach=clamp(elapsed/82,0,1);
+          const groomX=gx+Math.round(20*approach);
+          const brideX=bx-Math.round(24*approach);
+          const walkingPose=Math.floor(elapsed/7)%2?1:2;
+          const brideFrame=elapsed<58?walkingPose:(Math.floor(elapsed/8)%2?3:4);
+          const brideY=elapsed<58?140:Math.round(140-(elapsed-58)*.48-Math.sin(elapsed*.2)*2);
+          drawGroom(ctx,groomX,player.y-27,elapsed<72?walkingPose:4,1);
+          drawBride(ctx,brideX,brideY,brideFrame);
+          if(elapsed>34){drawHeart(ctx,brideX+8,90+Math.sin(tick*.18)*4,.8);drawHeart(ctx,brideX+35,75+Math.sin(tick*.15+1)*4,.65);}
         }else{
           const hugFrame=Math.floor((elapsed-105)/20)%6;
-          drawHug(ctx,gx+4,player.y-27,hugFrame);
+          drawHug(ctx,gx+16,player.y-27,hugFrame);
           for(let i=0;i<5;i++){const hx=gx+8+i*13,hy=94+Math.sin(tick*.12+i*1.4)*10-(i%2)*14;drawHeart(ctx,hx,hy,.65+(i%2)*.15);}
           if(Math.floor(elapsed/14)%2===0){drawSpark(ctx,gx+61,79,tick);drawSpark(ctx,gx+8,93,tick+3);}
         }
