@@ -86,7 +86,7 @@
     const moving=frame===1||frame===2||frame===3;
     const airborne=frame===3;
     const phase=frame%3;
-    const bob=airborne?-5:moving?(phase===1?-2:phase===2?1:0):Math.sin(tick*.055)*.7;
+    const bob=airborne?-5:moving?(phase===1?-2:phase===2?1:0):Math.sin(frame*.7)*.7;
     const lean=moving?(phase===1?-.075:phase===2?.055:0):airborne?-.11:0;
     const squash=moving&&phase===2?1.035:airborne?1.04:1;
     c.save();c.imageSmoothingEnabled=false;
@@ -99,7 +99,7 @@
   function drawBride(c,x,y,frame=0){
     if(!couple.complete||!couple.naturalWidth){rect(c,x+10,y+20,28,38,"#fff4e9");rect(c,x+15,y+5,20,18,"#efb18c");return;}
     const jumping=frame===2||frame===3||frame===4;
-    const bounce=jumping?(frame===2?-1:frame===3?-8:-4):Math.sin(tick*.07)*1.2;
+    const bounce=jumping?(frame===2?-1:frame===3?-8:-4):Math.sin(frame*.8)*1.2;
     const lean=jumping?(frame===3?-.09:.035):0;
     c.save();c.imageSmoothingEnabled=false;
     c.translate(Math.round(x+24),Math.round(y+32+bounce));c.rotate(lean);
@@ -162,7 +162,7 @@
         }
       }else{
         if(player.x>1500)drawBride(ctx,1900-camera,126,0);
-        drawGroom(ctx,player.x-camera,player.y-27,!player.ground?3:Math.abs(player.vx)>.25?1+Math.floor(tick/6)%3:0,player.face);
+        drawGroom(ctx,player.x-camera,player.y-27,!player.ground?3:Math.abs(player.vx)>.25?1+Math.floor(tick/6)%3:5+Math.floor(tick/12)%4,player.face);
       }
       // In-game status panel.
       rect(ctx,7,7,120,22,"#1d2b50dd");drawHeart(ctx,13,12,.7);ctx.fillStyle=C.white;ctx.font="bold 8px monospace";ctx.fillText(score+" / "+pickups.length+" MEMORIAS",28,22);
