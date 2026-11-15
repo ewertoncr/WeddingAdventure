@@ -179,3 +179,17 @@ h1{font-size:clamp(45px,4.6vw,66px);line-height:1.03;margin:18px 0}
 footer{padding:25px 6vw;background:#17254d}
 @media(max-width:850px){.site-header{height:66px}.nav{top:66px}.hero{grid-template-columns:1fr;padding:42px 6vw 30px;gap:27px}.hero-copy{max-width:650px}.hero-visual{width:100%;max-width:760px}.section-wrap{padding:58px 7vw}.game-section{padding:58px 6vw}.form-section{padding:58px 6vw}}
 @media(max-width:540px){.hero{padding:35px 5vw 25px;gap:22px}h1{font-size:clamp(42px,11vw,54px)}.hero-lead{font-size:12px}.hero-proof{font-size:6px;gap:6px;flex-wrap:wrap}.snes-frame{border-width:3px;border-radius:10px!important;box-shadow:0 4px 0 #d7b9c5,0 14px 28px #24365b25}.preview-topbar{padding:6px 8px;font-size:6px}.preview-level{top:32px;left:9px}.preview-level small{font-size:5px}.preview-level strong{font-size:9px}.preview-play{padding:7px 10px;font-size:7px}.preview-bottom{padding:6px 8px;font-size:5px}.game-section{padding:48px 4vw}.game-window{padding:5px}.game-toolbar{flex-wrap:wrap}.game-instructions{width:100%;margin:0 0 5px}.mobile-controls{margin-left:auto}.game-hud{font-size:6px}.section-wrap{padding:50px 6vw}.feature-grid,.steps{grid-template-columns:1fr;gap:22px}.field-row{grid-template-columns:1fr}.couple-form{padding:20px}}
+
+/* Final playable-demo polish */
+.game-stage canvas{image-rendering:pixelated;image-rendering:crisp-edges;display:block}
+.game-stage{border:2px solid #26345d;background:#76a9e5}
+.game-bar{color:#34436d}
+.game-lives{font-weight:900;font-size:10px;color:#e84478;letter-spacing:2px}
+.game-status b{color:#d04470}
+.game-instructions strong{color:#27365f}
+.mobile-controls button{font-weight:900;box-shadow:0 3px 0 #e8cbd5}
+.mobile-controls button:focus-visible,.restart-button:focus-visible,.button:focus-visible{outline:3px solid #f0b84c;outline-offset:3px}
+.preview-play{z-index:4}
+.game-overlay{z-index:5}
+.game-hud{pointer-events:none}
+@media(max-width:540px){.game-lives{font-size:8px}.game-stage{border-width:1px}.game-bar{gap:5px}.game-brand{font-size:6px}}
