@@ -55,7 +55,7 @@
     if(player){
       const walk=Math.abs(player.vx)>.25,air=!player.ground,frame=player.celebrate?4:air?3:walk?Math.floor(t/7)%3:0;
       drawCouple(c,player.x-camera-5,player.y-10,frame,player.face||1);
-    }else{
+    }else if(preview){
       const x=155+(Math.sin(t*.015)*14),y=177+Math.sin(t*.1)*2;drawCouple(c,x, y,Math.floor(t/8)%3,1);
       drawCouple(c,x+24,y+1,Math.floor(t/8+1)%3,1);
       drawHeart(c,x+11,y-23+Math.sin(t*.1)*2,.7);
@@ -92,7 +92,7 @@
       player.x=checkpoint;player.y=130;player.vx=player.vy=0;message.textContent="Respirem fundo — ainda têm "+lives+" vidas!";}
     function drawEnemy(e){const x=e.x-camera;if(x< -30||x>W+30||!e.alive)return;rect(ctx,x+3,e.y+25,21,4,"#28385c66");rect(ctx,x+4,e.y+9,18,15,"#8b5a91");rect(ctx,x+1,e.y+13,24,10,"#a96a9d");rect(ctx,x+6,e.y+4,14,8,"#c68eb7");rect(ctx,x+7,e.y+10,3,4,C.white);rect(ctx,x+16,e.y+10,3,4,C.white);rect(ctx,x+8,e.y+11,2,2,C.dark);rect(ctx,x+17,e.y+11,2,2,C.dark);rect(ctx,x+9,e.y+20,3,3,C.gold);rect(ctx,x+16,e.y+20,3,3,C.gold);}
     function draw(){
-      drawWorld(ctx,W,H,camera,tick,false,null);
+      drawWorld(ctx,W,H,camera,tick,false,{});
       pickups.forEach(p=>{if(!p.got){const x=p.x-camera;if(x>-20&&x<W+20){drawHeart(ctx,x,p.y+Math.sin(tick*.09+p.x)*2,1);drawSpark(ctx,x+7,p.y-6,tick);}}});
       enemies.forEach(drawEnemy);
       // Player rendered in the foreground.
