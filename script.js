@@ -82,6 +82,20 @@ function drawScene(c,camera,t,preview=false){
    for(let q=16;q<p.w-12;q+=39){rect(c,x+q,p.y+27,17,4,"#a06b50");rect(c,x+q+20,p.y+45,9,4,"#594039");}
    if(i%2===0){rect(c,x+18,p.y+64,4,12,"#55774b");rect(c,x+22,p.y+68,3,8,"#55774b");}
  });
+ // Foreground castle gate follows the playable world camera.
+ const gateX=3780-camera;
+ if(gateX<W+360&&gateX>-360){
+   rect(c,gateX+28,GROUND-188,252,188,"#d7c2a4");
+   rect(c,gateX+38,GROUND-178,232,178,"#f0dfc3");
+   rect(c,gateX+4,GROUND-230,78,230,"#e4cfad");rect(c,gateX+226,GROUND-248,78,248,"#e4cfad");
+   rect(c,gateX-2,GROUND-238,90,15,"#9a526e");rect(c,gateX+218,GROUND-256,94,15,"#9a526e");
+   for(let k=0;k<5;k++){rect(c,gateX+7+k*15,GROUND-253,8,18,"#c37b83");rect(c,gateX+232+k*14,GROUND-270,8,18,"#c37b83");}
+   rect(c,gateX+100,GROUND-172,112,172,"#fff0d8");rect(c,gateX+122,GROUND-102,70,102,"#73516b");
+   rect(c,gateX+137,GROUND-146,18,27,"#84c2d0");rect(c,gateX+168,GROUND-146,18,27,"#84c2d0");
+   rect(c,gateX+149,GROUND-78,18,78,"#d3a46e");
+   for(let k=0;k<22;k++){const fx=gateX+12+k*13,fy=GROUND-36-Math.round(Math.sin(k/21*Math.PI)*27);rect(c,fx,fy,7,7,k%3?"#ed91ad":"#f5d47e");rect(c,fx+2,fy+7,4,8,"#4d8d5c");}
+   rect(c,gateX+69,GROUND-287,5,51,"#58465d");rect(c,gateX+74,GROUND-284,34,19,"#e54e7a");
+ }
  // Floating motes and warm fireflies.
  for(let i=0;i<22;i++){const x=(i*53-t*(.18+i%3*.04))%(W+30),y=90+(i*37)%260+Math.sin(t*.03+i)*4;rect(c,x,y,4,4,i%3?"#fff0cb":"#ffd7e2");}
 }
@@ -180,8 +194,8 @@ if(ctx){
  function jump(){if(playing&&!ending&&!won)player.buffer=10;}
  $("#start-game")?.addEventListener("click",()=>{if(lives<=0)reset();playing=true;overlay?.classList.add("hidden");message.textContent="A aventura começou! Recolham as 12 memórias.";last=performance.now();});
  $("#reset-game")?.addEventListener("click",reset);
- function down(e){const k=e.key.toLowerCase();if(["arrowleft","arrowright","arrowup"," ","a","w","d"].includes(k))e.preventDefault();if(k==="arrowleft"||k==="a")keys.left=true;if(k==="arrowright"||k==="d")keys.right=true;if(k==="arrowup"||k===" "||k==="w")jump();}
- function up(e){const k=e.key.toLowerCase();if(k==="arrowleft"||k==="a")keys.left=false;if(k==="arrowright"||k==="d")keys.right=false;}
+ function down(e){const k=e.key.toLowerCase();if(["arrowleft","arrowright","arrowup"," ","a","w","d"].includes(k))e.preventDefault();if(k==="arrowleft")keys.left=true;if(k==="arrowright"||k==="d")keys.right=true;if(k==="arrowup"||k===" "||k==="w"||k==="a")jump();}
+ function up(e){const k=e.key.toLowerCase();if(k==="arrowleft")keys.left=false;if(k==="arrowright"||k==="d")keys.right=false;}
  window.addEventListener("keydown",down);window.addEventListener("keyup",up);window.addEventListener("blur",()=>{keys.left=keys.right=false;});
  document.querySelectorAll(".mobile-controls button").forEach(btn=>{const key=btn.dataset.key;const press=e=>{e.preventDefault();if(key==="jump")jump();else keys[key]=true;};const release=e=>{e.preventDefault();if(key!=="jump")keys[key]=false;};btn.addEventListener("pointerdown",press);["pointerup","pointerleave","pointercancel"].forEach(v=>btn.addEventListener(v,release));});
  reset();last=performance.now();requestAnimationFrame(frame);
