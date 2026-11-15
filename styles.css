@@ -197,3 +197,11 @@ footer{padding:25px 6vw;background:#17254d}
 /* Crisp, enlarged SNES sprite rendering */
 #game, #hero-game-preview { image-rendering: pixelated; image-rendering: crisp-edges; }
 #game { width:100%; height:auto; }
+
+/* Crisp 16-bit presentation for the playable adventure and live cover preview. */
+#hero-game-preview,.game-stage canvas{image-rendering:pixelated;image-rendering:crisp-edges}
+.game-stage{background:#79b8e9;border:4px solid #f4d9aa;box-shadow:inset 0 0 0 2px #fff7e8}
+.game-bar{background:#fff8ed}
+.game-stage canvas{image-rendering:pixelated}
+.mobile-controls button{border-radius:8px;background:#fff8ed;box-shadow:0 3px 0 #d9c8b3;font-weight:800}
+.mobile-controls button:active{transform:translateY(2px);box-shadow:0 1px 0 #d9c8b3}
