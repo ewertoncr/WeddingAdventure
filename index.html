@@ -1,97 +1,51 @@
 <!doctype html>
 <html lang="pt-PT">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f7f2e9">
-  <meta name="description" content="Wedding Adventure — transforme a história do vosso amor num jogo 2D e num site de casamento inesquecível.">
-  <title>Wedding Adventure — A vossa história, uma aventura</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#172c27">
+<meta name="description" content="Wedding Adventure — sites de casamento e videojogos 2D criados a partir da vossa história.">
+<title>Wedding Adventure — O amor é a maior aventura</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="site-header">
-    <a class="brand" href="#inicio" aria-label="Wedding Adventure — início"><span class="brand-mark">W<span>✦</span>A</span><span class="brand-name">WEDDING<br>ADVENTURE</span></a>
-    <button class="menu-toggle" aria-label="Abrir menu" aria-expanded="false">☰</button>
-    <nav class="nav">
-      <a href="#conceito">O conceito</a><a href="#experiencia">Experiência</a><a href="#pacotes">Pacotes</a><a class="nav-cta" href="#criar">Criar a nossa aventura <span>↗</span></a>
-    </nav>
-  </header>
-
-  <main>
-    <section class="hero" id="inicio">
-      <div class="hero-copy">
-        <p class="eyebrow"><span></span> O vosso amor merece mais do que um convite</p>
-        <h1>Uma história de amor.<br><em>Uma aventura só vossa.</em></h1>
-        <p class="hero-lead">Criamos um site de casamento personalizado e um jogo 2D inspirado na história de vocês. Uma experiência para jogar, descobrir e guardar para sempre.</p>
-        <div class="hero-actions"><a class="button button-dark" href="#criar">Começar a criar <span>↗</span></a><a class="text-link" href="#experiencia">Experimentar o jogo <span>↓</span></a></div>
-        <div class="hero-note"><span class="sparkle">✧</span><span>Feito à medida. Pensado a dois. Lembrado para sempre.</span></div>
-      </div>
-      <div class="hero-art" aria-label="Ilustração de um mundo de jogo romântico">
-        <div class="sun"></div><div class="floating-heart">♡</div>
-        <div class="cloud cloud-one"></div><div class="cloud cloud-two"></div>
-        <div class="hill hill-back"></div><div class="hill hill-front"></div>
-        <div class="castle"><div class="tower"></div><div class="castle-body"><div class="castle-door"></div><div class="window"></div></div><div class="flag">♥</div></div>
-        <div class="path"></div><div class="hero-couple"><span class="person person-one">♥</span><span class="person person-two">♥</span></div>
-        <div class="art-caption"><span>LEVEL 01</span><b>O início de tudo</b><small>Uma aventura feita de memórias</small></div>
-        <div class="art-sticker">PLAYER<br><b>LOVE × 2</b></div>
-      </div>
-      <div class="hero-bottom"><span>01 / UMA NOVA FORMA DE CELEBRAR</span><span>PORTUGAL · BRASIL · ONLINE</span></div>
-    </section>
-
-    <section class="intro section-wrap" id="conceito">
-      <div class="section-kicker">01 — O conceito</div>
-      <div class="intro-grid"><h2>O vosso grande dia<br>começa <em>numa aventura.</em></h2><div><p class="large-copy">E se os convidados pudessem entrar no universo de vocês antes mesmo de chegar à festa?</p><p>O Wedding Adventure junta um site elegante com um jogo 2D exclusivo. Os personagens, os cenários, os desafios e as mensagens nascem dos momentos que fizeram a vossa história.</p></div></div>
-      <div class="feature-grid">
-        <article class="feature"><span class="feature-no">01</span><div class="feature-icon">⌘</div><h3>Site de casamento</h3><p>Um espaço bonito e fácil de consultar com data, local, programação, confirmação de presença e informações para os convidados.</p></article>
-        <article class="feature"><span class="feature-no">02</span><div class="feature-icon">♧</div><h3>Jogo 2D exclusivo</h3><p>Uma pequena aventura inspirada em vocês, com personagens, fases, obstáculos e surpresas personalizadas.</p></article>
-        <article class="feature"><span class="feature-no">03</span><div class="feature-icon">♡</div><h3>Memórias para guardar</h3><p>Mensagens, referências e detalhes da relação transformados numa experiência que os convidados vão recordar.</p></article>
-      </div>
-    </section>
-
-    <section class="game-section" id="experiencia">
-      <div class="game-heading"><div><div class="section-kicker light">02 — Experimentem</div><h2>Uma amostra da<br><em>vossa aventura.</em></h2></div><p>Este é apenas um pequeno protótipo. No projeto final, o mundo, os personagens e os desafios serão desenhados a partir da vossa história.</p></div>
-      <div class="game-shell">
-        <div class="game-top"><span><i class="live-dot"></i> DEMO INTERATIVA</span><span>PLAYER 01 <b>♥ ♥ ♥</b></span><span>WEDDING WORLD</span></div>
-        <canvas id="game" width="900" height="390" aria-label="Jogo 2D demonstrativo. Use as setas ou os botões para mover o personagem e apanhar corações."></canvas>
-        <div class="game-controls"><div><b id="game-message">Ajude o casal a encontrar os corações!</b><small>Setas ou A/D para mover · Espaço para saltar</small></div><div class="touch-controls"><button data-key="left" aria-label="Mover para a esquerda">←</button><button data-key="jump" aria-label="Saltar">↑</button><button data-key="right" aria-label="Mover para a direita">→</button></div><button class="reset-game" id="reset-game">Recomeçar ↻</button></div>
-      </div>
-      <p class="game-footnote">A demonstração funciona diretamente no navegador, também em telemóveis. O jogo final será personalizado para cada casal.</p>
-    </section>
-
-    <section class="process section-wrap">
-      <div class="section-kicker">03 — Como funciona</div><h2>Da vossa história<br>ao <em>vosso mundo.</em></h2>
-      <div class="steps"><article><span>01</span><h3>Contem-nos sobre vocês</h3><p>Respondam a algumas perguntas sobre a relação, o casamento e o estilo que imaginam.</p></article><article><span>02</span><h3>Criamos o universo</h3><p>Desenhamos o conceito visual, os personagens, o site e a aventura 2D.</p></article><article><span>03</span><h3>Partilhem com todos</h3><p>Recebem um endereço para enviar aos convidados e celebrar juntos.</p></article></div>
-    </section>
-
-    <section class="pricing" id="pacotes"><div class="section-wrap"><div class="section-kicker">04 — Formatos</div><h2>Uma experiência<br><em>à vossa medida.</em></h2><p class="pricing-intro">Cada casamento é diferente. A proposta é definida de acordo com o nível de personalização e os elementos que desejam incluir.</p>
-      <div class="price-grid"><article class="price-card"><span class="price-label">ESSENCIAL</span><h3>O convite especial</h3><p>Um site de casamento elegante para reunir todas as informações importantes.</p><ul><li>Site personalizado e responsivo</li><li>Informações do evento</li><li>Confirmação de presença</li><li>Galeria de fotografias</li></ul><a href="#criar" class="price-link">Conversar sobre este formato ↗</a></article>
-      <article class="price-card featured"><span class="popular">MAIS COMPLETO</span><span class="price-label">AVENTURA</span><h3>O vosso próprio jogo</h3><p>O site de casamento acompanhado de uma aventura 2D inspirada na vossa história.</p><ul><li>Tudo do formato Essencial</li><li>Personagens personalizados</li><li>Jogo 2D com fases e desafios</li><li>Mensagens e surpresas no jogo</li></ul><a href="#criar" class="price-link">Criar a nossa aventura ↗</a></article>
-      <article class="price-card"><span class="price-label">EXCLUSIVO</span><h3>Um mundo completo</h3><p>Uma experiência mais extensa, com mais cenários, detalhes e conteúdos exclusivos.</p><ul><li>Tudo do formato Aventura</li><li>Mais fases e cenários</li><li>Identidade visual aprofundada</li><li>Elementos especiais à escolha</li></ul><a href="#criar" class="price-link">Pedir uma proposta ↗</a></article></div>
-      <p class="price-disclaimer">Os valores serão apresentados numa proposta personalizada após conhecermos o projeto. Nenhum preço ou serviço é cobrado nesta página.</p>
-    </div></section>
-
-    <section class="form-section" id="criar"><div class="form-layout"><div class="form-aside"><div class="section-kicker light">05 — Vamos começar?</div><h2>A próxima grande história pode ser <em>a vossa.</em></h2><p>Respondam a estas perguntas iniciais. Quanto mais conhecermos a vossa história, mais especial poderá ser o universo que vamos criar.</p><div class="aside-quote">“Cada casal tem uma história única. O nosso trabalho é transformá-la numa experiência.”<span>— WEDDING ADVENTURE</span></div></div>
-      <form id="couple-form" class="couple-form">
-        <div class="form-progress"><span>QUESTIONÁRIO INICIAL</span><span>01 — 10</span></div>
-        <div class="field-row"><label>Como gostariam de ser chamados?<input name="names" required placeholder="Ex.: Ana & Miguel"></label><label>Data do casamento<input name="date" type="date"></label></div>
-        <label>Qual é o melhor e-mail para contacto?<input name="email" type="email" required placeholder="vossoemail@exemplo.com"></label>
-        <label>Como se conheceram?<textarea name="meet" rows="3" placeholder="Contem-nos como tudo começou..."></textarea></label>
-        <label>Quais são os momentos mais marcantes da vossa história?<textarea name="memories" rows="3" placeholder="Uma viagem, um encontro, um pedido especial..."></textarea></label>
-        <label>Que estilo imaginam para o vosso universo?<select name="style"><option value="">Escolham uma inspiração</option><option>Fantasia e conto de fadas</option><option>Aventura clássica em 2D</option><option>Romântico e delicado</option><option>Divertido e descontraído</option><option>Minimalista e moderno</option><option>Queremos sugestões</option></select></label>
-        <label>Que lugares ou cenários têm significado para vocês?<textarea name="places" rows="2" placeholder="Cidade, praia, viagem, local do primeiro encontro..."></textarea></label>
-        <label>Como imaginam os personagens do jogo?<textarea name="characters" rows="2" placeholder="Representações de vocês, roupas, poderes, animais de estimação..."></textarea></label>
-        <label>Que desafios ou referências gostariam de incluir?<textarea name="challenges" rows="2" placeholder="Pequenos desafios, hobbies, piadas internas, referências..."></textarea></label>
-        <label>Há alguma música ou mensagem especial que gostariam de incluir?<textarea name="music" rows="2" placeholder="Nome da música, dedicatória ou mensagem..."></textarea></label>
-        <label class="consent"><input type="checkbox" name="consent" required><span>Concordamos em ser contactados sobre este projeto e compreendemos que este protótipo não envia nem armazena os dados num servidor.</span></label>
-        <button class="button button-dark submit-button" type="submit">Preparar o nosso resumo <span>↗</span></button>
-        <p class="form-note">Ao enviar, será preparado um resumo para copiarem. Nesta versão inicial, as respostas não são transmitidas nem guardadas online.</p>
-        <div id="form-result" class="form-result" hidden aria-live="polite"></div>
-      </form></div></section>
-  </main>
-  <footer><a class="brand footer-brand" href="#inicio"><span class="brand-mark">W<span>✦</span>A</span><span class="brand-name">WEDDING<br>ADVENTURE</span></a><p>A vossa história merece ser jogada.</p><a href="#inicio">Voltar ao início ↑</a><small>© <span id="year"></span> Wedding Adventure. Feito com carinho.</small></footer>
-  <script src="script.js"></script>
-</body>
-</html>
+<div class="announcement"><span>✦</span> CONVITES QUE SE TRANSFORMAM EM AVENTURAS <span>✦</span></div>
+<header class="site-header"><a class="brand" href="#inicio"><span class="brand-symbol">W<span>✦</span>A</span><span class="brand-name">WEDDING<br>ADVENTURE</span></a>
+<button class="menu-toggle" aria-label="Abrir menu" aria-expanded="false">☰</button>
+<nav class="nav"><a href="#conceito">O conceito</a><a href="#jogo">O jogo</a><a href="#experiencia">Como funciona</a><a href="#pacotes">Experiências</a><a class="nav-cta" href="#criar">Criar a nossa história <span>↗</span></a></nav></header>
+<main>
+<section class="hero" id="inicio">
+<div class="hero-copy"><div class="eyebrow"><span class="eyebrow-line"></span> UM CONVITE FORA DO COMUM <span class="eyebrow-star">✧</span></div>
+<h1>O vosso amor.<br><em>A vossa aventura.</em></h1>
+<p class="hero-lead">E se o convite de casamento fosse também um videojogo? Criamos experiências digitais únicas onde a vossa história ganha vida — para jogar, partilhar e recordar.</p>
+<div class="hero-actions"><a class="button button-gold" href="#criar">Criar a nossa aventura <span>↗</span></a><a class="play-link" href="#jogo"><span class="play-icon">▶</span> Jogar demonstração</a></div>
+<div class="hero-proof"><span>✦</span> Desenhado à medida <i></i> Para jogar em qualquer ecrã <i></i> Feito para recordar</div></div>
+<div class="hero-visual"><div class="hero-image-frame"><div class="hero-scene-sky"></div><div class="hero-moon"></div><div class="hero-cloud cloud-a"></div><div class="hero-cloud cloud-b"></div><div class="hero-mountain mountain-a"></div><div class="hero-mountain mountain-b"></div><div class="hero-castle"><span class="castle-flag">♥</span><span class="castle-tower tower-a"></span><span class="castle-tower tower-b"></span><span class="castle-main"></span></div><div class="hero-bridge"></div><div class="hero-avatar avatar-a"><span class="avatar-head"></span><span class="avatar-body"></span></div><div class="hero-avatar avatar-b"><span class="avatar-head"></span><span class="avatar-body"></span></div><div class="hero-visual-label"><small>WORLD 01 · THE BEGINNING</small><strong>Era uma vez… vocês.</strong><span>Uma história que merece ser vivida.</span></div><div class="floating-tag tag-one">♥ &nbsp; PLAYER 01 + 02</div><div class="floating-tag tag-two">LEVEL 01 / ∞</div></div><div class="visual-caption"><span>UMA NOVA FORMA DE CELEBRAR</span><span>PORTUGAL · BRASIL · ONLINE</span></div></div>
+</section>
+<div class="marquee"><div>O VOSSO CONVITE É O INÍCIO DA AVENTURA <span>✦</span> CADA CASAL, UM UNIVERSO <span>✦</span> O VOSSO CONVITE É O INÍCIO DA AVENTURA <span>✦</span> CADA CASAL, UM UNIVERSO <span>✦</span></div></div>
+<section class="intro section-wrap" id="conceito"><div class="section-kicker">01 / MAIS DO QUE UM CONVITE</div><div class="intro-grid"><h2>Não contem apenas<br>a vossa história.<br><em>Deixem-nos jogá-la.</em></h2><div><p class="large-copy">Imaginem os vossos convidados a entrar num mundo criado a partir das vossas memórias.</p><p>Um site elegante reúne tudo sobre o grande dia. Um jogo 2D original transforma os momentos mais especiais numa aventura interativa. Duas experiências, uma só história: a vossa.</p><a class="underlined-link" href="#jogo">Descobrir a demonstração <span>↗</span></a></div></div>
+<div class="feature-grid"><article class="feature"><span class="feature-index">01</span><div class="feature-icon">⌘</div><h3>Um site só vosso</h3><p>Design exclusivo, informações do casamento, localização, programação, galeria e confirmação de presença.</p></article><article class="feature"><span class="feature-index">02</span><div class="feature-icon">✧</div><h3>Um jogo com significado</h3><p>Personagens inspirados no casal, cenários especiais, desafios, colecionáveis e surpresas escondidas.</p></article><article class="feature"><span class="feature-index">03</span><div class="feature-icon">♡</div><h3>Uma memória para sempre</h3><p>Uma experiência que os convidados podem viver antes do casamento e recordar muito depois da festa.</p></article></div></section>
+<section class="game-section" id="jogo"><div class="game-heading"><div><div class="section-kicker section-kicker-light">02 / EXPERIMENTEM AGORA</div><h2>Uma pequena amostra.<br><em>Uma grande aventura.</em></h2></div><p>Entrem no mundo Wedding Adventure. Recolham as memórias, ultrapassem os obstáculos e cheguem juntos ao castelo.</p></div>
+<div class="game-window"><div class="game-bar"><div class="game-brand"><span class="game-brand-icon">✦</span> WEDDING ADVENTURE <span class="demo-pill">DEMO PLAYABLE</span></div><div class="game-status"><span class="status-dot"></span> WORLD 01 <b id="level-name">THE MEADOW</b></div><div class="game-lives">♥ ♥ ♥</div></div>
+<div class="game-stage"><canvas id="game" width="960" height="500" aria-label="Demonstração de jogo de plataformas 2D. Use as setas ou A e D para mover e espaço para saltar."></canvas><div class="game-overlay" id="game-overlay"><div class="overlay-card"><span class="overlay-kicker">WEDDING ADVENTURE PRESENTS</span><h3>A vossa história<br>começa aqui.</h3><p>Uma aventura a dois, à procura de todas as memórias.</p><button class="button button-gold" id="start-game">Começar a jogar <span>▶</span></button></div></div><div class="game-hud"><span>MEMÓRIAS <b id="score">0 / 8</b></span><span>✦ ENCONTREM O CAMINHO ATÉ AO CASTELO</span><span>WORLD 01</span></div></div>
+<div class="game-toolbar"><div class="game-instructions"><strong id="game-message">Preparados para a aventura?</strong><small>← → ou A / D para mover &nbsp;·&nbsp; Espaço / ↑ para saltar</small></div><div class="mobile-controls"><button data-key="left" aria-label="Esquerda">←</button><button data-key="jump" aria-label="Saltar">↑</button><button data-key="right" aria-label="Direita">→</button></div><button class="restart-button" id="reset-game">↻ Reiniciar</button></div></div><p class="game-note">ESTA É APENAS UMA DEMONSTRAÇÃO. O VOSSO JOGO TERÁ PERSONAGENS, CENÁRIOS E UMA HISTÓRIA CRIADOS DE RAIZ PARA VOCÊS.</p></section>
+<section class="process section-wrap" id="experiencia"><div class="section-kicker">03 / DO SONHO À EXPERIÊNCIA</div><h2>Três passos para<br><em>um mundo só vosso.</em></h2><div class="steps"><article><span>01</span><div class="step-line"></div><h3>Contem-nos a vossa história</h3><p>Queremos conhecer como se encontraram, os vossos lugares especiais, gostos e memórias.</p></article><article><span>02</span><div class="step-line"></div><h3>Desenhamos a aventura</h3><p>Criamos o conceito, o visual, os personagens, o site e as fases do vosso jogo.</p></article><article><span>03</span><div class="step-line"></div><h3>Partilhem com quem amam</h3><p>Recebem um endereço único para enviar aos convidados e começar a celebração.</p></article></div></section>
+<section class="pricing" id="pacotes"><div class="section-wrap"><div class="section-kicker">04 / ESCOLHAM A VOSSA EXPERIÊNCIA</div><h2>Pequena ou épica.<br><em>Sempre inesquecível.</em></h2><p class="pricing-intro">Cada história merece o seu próprio universo. A experiência é construída à medida do que imaginam.</p><div class="price-grid"><article class="price-card"><span class="price-label">01 / ESSENCIAL</span><div class="price-symbol">✧</div><h3>O convite especial</h3><p>Um espaço digital elegante para contar aos convidados tudo sobre o grande dia.</p><ul><li>Site exclusivo e responsivo</li><li>Informações e localização</li><li>Galeria de fotografias</li><li>Estrutura para confirmação de presença</li></ul><a href="#criar" class="price-link">Quero saber mais <span>↗</span></a></article><article class="price-card price-featured"><span class="featured-ribbon">A EXPERIÊNCIA MAIS PEDIDA</span><span class="price-label">02 / AVENTURA</span><div class="price-symbol">♡</div><h3>O jogo é sobre vocês</h3><p>O site de casamento ganha vida com um videojogo 2D inspirado na vossa história.</p><ul><li>Tudo do formato Essencial</li><li>Personagens personalizados</li><li>Jogo 2D com fases e desafios</li><li>Memórias e mensagens escondidas</li></ul><a href="#criar" class="price-link">Quero a nossa aventura <span>↗</span></a></article><article class="price-card"><span class="price-label">03 / EXCLUSIVO</span><div class="price-symbol">♛</div><h3>Um universo inteiro</h3><p>Uma experiência expandida, com mais mundos, narrativa e detalhes especiais.</p><ul><li>Tudo do formato Aventura</li><li>Vários mundos e fases</li><li>Narrativa personalizada</li><li>Detalhes e surpresas exclusivas</li></ul><a href="#criar" class="price-link">Vamos imaginar juntos <span>↗</span></a></article></div><p class="price-disclaimer">Cada projeto recebe uma proposta personalizada. Os valores são definidos após conhecermos a dimensão da experiência.</p></div></section>
+<section class="form-section" id="criar"><div class="form-layout"><div class="form-aside"><div class="section-kicker section-kicker-light">05 / A VOSSA VEZ</div><h2>Vamos transformar<br>o vosso amor <em>numa aventura?</em></h2><p>Este é o primeiro passo. Respondam ao nosso questionário e vamos começar a imaginar o vosso universo.</p><div class="aside-quote">“Não há duas histórias iguais. Por isso, não há duas Wedding Adventures iguais.”<span>— WEDDING ADVENTURE</span></div></div>
+<form id="couple-form" class="couple-form"><div class="form-progress"><span>QUESTIONÁRIO CRIATIVO</span><span>10 PERGUNTAS</span></div>
+<div class="field-row"><label>Como se chamam? <input name="names" required placeholder="Ex.: Ana & Miguel"></label><label>Data do casamento <input name="date" type="date"></label></div>
+<label>Qual é o melhor e-mail para contacto? <input name="email" type="email" required placeholder="vossoemail@exemplo.com"></label>
+<label>Como se conheceram? <textarea name="meet" rows="3" placeholder="Contem-nos como tudo começou…"></textarea></label>
+<label>Quais são as 3 memórias mais especiais da vossa relação? <textarea name="memories" rows="3" placeholder="Uma viagem, um encontro, um pedido especial…"></textarea></label>
+<label>Que universo visual combina convosco? <select name="style"><option value="">Escolham uma inspiração</option><option>Fantasia e conto de fadas</option><option>Aventura clássica em 2D</option><option>Romântico e delicado</option><option>Pixel art retro</option><option>Divertido e descontraído</option><option>Minimalista e moderno</option><option>Surpreendam-nos!</option></select></label>
+<label>Que lugares devem fazer parte do jogo? <textarea name="places" rows="2" placeholder="Cidade, praia, local do primeiro encontro, viagem…"></textarea></label>
+<label>Como imaginam os vossos personagens? <textarea name="characters" rows="2" placeholder="Aparência, roupas, animais de estimação, poderes…"></textarea></label>
+<label>Que hobbies, piadas internas ou desafios podemos incluir? <textarea name="challenges" rows="2" placeholder="Pequenos detalhes que só vocês entendem…"></textarea></label>
+<label>Existe uma música ou mensagem que não pode faltar? <textarea name="music" rows="2" placeholder="Uma dedicatória, música especial ou frase…"></textarea></label>
+<label class="consent"><input type="checkbox" name="consent" required><span>Autorizamos o contacto sobre este projeto e compreendemos que este formulário demonstrativo prepara um resumo local, sem enviar nem armazenar os dados num servidor.</span></label>
+<button class="button button-dark submit-button" type="submit">Preparar o nosso resumo <span>↗</span></button><p class="form-note">Nesta versão, as respostas ficam no vosso dispositivo. O formulário ainda não envia dados online.</p><div id="form-result" class="form-result" hidden aria-live="polite"></div></form></div></section>
+</main>
+<footer><a class="brand footer-brand" href="#inicio"><span class="brand-symbol">W<span>✦</span>A</span><span class="brand-name">WEDDING<br>ADVENTURE</span></a><p>A vossa história merece ser jogada.</p><a href="#criar">Vamos criar? ↗</a><small>© <span id="year"></span> Wedding Adventure. Feito para histórias extraordinárias.</small></footer>
+<script src="script.js"></script>
+</body></html>
