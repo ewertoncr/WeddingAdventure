@@ -38,7 +38,7 @@
     for(let i=0;i<8;i++){const x=i*75-(camera*.16%75);rect(c,x,103+(i%3)*9,49,85,palette.far);rect(c,x+9,93+(i%3)*9,31,13,"#b6c9df");rect(c,x+20,86+(i%3)*9,12,8,"#d7e2e9");}
     for(let i=0;i<13;i++){const x=i*52-(camera*.32%52);tree(c,x,178+(i%2)*3,.72+(i%3)*.12);}
     // castle visible in the distance and destination at right
-    castle(c,385-(camera*.1%20));
+    if(!gameMode) castle(c,385);
     // platform field
     const plats=[{x:0,y:211,w:210},{x:246,y:181,w:80},{x:354,y:157,w:78},{x:465,y:188,w:92},{x:600,y:163,w:82},{x:716,y:181,w:92},{x:855,y:153,w:85},{x:1000,y:185,w:105},{x:1160,y:164,w:95},{x:1320,y:205,w:180}];
     for(const p of plats){const sx=p.x-camera;if(sx<-130||sx>w+50)continue;
@@ -48,7 +48,7 @@
     // foreground flowers and tiny grass
     for(let i=0;i<45;i++){const x=((i*37-camera*.9)%(w+30)+w+30)%(w+30);rect(c,x,205,2,7,"#33734d");rect(c,x-2,202,3,3,i%2?"#ff9bb4":"#ffe18a");}
     // floating heart pickups
-    for(let i=0;i<8;i++){const hx=[90,285,393,510,650,765,900,1085][i]-camera,hy=[183,154,130,160,137,155,127,158][i]+Math.sin(t*.07+i)*2;if(hx>-20&&hx<w+20)heart(c,hx,hy,1);}
+    if(!gameMode) for(let i=0;i<8;i++){const hx=[90,285,393,510,650,765,900,1085][i]-camera,hy=[183,154,130,160,137,155,127,158][i]+Math.sin(t*.07+i)*2;if(hx>-20&&hx<w+20)heart(c,hx,hy,1);}
     // animated couple
     const walk=Math.sin(t*.16)*1.3, bob=Math.sin(t*.11)*1.4;
     sprite(c,heroX-camera,heroY+bob,false,Math.floor(t/7)%2,1);
