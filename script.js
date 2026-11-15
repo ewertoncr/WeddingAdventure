@@ -54,20 +54,20 @@
     const flagX=1010-camera;if(flagX>-20&&flagX<w+20){rect(c,flagX,115,3,44,C.white);rect(c,flagX+3,117,22,13,C.pink);rect(c,flagX+3,130,15,4,C.gold);}
     if(player){
       const walk=Math.abs(player.vx)>.25,air=!player.ground,frame=player.celebrate?4:air?3:walk?Math.floor(t/7)%3:0;
-      drawCouple(c,player.x-camera-5,player.y-10,frame,player.face||1);
+      drawCouple(c,player.x-camera-14,player.y-27,frame,player.face||1);
     }else if(preview){
-      const x=155+(Math.sin(t*.015)*14),y=177+Math.sin(t*.1)*2;drawCouple(c,x, y,Math.floor(t/8)%3,1);
-      drawCouple(c,x+24,y+1,Math.floor(t/8+1)%3,1);
-      drawHeart(c,x+11,y-23+Math.sin(t*.1)*2,.7);
+      const x=145+(Math.sin(t*.015)*14),y=145+Math.sin(t*.1)*2;drawCouple(c,x, y,Math.floor(t/8)%3,1);
+      drawCouple(c,x+35,y+1,Math.floor(t/8+1)%3,1);
+      drawHeart(c,x+20,y-23+Math.sin(t*.1)*2,.7);
     }
     // Foreground frame.
     rect(c,0,h-3,w,3,"#fff7e8aa");
   }
   function drawCouple(c,x,y,frame,face=1){
-    if(!couple.complete||!couple.naturalWidth){rect(c,x+5,y+12,13,21,"#31589b");rect(c,x+7,y,10,12,"#efb18c");return;}
+    if(!couple.complete||!couple.naturalWidth){rect(c,x+10,y+20,28,38,"#31589b");rect(c,x+15,y+5,20,18,"#efb18c");rect(c,x+13,y+2,23,7,"#49312d");return;}
     c.save();c.imageSmoothingEnabled=false;if(face<0){c.translate(Math.round(x+32),0);c.scale(-1,1);x=0;}else x=Math.round(x);
-    c.drawImage(couple,(frame%5)*32,0,32,48,x,Math.round(y),32,48);
-    c.drawImage(couple,(frame%5)*32,48,32,48,x+22,Math.round(y+1),32,48);c.restore();
+    c.drawImage(couple,(frame%5)*48,0,48,64,x,Math.round(y),48,64);
+    c.drawImage(couple,(frame%5)*48,64,48,64,x+34,Math.round(y+1),48,64);c.restore();
   }
   // Animated cover preview.
   const preview=$("#hero-game-preview"),pctx=preview?.getContext("2d");
@@ -96,7 +96,7 @@
       pickups.forEach(p=>{if(!p.got){const x=p.x-camera;if(x>-20&&x<W+20){drawHeart(ctx,x,p.y+Math.sin(tick*.09+p.x)*2,1);drawSpark(ctx,x+7,p.y-6,tick);}}});
       enemies.forEach(drawEnemy);
       // Player rendered in the foreground.
-      drawCouple(ctx,player.x-camera-5,player.y-10,player.celebrate?4:!player.ground?3:Math.abs(player.vx)>.25?Math.floor(tick/7)%3:0,player.face);
+      drawCouple(ctx,player.x-camera-14,player.y-27,player.celebrate?4:!player.ground?3:Math.abs(player.vx)>.25?Math.floor(tick/7)%3:0,player.face);
       // In-game status panel.
       rect(ctx,7,7,120,22,"#1d2b50dd");drawHeart(ctx,13,12,.7);ctx.fillStyle=C.white;ctx.font="bold 8px monospace";ctx.fillText(score+" / "+pickups.length+" MEMORIAS",28,22);
       rect(ctx,365,7,108,22,"#1d2b50dd");ctx.fillStyle=C.gold;ctx.font="bold 7px monospace";ctx.fillText("WORLD 01 · LOVE",373,21);
