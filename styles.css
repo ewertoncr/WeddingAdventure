@@ -239,3 +239,10 @@ footer{padding:25px 6vw;background:#17254d}
 .overlay-card{width:min(430px,88%);padding:36px 30px;border:1px solid #eadbc5;border-radius:18px;box-shadow:0 25px 70px #172a2470}
 .overlay-card h3{font-size:clamp(30px,3vw,40px);line-height:1.13}
 @media(max-width:700px){.game-stage,.game-stage canvas{aspect-ratio:16/9}.overlay-card{padding:22px 18px}.overlay-card h3{font-size:28px}}
+/* Sprite-driven game reconstruction */
+.game-stage{aspect-ratio:16/9;min-height:0;background:#9eb9ad;overflow:hidden}
+.game-stage canvas{display:block;width:100%;height:auto;aspect-ratio:16/9;image-rendering:pixelated;touch-action:none}
+#hero-game-preview{image-rendering:pixelated}
+.game-overlay{background:rgba(19,37,33,.58);backdrop-filter:blur(2px)}
+.overlay-card{background:#fff9ef;border:1px solid #ead8bd;box-shadow:0 22px 65px rgba(18,34,29,.28)}
+.mobile-controls button{touch-action:none;user-select:none}
