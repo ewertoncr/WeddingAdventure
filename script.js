@@ -127,8 +127,8 @@
     }
     $("#start-game")?.addEventListener("click",()=>{if(lives<=0)reset();playing=true;overlay?.classList.add("hidden");message.textContent="A aventura começou! Recolham as 12 memórias." ;last=performance.now();});
     $("#reset-game")?.addEventListener("click",reset);
-    function down(e){const k=e.key.toLowerCase();if(["arrowleft","arrowright","arrowup"," ","a","d","w"].includes(k))e.preventDefault();if(k==="arrowleft"||k==="a")keys.left=true;if(k==="arrowright"||k==="d")keys.right=true;if((k==="arrowup"||k===" "||k==="w")&&playing)jump();}
-    function up(e){const k=e.key.toLowerCase();if(k==="arrowleft"||k==="a")keys.left=false;if(k==="arrowright"||k==="d")keys.right=false;}
+    function down(e){const k=e.key.toLowerCase();if(["arrowleft","arrowright","arrowup"," ","a","w"].includes(k))e.preventDefault();if(k==="arrowleft")keys.left=true;if(k==="arrowright")keys.right=true;if((k==="arrowup"||k===" "||k==="w"||k==="a")&&playing)jump();}
+    function up(e){const k=e.key.toLowerCase();if(k==="arrowleft")keys.left=false;if(k==="arrowright")keys.right=false;}
     window.addEventListener("keydown",down);window.addEventListener("keyup",up);window.addEventListener("blur",()=>{keys.left=keys.right=false;});
     document.querySelectorAll(".mobile-controls button").forEach(btn=>{const k=btn.dataset.key;const press=e=>{e.preventDefault();if(k==="jump")jump();else keys[k]=true;};const release=e=>{e.preventDefault();if(k!=="jump")keys[k]=false;};btn.addEventListener("pointerdown",press);["pointerup","pointerleave","pointercancel"].forEach(ev=>btn.addEventListener(ev,release));});
     reset();last=performance.now();requestAnimationFrame(step);
