@@ -1,137 +1,151 @@
 (() => {
+  "use strict";
   const $ = s => document.querySelector(s);
   const menuButton=$(".menu-toggle"),nav=$(".nav");
   menuButton?.addEventListener("click",()=>{const open=nav.classList.toggle("open");menuButton.setAttribute("aria-expanded",String(open));menuButton.textContent=open?"×":"☰";});
   nav?.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>{nav.classList.remove("open");menuButton?.setAttribute("aria-expanded","false");if(menuButton)menuButton.textContent="☰";}));
   const year=$("#year");if(year)year.textContent=new Date().getFullYear();
 
-  // 16-bit pixel-art renderer shared by the cover preview and playable demo.
-  const palette={sky1:"#5796df",sky2:"#b9c9ee",sun:"#fff0bd",far:"#8197bd",mount:"#506d91",leaf1:"#245c55",leaf2:"#347c60",leaf3:"#5ba46b",soil:"#85533f",soil2:"#ad704b",grass:"#4c984d",grass2:"#83cf62",stone:"#d9c19b",pink:"#ef4779",cream:"#fff1dc",ink:"#27385e"};
-  const rect=(c,x,y,w,h,col)=>{c.fillStyle=col;c.fillRect(Math.round(x),Math.round(y),w,h);};
-  function cloud(c,x,y){rect(c,x+4,y,19,5,"#fff7e8");rect(c,x,y+4,29,5,"#fff7e8");rect(c,x+9,y-4,12,6,"#fff7e8");}
-  function tree(c,x,y,s=1){c.save();c.translate(x,y);c.scale(s,s);rect(c,-2,-2,5,19,"#694b42");rect(c,-10,-20,21,17,palette.leaf1);rect(c,-7,-27,15,13,palette.leaf2);rect(c,-3,-31,8,8,palette.leaf3);rect(c,-8,-16,5,4,"#78b86b");c.restore();}
-  function castle(c,x){rect(c,x+7,145,62,48,"#ead8b9");rect(c,x,126,18,67,"#f6e5c7");rect(c,x+58,119,18,74,"#f6e5c7");rect(c,x+26,113,26,80,"#fff0d3");
-    rect(c,x-2,119,22,5,"#a95678");rect(c,x+56,112,22,5,"#a95678");rect(c,x+24,106,30,6,"#a95678");
-    rect(c,x+4,111,10,9,"#c87983");rect(c,x+62,104,10,9,"#c87983");rect(c,x+33,96,12,12,"#c87983");
-    rect(c,x+31,164,17,29,"#79516a");rect(c,x+35,155,9,10,"#ffcf80");rect(c,x+38,87,3,10,"#f5d27e");rect(c,x+41,89,10,4,palette.pink);
-    rect(c,x+12,139,6,10,"#6d9bb7");rect(c,x+60,133,6,10,"#6d9bb7");rect(c,x+34,125,7,10,"#6d9bb7");
+  // Original pixel-art engine: crisp tile rendering, layered scenery and an animated couple atlas.
+  const C={sky:"#76a9e5",sky2:"#d9d9e8",sun:"#fff0b9",cloud:"#fff8e8",far:"#9bafd0",far2:"#728fb2",hill:"#507c72",hill2:"#396653",leaf:"#2c694f",leaf2:"#43865a",leaf3:"#78ad61",trunk:"#775044",soil:"#89553e",soil2:"#a96b49",grass:"#4b984f",grass2:"#83ce68",stone:"#e8d4ad",gold:"#ffe18a",pink:"#ed4d80",dark:"#24345b",white:"#fff5e6",shadow:"#263b5c"};
+  const couple=new Image();couple.src="/WeddingAdventure/assets/sprites/wedding-couple-16bit.svg";
+  const rect=(c,x,y,w,h,color)=>{c.fillStyle=color;c.fillRect(Math.round(x),Math.round(y),Math.ceil(w),Math.ceil(h));};
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  function drawCloud(c,x,y,s=1){rect(c,x+7*s,y,25*s,7*s,C.cloud);rect(c,x,y+6*s,42*s,8*s,C.cloud);rect(c,x+13*s,y-6*s,19*s,9*s,C.cloud);}
+  function drawTree(c,x,y,s=1){c.save();c.translate(Math.round(x),Math.round(y));c.scale(s,s);rect(c,-3,-3,7,22,C.trunk);rect(c,-13,-23,27,20,C.leaf);rect(c,-10,-32,21,15,C.leaf2);rect(c,-5,-38,12,10,C.leaf3);rect(c,-11,-17,7,5,"#8ac66b");rect(c,4,-25,8,5,"#65a85e");c.restore();}
+  function drawCastle(c,x,ground){rect(c,x+15,ground-56,92,56,"#f0dfbd");rect(c,x,ground-94,27,94,"#f9e9ca");rect(c,x+95,ground-105,27,105,"#f9e9ca");rect(c,x+39,ground-83,48,83,"#fff0d5");
+    rect(c,x-4,ground-103,35,9,"#a75c78");rect(c,x+91,ground-114,35,9,"#a75c78");rect(c,x+34,ground-92,58,10,"#a75c78");
+    for(const [tx,ty] of [[x+7,ground-120],[x+102,ground-131],[x+55,ground-109]]){rect(c,tx,ty,18,17,"#c77a84");rect(c,tx+7,ty-7,4,7,C.gold);}
+    rect(c,x+52,ground-43,20,43,"#745064");rect(c,x+57,ground-51,10,9,C.gold);
+    rect(c,x+9,ground-78,9,14,"#76a7c5");rect(c,x+105,ground-88,9,14,"#76a7c5");rect(c,x+57,ground-68,11,15,"#76a7c5");
+    rect(c,x+119,ground-136,3,28,C.dark);rect(c,x+122,ground-135,17,9,C.pink);
   }
-  function heart(c,x,y,scale=1){const p=scale;rect(c,x+2*p,y,3*p,2*p,"#ff9ab6");rect(c,x+8*p,y,3*p,2*p,"#ff9ab6");rect(c,x,y+2*p,13*p,5*p,palette.pink);rect(c,x+2*p,y+7*p,9*p,3*p,palette.pink);rect(c,x+4*p,y+10*p,5*p,2*p,palette.pink);rect(c,x+3*p,y+2*p,3*p,2*p,"#ffd5e1");}
-  // Original groom/bride sprite sheet (4 frames per character, transparent PNG-like SVG).
-  const coupleSheet=new Image();
-  coupleSheet.src="/WeddingAdventure/assets/sprites/wedding-couple-16bit.svg";
-  function sprite(c,x,y,bride,step=0,scale=1){
-    c.save();c.imageSmoothingEnabled=false;
-    const frame=(Math.floor(performance.now()/145)+(Number(step)||0))%3;
-    if(coupleSheet.complete&&coupleSheet.naturalWidth){
-      c.drawImage(coupleSheet,frame*32,bride?40:0,32,40,
-        Math.round(x-16*scale),Math.round(y-16*scale),32*scale,40*scale);
+  function drawHeart(c,x,y,s=1){rect(c,x+2*s,y,4*s,3*s,"#ffb4c9");rect(c,x+10*s,y,4*s,3*s,"#ffb4c9");rect(c,x,y+3*s,16*s,7*s,C.pink);rect(c,x+2*s,y+10*s,12*s,4*s,C.pink);rect(c,x+5*s,y+14*s,6*s,3*s,C.pink);rect(c,x+3*s,y+3*s,4*s,3*s,"#ffe1e8");}
+  function drawSpark(c,x,y,t){const a=Math.sin(t*.12+x)*2;rect(c,x+2,y-3+a,2,9,C.gold);rect(c,x-1,y+a,8,2,C.gold);}
+  const platforms=[
+    {x:0,y:211,w:245},{x:280,y:184,w:86},{x:400,y:158,w:88},{x:525,y:190,w:105},
+    {x:670,y:164,w:90},{x:800,y:188,w:95},{x:940,y:157,w:100},{x:1085,y:184,w:112},
+    {x:1245,y:155,w:92},{x:1380,y:184,w:110},{x:1535,y:157,w:105},{x:1685,y:205,w:370}
+  ];
+  const worldWidth=2055;
+  const hearts=[{x:108,y:181},{x:319,y:154},{x:443,y:128},{x:567,y:160},{x:714,y:134},{x:846,y:158},{x:988,y:128},{x:1140,y:155},{x:1290,y:127},{x:1435,y:155},{x:1585,y:127},{x:1785,y:177}];
+  function drawWorld(c,w,h,camera,t,preview=false,player=null){
+    const sky=c.createLinearGradient(0,0,0,h);sky.addColorStop(0,C.sky);sky.addColorStop(.67,C.sky2);sky.addColorStop(1,"#f5c6aa");c.fillStyle=sky;c.fillRect(0,0,w,h);
+    rect(c,0,0,w,2,"#ffffff88");
+    rect(c,367,35,31,31,C.sun);rect(c,361,41,43,19,C.sun);rect(c,376,27,13,45,"#fff3c466");
+    for(let i=0;i<7;i++){const x=((i*111-t*.22)%(w+70)+w+70)%(w+70)-30;drawCloud(c,x,30+(i%3)*18,.72+(i%2)*.18);}
+    // Distant mountains and rolling hills, all aligned to the pixel grid.
+    for(let i=0;i<9;i++){const x=i*76-(camera*.13%76),y=112+(i%3)*9;rect(c,x,y+15,57,91,C.far);rect(c,x+10,y+2,39,18,"#c7d4e5");rect(c,x+22,y-7,18,12,"#e5e8e9");rect(c,x+5,y+34,49,5,C.far2);}
+    for(let i=0;i<7;i++){const x=i*105-(camera*.25%105);rect(c,x,168+(i%2)*7,115,65,i%2?C.hill:C.hill2);rect(c,x+10,163+(i%2)*7,75,9,"#659174");}
+    for(let i=0;i<13;i++){const x=i*59-(camera*.34%59);drawTree(c,x,195+(i%2)*3,.65+(i%3)*.1);}
+    // Platforms with grass caps, soil strata, stones and flowers.
+    platforms.forEach((p,i)=>{const x=p.x-camera;if(x> w+20||x+p.w< -20)return;
+      rect(c,x,p.y+6,p.w,46,C.soil);rect(c,x,p.y+3,p.w,7,C.grass);rect(c,x,p.y,p.w,5,C.grass2);
+      for(let q=8;q<p.w-4;q+=24){rect(c,x+q,p.y+14,9,4,"#b77a51");rect(c,x+q+9,p.y+30,5,4,"#69483c");rect(c,x+q+3,p.y+1,4,3,"#c1e77d");}
+      if(i%2===0){rect(c,x+17,p.y+20,8,6,"#d2a078");rect(c,x+Math.max(30,p.w-32),p.y+38,6,5,"#6e473d");}
+    });
+    // Tiny foreground flowers and grass tufts.
+    for(let i=0;i<52;i++){const x=((i*31-camera*.92)%(w+24)+w+24)%(w+24);rect(c,x,204,2,7,"#34724e");rect(c,x-2,201,4,3,i%3===0?"#fff0a8":i%2?"#ff9fbd":"#e9e5e0");}
+    // Floating hearts for the cover and game world.
+    hearts.forEach((p,i)=>{const x=p.x-camera,y=p.y+Math.sin(t*.08+i)*2;if(x>-20&&x<w+20)drawHeart(c,x,y,1);});
+    // Decorative castle appears at the destination only.
+    const castleX=1900-camera;if(castleX>-150&&castleX<w+150)drawCastle(c,castleX,205);
+    // Checkpoint flag.
+    const flagX=1010-camera;if(flagX>-20&&flagX<w+20){rect(c,flagX,115,3,44,C.white);rect(c,flagX+3,117,22,13,C.pink);rect(c,flagX+3,130,15,4,C.gold);}
+    if(player){
+      const walk=Math.abs(player.vx)>.25,air=!player.ground,frame=player.celebrate?4:air?3:walk?Math.floor(t/7)%3:0;
+      drawCouple(c,player.x-camera-5,player.y-10,frame,player.face||1);
     }else{
-      rect(c,x-6,y+20,13,3,"#25375a66");
-      rect(c,x-5,y+8,11,13,bride?"#fff0e8":"#31549b");
-      rect(c,x-5,y-5,11,13,"#efb18c");
-      rect(c,x-6,y-7,13,5,bride?"#58372f":"#56352e");
+      const x=155+(Math.sin(t*.015)*14),y=177+Math.sin(t*.1)*2;drawCouple(c,x, y,Math.floor(t/8)%3,1);
+      drawCouple(c,x+24,y+1,Math.floor(t/8+1)%3,1);
+      drawHeart(c,x+11,y-23+Math.sin(t*.1)*2,.7);
     }
-    c.restore();
+    // Foreground frame.
+    rect(c,0,h-3,w,3,"#fff7e8aa");
   }
-  function drawScene(c,w,h,camera,t,heroX,heroY,gameMode){
-    const sky=c.createLinearGradient(0,0,0,h);sky.addColorStop(0,palette.sky1);sky.addColorStop(.62,palette.sky2);sky.addColorStop(1,"#f6c5a2");c.fillStyle=sky;c.fillRect(0,0,w,h);
-    rect(c,0,0,w,2,"#ffffff66");
-    // sunset glow
-    rect(c,365,35,30,30,palette.sun);rect(c,359,41,42,18,palette.sun);rect(c,370,29,20,42,"#fff0bd55");
-    for(let i=0;i<6;i++){const x=((i*103-t*.18)%(w+50)+w+50)%(w+50)-30;cloud(c,x,35+(i%3)*17);}
-    // distant mountains, layered pixel ridges
-    for(let i=0;i<8;i++){const x=i*75-(camera*.16%75);rect(c,x,103+(i%3)*9,49,85,palette.far);rect(c,x+9,93+(i%3)*9,31,13,"#b6c9df");rect(c,x+20,86+(i%3)*9,12,8,"#d7e2e9");}
-    for(let i=0;i<13;i++){const x=i*52-(camera*.32%52);tree(c,x,178+(i%2)*3,.72+(i%3)*.12);}
-    // castle visible in the distance and destination at right
-    if(!gameMode) castle(c,385);
-    // platform field
-    const plats=[{x:0,y:211,w:210},{x:246,y:181,w:80},{x:354,y:157,w:78},{x:465,y:188,w:92},{x:600,y:163,w:82},{x:716,y:181,w:92},{x:855,y:153,w:85},{x:1000,y:185,w:105},{x:1160,y:164,w:95},{x:1320,y:205,w:180}];
-    for(const p of plats){const sx=p.x-camera;if(sx<-130||sx>w+50)continue;
-      rect(c,sx,p.y+6,p.w,43,palette.soil);rect(c,sx,p.y+3,p.w,8,palette.grass);rect(c,sx,p.y,p.w,5,palette.grass2);
-      for(let tx=sx+7;tx<sx+p.w-4;tx+=16){rect(c,tx,p.y+13,8,3,"#a96d4b");rect(c,tx+4,p.y+28,3,3,"#68483d");rect(c,tx+1,p.y+1,3,3,"#b4e77b");}
-    }
-    // foreground flowers and tiny grass
-    for(let i=0;i<45;i++){const x=((i*37-camera*.9)%(w+30)+w+30)%(w+30);rect(c,x,205,2,7,"#33734d");rect(c,x-2,202,3,3,i%2?"#ff9bb4":"#ffe18a");}
-    // floating heart pickups
-    if(!gameMode) for(let i=0;i<8;i++){const hx=[90,285,393,510,650,765,900,1085][i]-camera,hy=[183,154,130,160,137,155,127,158][i]+Math.sin(t*.07+i)*2;if(hx>-20&&hx<w+20)heart(c,hx,hy,1);}
-    // animated couple
-    const walk=Math.sin(t*.16)*1.3, bob=Math.sin(t*.11)*1.4;
-    sprite(c,heroX-camera,heroY+bob,false,Math.floor(t/7)%2,1);
-    sprite(c,heroX-camera-18,heroY+bob,true,Math.floor(t/7+1)%2,1);
-    if(!gameMode){heart(c,heroX-camera-5,heroY-22+Math.sin(t*.1)*2,1);}
-    // foreground border highlights
-    rect(c,0,h-3,w,3,"#ffffff55");
+  function drawCouple(c,x,y,frame,face=1){
+    if(!couple.complete||!couple.naturalWidth){rect(c,x+5,y+12,13,21,"#31589b");rect(c,x+7,y,10,12,"#efb18c");return;}
+    c.save();c.imageSmoothingEnabled=false;if(face<0){c.translate(Math.round(x+32),0);c.scale(-1,1);x=0;}else x=Math.round(x);
+    c.drawImage(couple,(frame%5)*32,0,32,48,x,Math.round(y),32,48);
+    c.drawImage(couple,(frame%5)*32,48,32,48,x+22,Math.round(y+1),32,48);c.restore();
   }
-
-  // Hero cover preview loops a little playable-looking vignette.
+  // Animated cover preview.
   const preview=$("#hero-game-preview"),pctx=preview?.getContext("2d");
-  if(pctx){pctx.imageSmoothingEnabled=false;let frame=0;function previewLoop(){frame++;drawScene(pctx,480,270,0,frame,175+(frame*.24)%95,187,false);requestAnimationFrame(previewLoop);}previewLoop();}
+  if(pctx){pctx.imageSmoothingEnabled=false;let tick=0;const loop=()=>{tick++;drawWorld(pctx,480,270,0,tick,true);requestAnimationFrame(loop);};loop();}
 
-  // Playable side-scrolling platform game.
+  // Playable platform adventure with 12 memories, enemies, checkpoint and finish sequence.
   const canvas=$("#game"),ctx=canvas?.getContext("2d");
   if(ctx){
-    const W=480,H=250,WORLD=1500,GRAVITY=.42;
+    const W=480,H=250,GRAVITY=.43;
     ctx.imageSmoothingEnabled=false;
-    const platforms=[{x:0,y:211,w:210},{x:246,y:181,w:80},{x:354,y:157,w:78},{x:465,y:188,w:92},{x:600,y:163,w:82},{x:716,y:181,w:92},{x:855,y:153,w:85},{x:1000,y:185,w:105},{x:1160,y:164,w:95},{x:1320,y:205,w:180}];
-    const pickups=[90,285,393,510,650,765,900,1085].map((x,i)=>({x,y:[183,154,130,160,137,155,127,158][i],got:false}));
     const keys={left:false,right:false};
-    let player={x:28,y:187,vx:0,vy:0,w:13,h:24,ground:false,face:1};
-    let camera=0,frame=0,score=0,playing=false,won=false,raf=0,last=0,particles=[];
-    const scoreEl=$("#score"),overlay=$("#game-overlay"),message=$("#game-message"),level=$("#level-name");
-    const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
-    function reset(){player={x:28,y:187,vx:0,vy:0,w:13,h:24,ground:false,face:1};camera=0;frame=0;score=0;playing=false;won=false;particles=[];pickups.forEach(p=>p.got=false);keys.left=keys.right=false;scoreEl.textContent="0 / 8";message.textContent="Recolham 8 corações e cheguem ao castelo.";overlay.classList.remove("hidden");if(level)level.textContent="THE MEADOW";}
-    function jump(){if(playing&&!won&&player.ground){player.vy=-7.9;player.ground=false;}}
-    function burst(x,y){for(let i=0;i<10;i++){const a=i*Math.PI/5;particles.push({x,y,vx:Math.cos(a)*1.2,vy:Math.sin(a)*1.2-1,life:24});}}
+    const player={x:28,y:173,vx:0,vy:0,w:19,h:37,ground:false,face:1,celebrate:false};
+    const pickups=hearts.map(p=>({...p,got:false}));
+    const enemies=[{x:590,y:168,min:545,max:625,v:0.65,alive:true},{x:1190,y:162,min:1120,max:1215,v:0.72,alive:true},{x:1510,y:166,min:1460,max:1570,v:0.8,alive:true}];
+    let camera=0,tick=0,score=0,lives=3,playing=false,won=false,checkpoint=28,raf=0,last=0,particles=[];
+    const scoreEl=$("#score"),overlay=$("#game-overlay"),message=$("#game-message"),level=$("#level-name"),lifeEl=$(".game-lives");
+    function updateHud(){if(scoreEl)scoreEl.textContent=score+" / "+pickups.length;if(lifeEl)lifeEl.textContent="♥ ".repeat(lives).trim()||"♡";}
+    function reset(){player.x=28;player.y=173;player.vx=player.vy=0;player.ground=false;player.face=1;player.celebrate=false;camera=0;tick=0;score=0;lives=3;checkpoint=28;won=false;playing=false;particles=[];pickups.forEach(p=>p.got=false);enemies.forEach(e=>e.alive=true);keys.left=keys.right=false;updateHud();if(message)message.textContent="Recolham as 12 memórias, evitem os guardiões e cheguem ao castelo.";overlay?.classList.remove("hidden");if(level)level.textContent="THE MEADOW";}
+    function jump(){if(playing&&!won&&player.ground){player.vy=-8.3;player.ground=false;}}
+    function sparkle(x,y,color=C.gold){for(let i=0;i<12;i++){const a=i*Math.PI/6;particles.push({x,y,vx:Math.cos(a)*1.4,vy:Math.sin(a)*1.4-1,life:28,color});}}
+    function respawn(){lives--;updateHud();if(lives<=0){playing=false;overlay?.classList.remove("hidden");const h=overlay?.querySelector("h3"),p=overlay?.querySelector("p"),b=$("#start-game");if(h)h.textContent="A aventura continua.";if(p)p.textContent="As memórias continuam à vossa espera. Tentem novamente!";if(b)b.textContent="Jogar novamente ▶";return;}
+      player.x=checkpoint;player.y=130;player.vx=player.vy=0;message.textContent="Respirem fundo — ainda têm "+lives+" vidas!";}
+    function drawEnemy(e){const x=e.x-camera;if(x< -30||x>W+30||!e.alive)return;rect(ctx,x+3,e.y+25,21,4,"#28385c66");rect(ctx,x+4,e.y+9,18,15,"#8b5a91");rect(ctx,x+1,e.y+13,24,10,"#a96a9d");rect(ctx,x+6,e.y+4,14,8,"#c68eb7");rect(ctx,x+7,e.y+10,3,4,C.white);rect(ctx,x+16,e.y+10,3,4,C.white);rect(ctx,x+8,e.y+11,2,2,C.dark);rect(ctx,x+17,e.y+11,2,2,C.dark);rect(ctx,x+9,e.y+20,3,3,C.gold);rect(ctx,x+16,e.y+20,3,3,C.gold);}
     function draw(){
-      drawScene(ctx,W,H,camera,frame,player.x+player.w/2,player.y,true);
-      // cover the scene with a camera-translated world layer for moving pickups/platforms/castle
-      // redraw pickups in camera space; the background is intentionally parallax.
-      pickups.forEach(p=>{if(p.got)return;const x=p.x-camera,y=p.y+Math.sin(frame*.08+p.x)*2;if(x>-12&&x<W+12)heart(ctx,x,y,1);});
-      // draw the controlled hero over the background couple
-      sprite(ctx,player.x-camera,player.y,false,Math.floor(frame/7)%2,1);
-      sprite(ctx,player.x-camera-18,player.y+1,true,Math.floor(frame/7+1)%2,1);
-      // HUD in-game
-      rect(ctx,7,7,90,20,"#18294dcc");rect(ctx,11,10,82,14,"#fff4df");heart(ctx,15,12,.65);ctx.fillStyle="#29395e";ctx.font="bold 8px monospace";ctx.fillText(score+" / 8",29,21);
-      rect(ctx,365,7,108,20,"#18294dcc");ctx.fillStyle="#fff4df";ctx.font="bold 7px monospace";ctx.fillText("WORLD 1 - LOVE",372,20);
-      if(won){rect(ctx,0,0,W,H,"#17254dcc");rect(ctx,77,74,326,105,"#fff1dc");rect(ctx,80,77,320,99,"#f7dfb9");ctx.fillStyle="#25365d";ctx.textAlign="center";ctx.font="bold 15px monospace";ctx.fillText("LEVEL COMPLETE!",W/2,105);ctx.font="9px monospace";ctx.fillText("A VOSSA AVENTURA COMECou!",W/2,125);ctx.fillText("♥ 8/8 MEMORIAS ♥",W/2,145);ctx.textAlign="left";}
-      particles.forEach(p=>{rect(ctx,p.x-camera,p.y,2,2,"#ffe18a");});
+      drawWorld(ctx,W,H,camera,tick,false,null);
+      pickups.forEach(p=>{if(!p.got){const x=p.x-camera;if(x>-20&&x<W+20){drawHeart(ctx,x,p.y+Math.sin(tick*.09+p.x)*2,1);drawSpark(ctx,x+7,p.y-6,tick);}}});
+      enemies.forEach(drawEnemy);
+      // Player rendered in the foreground.
+      drawCouple(ctx,player.x-camera-5,player.y-10,player.celebrate?4:!player.ground?3:Math.abs(player.vx)>.25?Math.floor(tick/7)%3:0,player.face);
+      // In-game status panel.
+      rect(ctx,7,7,120,22,"#1d2b50dd");drawHeart(ctx,13,12,.7);ctx.fillStyle=C.white;ctx.font="bold 8px monospace";ctx.fillText(score+" / "+pickups.length+" MEMORIAS",28,22);
+      rect(ctx,365,7,108,22,"#1d2b50dd");ctx.fillStyle=C.gold;ctx.font="bold 7px monospace";ctx.fillText("WORLD 01 · LOVE",373,21);
+      particles.forEach(p=>rect(ctx,p.x-camera,p.y,3,3,p.color));
+      if(won){rect(ctx,0,0,W,H,"#17254dcc");rect(ctx,62,63,356,125,"#fff2dc");rect(ctx,66,67,348,117,"#f4dfbd");ctx.fillStyle=C.dark;ctx.textAlign="center";ctx.font="bold 17px monospace";ctx.fillText("AVENTURA COMPLETA!",W/2,98);ctx.font="10px monospace";ctx.fillText("12 MEMORIAS REUNIDAS",W/2,121);ctx.fillText("E O VOSSO AMOR É O TESOURO.",W/2,139);ctx.font="18px monospace";ctx.fillText("♥  ♥  ♥",W/2,164);ctx.textAlign="left";}
     }
-    function update(ts){
-      const dt=Math.min((ts-last)/16.67||1,1.7);last=ts;frame+=dt;
+    function step(ts){
+      const dt=Math.min((ts-last)/16.667||1,1.6);last=ts;tick+=dt;
       if(playing&&!won){
         const prevBottom=player.y+player.h;
-        if(keys.left){player.vx-=.42*dt;player.face=-1;}if(keys.right){player.vx+=.42*dt;player.face=1;}
+        if(keys.left){player.vx-=.45*dt;player.face=-1;}if(keys.right){player.vx+=.45*dt;player.face=1;}
         if(!keys.left&&!keys.right)player.vx*=Math.pow(.78,dt);
-        player.vx=clamp(player.vx,-2.5,2.5);player.x=clamp(player.x+player.vx*dt,0,WORLD-player.w);
+        player.vx=clamp(player.vx,-2.65,2.65);player.x=clamp(player.x+player.vx*dt,0,worldWidth-player.w);
         player.vy+=GRAVITY*dt;player.y+=player.vy*dt;player.ground=false;
-        for(const p of platforms){const overlap=player.x+player.w>p.x&&player.x<p.x+p.w;const bottom=player.y+player.h;if(overlap&&player.vy>=0&&prevBottom<=p.y+4&&bottom>=p.y&&bottom<=p.y+16){player.y=p.y-player.h;player.vy=0;player.ground=true;}}
-        if(player.y>H+40){player.x=Math.max(8,player.x-90);player.y=120;player.vy=0;player.vx=0;message.textContent="Ops! Tentem novamente. ♥";}
-        pickups.forEach(p=>{if(!p.got&&Math.abs(player.x+6-p.x)<13&&Math.abs(player.y+11-p.y)<16){p.got=true;score++;scoreEl.textContent=score+" / 8";burst(p.x,p.y);message.textContent="Coração encontrado! "+score+" de 8."; }});
-        camera=clamp(player.x-150,0,WORLD-W);
-        if(player.x>1390&&score===8){won=true;message.textContent="Conseguiram! O castelo é vosso. ♥";}
+        platforms.forEach(p=>{const overlap=player.x+player.w>p.x&&player.x<p.x+p.w,bottom=player.y+player.h;if(overlap&&player.vy>=0&&prevBottom<=p.y+5&&bottom>=p.y&&bottom<=p.y+18){player.y=p.y-player.h;player.vy=0;player.ground=true;}});
+        if(player.y>H+45)respawn();
+        pickups.forEach(p=>{if(!p.got&&Math.abs(player.x+10-p.x)<17&&Math.abs(player.y+17-p.y)<22){p.got=true;score++;updateHud();sparkle(p.x,p.y);message.textContent="Memória encontrada! "+score+" de "+pickups.length+" ♥";}});
+        enemies.forEach(e=>{if(!e.alive)return;e.x+=e.v*dt;if(e.x<e.min||e.x>e.max)e.v*=-1;
+          if(player.x+player.w>e.x+3&&player.x<e.x+24&&player.y+player.h>e.y+5&&player.y<e.y+29){
+            if(player.vy>1&&player.y+player.h<e.y+18){e.alive=false;player.vy=-5;sparkle(e.x,e.y,C.pink);message.textContent="Guardião ultrapassado!";}else{player.x=Math.max(checkpoint,player.x-55);player.vx=0;player.vy=-3;respawn();}
+          }});
+        if(player.x>970&&checkpoint<1000){checkpoint=1015;message.textContent="Ponto de controlo ativado! ✦";}
+        camera=clamp(player.x-155,0,worldWidth-W);
+        if(player.x>1880&&score===pickups.length){won=true;player.celebrate=true;message.textContent="Conseguiram! Todas as memórias estão reunidas. ♥";}
+        else if(player.x>1880&&score<pickups.length){player.x=1870;message.textContent="Faltam "+(pickups.length-score)+" memórias para abrir o castelo.";}
       }
-      particles=particles.filter(p=>p.life-->0);draw();raf=requestAnimationFrame(update);
+      particles=particles.filter(p=>p.life-->0);draw();raf=requestAnimationFrame(step);
     }
-    $("#start-game")?.addEventListener("click",()=>{playing=true;overlay.classList.add("hidden");message.textContent="Recolham os 8 corações e cheguem ao castelo!";});
+    $("#start-game")?.addEventListener("click",()=>{if(lives<=0)reset();playing=true;overlay?.classList.add("hidden");message.textContent="A aventura começou! Recolham as 12 memórias." ;last=performance.now();});
     $("#reset-game")?.addEventListener("click",reset);
-    function keyDown(e){const k=e.key.toLowerCase();if(["arrowleft","arrowright","arrowup"," ","a","d","w"].includes(k))e.preventDefault();if(k==="arrowleft"||k==="a")keys.left=true;if(k==="arrowright"||k==="d")keys.right=true;if((k==="arrowup"||k===" "||k==="w")&&playing)jump();}
-    function keyUp(e){const k=e.key.toLowerCase();if(k==="arrowleft"||k==="a")keys.left=false;if(k==="arrowright"||k==="d")keys.right=false;}
-    window.addEventListener("keydown",keyDown);window.addEventListener("keyup",keyUp);
-    document.querySelectorAll(".mobile-controls button").forEach(btn=>{const key=btn.dataset.key;const down=e=>{e.preventDefault();if(key==="jump")jump();else keys[key]=true;};const up=e=>{e.preventDefault();if(key!=="jump")keys[key]=false;};btn.addEventListener("pointerdown",down);["pointerup","pointerleave","pointercancel"].forEach(ev=>btn.addEventListener(ev,up));});
-    reset();last=performance.now();requestAnimationFrame(update);
+    function down(e){const k=e.key.toLowerCase();if(["arrowleft","arrowright","arrowup"," ","a","d","w"].includes(k))e.preventDefault();if(k==="arrowleft"||k==="a")keys.left=true;if(k==="arrowright"||k==="d")keys.right=true;if((k==="arrowup"||k===" "||k==="w")&&playing)jump();}
+    function up(e){const k=e.key.toLowerCase();if(k==="arrowleft"||k==="a")keys.left=false;if(k==="arrowright"||k==="d")keys.right=false;}
+    window.addEventListener("keydown",down);window.addEventListener("keyup",up);window.addEventListener("blur",()=>{keys.left=keys.right=false;});
+    document.querySelectorAll(".mobile-controls button").forEach(btn=>{const k=btn.dataset.key;const press=e=>{e.preventDefault();if(k==="jump")jump();else keys[k]=true;};const release=e=>{e.preventDefault();if(k!=="jump")keys[k]=false;};btn.addEventListener("pointerdown",press);["pointerup","pointerleave","pointercancel"].forEach(ev=>btn.addEventListener(ev,release));});
+    reset();last=performance.now();requestAnimationFrame(step);
   }
 
-  // The inquiry form builds a copyable local brief; it does not submit to a server.
+  // The inquiry form creates a private, copyable brief in this browser only.
   const form=$("#couple-form"),result=$("#form-result");
   form?.addEventListener("submit",e=>{e.preventDefault();if(!form.reportValidity())return;
     const labels={names:"Nomes",date:"Data do casamento",email:"E-mail",meet:"Como se conheceram",memories:"Memórias especiais",style:"Estilo visual",places:"Lugares e cenários",characters:"Personagens",challenges:"Desafios e referências",music:"Música e mensagem"};
     const data=new FormData(form),lines=["WEDDING ADVENTURE — RESUMO INICIAL",""];
     Object.entries(labels).forEach(([k,l])=>{const v=String(data.get(k)||"").trim();if(v)lines.push(l+": "+v);});
-    const summary=lines.join("\n");result.hidden=false;result.innerHTML="<strong>O vosso resumo está pronto!</strong><br>Copiem o texto para o guardar ou partilhar connosco.";
+    const summary=lines.join("\n");result.hidden=false;result.replaceChildren();
+    const heading=document.createElement("strong");heading.textContent="O vosso resumo está pronto!";
+    const note=document.createElement("p");note.textContent="Copiem o texto para o guardar ou partilhar connosco.";
     const pre=document.createElement("pre");pre.textContent=summary;pre.style.cssText="white-space:pre-wrap;font:10px/1.7 DM Sans,sans-serif;background:#fff;padding:12px;max-height:220px;overflow:auto";
     const copy=document.createElement("button");copy.type="button";copy.textContent="Copiar respostas";
     copy.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(summary);copy.textContent="Copiado ✓";}catch(_){const a=document.createElement("textarea");a.value=summary;result.appendChild(a);a.select();document.execCommand("copy");a.remove();copy.textContent="Copiado ✓";}});
-    result.append(pre,copy);result.scrollIntoView({behavior:"smooth",block:"nearest"});
+    result.append(heading,note,pre,copy);result.scrollIntoView({behavior:"smooth",block:"nearest"});
   });
 })();
