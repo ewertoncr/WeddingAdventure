@@ -106,9 +106,9 @@
       if(ending){
         const elapsed=tick-endingStarted,gx=player.x-camera,bx=1900-camera;
         if(elapsed<105){
-          drawGroom(ctx,gx,player.y-45,elapsed>55?2:1,1);
+          drawGroom(ctx,gx,player.y-27,elapsed>55?2:1,1);
           const phase=Math.floor((elapsed%54)/18),brideFrame=phase===0?1:phase===1?3:4;
-          const brideY=phase===1?105:phase===0?126:120;
+          const brideY=phase===1?110:phase===0?141:135;
           drawBride(ctx,bx,brideY,brideFrame);
           if(elapsed>42){drawHeart(ctx,bx+8,90+Math.sin(tick*.18)*4,.8);drawHeart(ctx,bx+35,75+Math.sin(tick*.15+1)*4,.65);}
         }else{
@@ -116,7 +116,7 @@
           // The final atlas poses bring the groom and bride together in a close embrace.
           if(couple.complete&&couple.naturalWidth){
             ctx.save();ctx.imageSmoothingEnabled=false;
-            drawGroom(ctx,gx+5,player.y-47,0,1);drawBride(ctx,gx+25,player.y-46,0);
+            drawGroom(ctx,gx+5,player.y-27,0,1);drawBride(ctx,gx+25,player.y-26,0);
             // Pixel-art arms wrap around shoulders and waist to make the embrace readable.
             ctx.lineCap="round";ctx.lineJoin="round";
             ctx.strokeStyle="#263e78";ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(gx+37,player.y-19);ctx.quadraticCurveTo(gx+57,player.y-4,gx+66,player.y-20);ctx.stroke();
@@ -130,7 +130,7 @@
         }
       }else{
         if(player.x>1500)drawBride(ctx,1900-camera,126,0);
-        drawGroom(ctx,player.x-camera,player.y-45,!player.ground?3:Math.abs(player.vx)>.25?Math.floor(tick/7)%3:0,player.face);
+        drawGroom(ctx,player.x-camera,player.y-27,!player.ground?3:Math.abs(player.vx)>.25?Math.floor(tick/7)%3:0,player.face);
       }
       // In-game status panel.
       rect(ctx,7,7,120,22,"#1d2b50dd");drawHeart(ctx,13,12,.7);ctx.fillStyle=C.white;ctx.font="bold 8px monospace";ctx.fillText(score+" / "+pickups.length+" MEMORIAS",28,22);
