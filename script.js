@@ -9,6 +9,10 @@ canvas.width=W;canvas.height=H;
 if(preview){preview.width=W;preview.height=H;}
 ctx.imageSmoothingEnabled=true;
 if(pctx)pctx.imageSmoothingEnabled=true;
+const art={groom:new Image(),bride:new Image(),background:new Image()};
+art.groom.src="assets/art/groom-hero.svg";
+art.bride.src="assets/art/bride-hero.svg";
+art.background.src="assets/art/enchanted-kingdom.svg";
 if($("#year"))$("#year").textContent=new Date().getFullYear();
 
 const nav=$(".nav"),menu=$(".menu-toggle");
