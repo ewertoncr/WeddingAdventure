@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 220">
+<defs>
+ <linearGradient id="coat" x2="1" y2="1"><stop stop-color="#526f91"/><stop offset=".55" stop-color="#263f66"/><stop offset="1" stop-color="#172945"/></linearGradient>
+ <linearGradient id="gold" x2="0" y2="1"><stop stop-color="#ffe6a0"/><stop offset="1" stop-color="#b77a35"/></linearGradient>
+ <radialGradient id="skin"><stop stop-color="#f5c9a4"/><stop offset="1" stop-color="#bd8062"/></radialGradient>
+ <filter id="shadow"><feGaussianBlur stdDeviation="3"/></filter>
+</defs>
+<ellipse cx="80" cy="208" rx="39" ry="7" fill="#152238" opacity=".3" filter="url(#shadow)"/>
+<!-- boots and legs --><path d="M57 157l-4 35q-15 8-14 16h39l8-45zM98 157l8 35q15 7 14 16H82l-4-43z" fill="#26334a" stroke="#121f34" stroke-width="3"/><path d="M43 203h36l-1 7H40q-4-3 3-7M103 203h35q4 4 0 7h-34z" fill="#171f30"/>
+<!-- cape --><path d="M58 67Q20 91 29 163l31-9 24-70z" fill="#7e294d" stroke="#d4a45e" stroke-width="3"/><path d="M34 151q13-12 25-10l-4 18-26 8z" fill="#a74364"/>
+<!-- torso jacket --><path d="M54 74q26-15 52 0l18 83q-42 17-79 0z" fill="url(#coat)" stroke="#d3a75d" stroke-width="3"/>
+<path d="M68 73l12 20 13-20 9 8-12 54-11 12-12-12-10-54z" fill="#f6ead6" stroke="#d7b77c" stroke-width="2"/>
+<path d="M78 91l5 0 5 10-7 9-8-9z" fill="#a93656" stroke="#f1c875" stroke-width="2"/>
+<path d="M82 111l-5 29 7 12 8-12-5-29" fill="#e9d9bd"/>
+<!-- belt and ornate clasp --><path d="M49 151q31 10 66 0l3 10q-35 14-72 0z" fill="#b77b3c"/><circle cx="82" cy="158" r="7" fill="url(#gold)" stroke="#fff0b5" stroke-width="2"/><path d="M82 151l2 6-2 7-3-7z" fill="#fff2c0"/>
+<!-- arms --><path d="M56 84q-15 10-17 37l8 18 13-4-4-17 15-24zM105 83q17 11 18 36l-8 19-13-5 4-17-15-24z" fill="url(#coat)" stroke="#d4a45e" stroke-width="3"/><path d="M43 134l9 5-1 13q-8 7-14-1l-1-10zM113 134l-9 5 1 13q8 7 14-1l1-10z" fill="url(#skin)"/>
+<!-- neck and face --><path d="M69 60v19q12 13 25 0V59" fill="url(#skin)"/><path d="M51 30q1-25 31-25 30 0 31 27l-5 34q-8 19-28 20-21-2-29-22z" fill="url(#skin)" stroke="#754c43" stroke-width="2"/>
+<!-- hair --><path d="M49 39Q43 4 78 3q34-2 39 28l-9 5-7-17q-14 11-39 7l-5 19z" fill="#38272a"/><path d="M53 27q15-20 42-12-17 1-24 13z" fill="#68433a"/>
+<!-- face details --><path d="M66 48q6-5 12 0M91 48q6-5 11 0" fill="none" stroke="#5b352e" stroke-width="2.5" stroke-linecap="round"/><ellipse cx="73" cy="53" rx="2.6" ry="3.5" fill="#29384b"/><ellipse cx="97" cy="53" rx="2.6" ry="3.5" fill="#29384b"/><path d="M83 54l-3 10 6 1M75 70q9 7 18-1" fill="none" stroke="#915a4a" stroke-width="2" stroke-linecap="round"/>
+<!-- circlet and feather --><path d="M51 29q30-15 59 0" fill="none" stroke="url(#gold)" stroke-width="5"/><path d="M105 24q20-17 25-5-8 3-17 19z" fill="#e8d7b3" stroke="#a97942" stroke-width="2"/><circle cx="81" cy="21" r="5" fill="#74d4d0" stroke="#fff0b7" stroke-width="2"/>
+<!-- glove cuffs and magic glint --><path d="M39 146l13 5M108 151l13-5" stroke="#f1cb82" stroke-width="3"/><path d="M20 83l4-10 4 10 10 4-10 4-4 10-4-10-10-4z" fill="#ffe7a0"/><path d="M137 95l3-7 3 7 7 3-7 3-3 7-3-7-7-3z" fill="#b9f4ee"/>
+</svg>
