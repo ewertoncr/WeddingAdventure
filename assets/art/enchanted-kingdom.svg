@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 720">
+<defs>
+ <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#293d70"/><stop offset=".42" stop-color="#7189aa"/><stop offset=".72" stop-color="#e4b7a4"/><stop offset="1" stop-color="#f2d6ad"/></linearGradient>
+ <linearGradient id="mount" x2="0" y2="1"><stop stop-color="#8292a4"/><stop offset="1" stop-color="#354c62"/></linearGradient>
+ <linearGradient id="grass" x2="0" y2="1"><stop stop-color="#557d68"/><stop offset="1" stop-color="#1f493d"/></linearGradient>
+ <linearGradient id="water" x2="0" y2="1"><stop stop-color="#a5dce0"/><stop offset="1" stop-color="#478b9b"/></linearGradient>
+ <radialGradient id="moon"><stop stop-color="#fff4cf"/><stop offset="1" stop-color="#e4b77f" stop-opacity="0"/></radialGradient>
+ <filter id="blur"><feGaussianBlur stdDeviation="12"/></filter>
+</defs>
+<rect width="1600" height="720" fill="url(#sky)"/>
+<circle cx="1240" cy="150" r="130" fill="url(#moon)"/><circle cx="1240" cy="150" r="48" fill="#fff0cf" opacity=".85"/>
+<g fill="#fff5df" opacity=".72"><circle cx="170" cy="95" r="2"/><circle cx="330" cy="180" r="2"/><circle cx="540" cy="80" r="3"/><circle cx="770" cy="150" r="2"/><circle cx="1020" cy="70" r="2"/><circle cx="1440" cy="240" r="3"/></g>
+<!-- distant mountains --><path d="M0 430L130 265l110 125 180-225 180 245 160-180 150 200 190-250 180 240 150-170 170 170v300H0z" fill="url(#mount)" opacity=".75"/>
+<path d="M0 470L170 350l120 85 170-165 160 190 190-130 140 140 160-190 170 150 150-110 170 120v280H0z" fill="#526e77" opacity=".8"/>
+<!-- waterfall cliffs --> <path d="M0 390q180-70 350 15l-45 315H0z" fill="#405c59"/><path d="M1240 340q180-60 360 30v350h-390z" fill="#405c59"/>
+<!-- waterfall --> <path d="M1370 350q-20 120 0 260l-35 110h120l-40-120q-15-120-4-250z" fill="url(#water)" opacity=".85"/><path d="M1395 365q-8 130 9 235" stroke="#e3fbf0" stroke-width="9" opacity=".6" fill="none"/>
+<!-- rolling forest floor --> <path d="M0 520q210-95 430 8t440-5 390-5 340 12v190H0z" fill="url(#grass)"/>
+<path d="M0 610q220-80 430-5t410-10 420-4 340 10v119H0z" fill="#244b3e"/>
+<!-- castle on ridge --> <g transform="translate(1030 250)"><path d="M0 220V65h65V5h48v60h60V20h50v45h60v155z" fill="#e8d6bd" stroke="#987c79" stroke-width="7"/><path d="M-8 66L89-12l86 78M174 66l34-76 36 76M233 66l36-57 35 57" fill="#9c6875" stroke="#e9c99c" stroke-width="6"/><path d="M110 220v-78q35-75 70 0v78" fill="#4b4354"/><g fill="#f6dc9a"><rect x="27" y="105" width="15" height="27" rx="8"/><rect x="212" y="104" width="15" height="27" rx="8"/><rect x="85" y="94" width="14" height="25" rx="7"/></g><path d="M80 5v-44l48 14v31" fill="#ad536b" stroke="#e7c991" stroke-width="3"/></g>
+<!-- foreground old trees --> <g fill="#203d35"><path d="M0 620q35-240 80-240t90 240M80 650q20-190 80-210t110 210M1450 670q25-230 95-250t100 250M1350 680q15-180 70-210t90 210"/></g>
+<g fill="#557d5c"><circle cx="65" cy="410" r="65"/><circle cx="155" cy="455" r="78"/><circle cx="1480" cy="425" r="85"/><circle cx="1390" cy="465" r="70"/></g>
+<!-- enchanted glowing path --> <path d="M0 690q230-90 430-45t370-35 410 20 390-30" stroke="#f1d4a1" stroke-width="36" opacity=".24" fill="none" filter="url(#blur)"/><path d="M0 690q230-90 430-45t370-35 410 20 390-30" stroke="#d9b77c" stroke-width="8" opacity=".55" fill="none"/>
+<!-- foreground flora --> <g fill="#d5a5a2"><circle cx="180" cy="620" r="8"/><circle cx="196" cy="633" r="6"/><circle cx="1280" cy="630" r="9"/><circle cx="1300" cy="646" r="6"/><circle cx="670" cy="655" r="7"/></g><g fill="#d7d29b"><circle cx="400" cy="650" r="5"/><circle cx="980" cy="625" r="6"/><circle cx="1510" cy="650" r="5"/></g>
+</svg>
