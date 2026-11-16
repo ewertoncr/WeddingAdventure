@@ -26,12 +26,12 @@ const memories=[
 ];
 const crystals=[{x:2200,active:false},{x:3100,active:false}];
 const enemies=[
-{x:1120,y:525,w:48,h:55,v:0,dir:1,alive:true},
-{x:1700,y:555,w:48,h:55,v:0,dir:-1,alive:true},
-{x:3790,y:505,w:48,h:55,v:0,dir:1,alive:true},
-{x:5200,y:555,w:48,h:55,v:0,dir:-1,alive:true},
-{x:6880,y:555,w:48,h:55,v:0,dir:1,alive:true},
-{x:8020,y:555,w:48,h:55,v:0,dir:-1,alive:true}
+{x:1120,home:1120,min:980,max:1260,y:525,w:48,h:55,v:0,dir:1,alive:true},
+{x:1700,home:1700,min:1500,max:1940,y:555,w:48,h:55,v:0,dir:-1,alive:true},
+{x:3790,home:3790,min:3660,max:4020,y:505,w:48,h:55,v:0,dir:1,alive:true},
+{x:5200,home:5200,min:5000,max:5500,y:555,w:48,h:55,v:0,dir:-1,alive:true},
+{x:6880,home:6880,min:6630,max:7080,y:555,w:48,h:55,v:0,dir:1,alive:true},
+{x:8020,home:8020,min:7850,max:8280,y:555,w:48,h:55,v:0,dir:-1,alive:true}
 ];
 const p={x:110,y:540,vx:0,vy:0,face:1,onGround:false,coyote:0,buffer:0,inv:0,attack:0};
 const bride={x:55,y:540,vx:0,vy:0,face:1,onGround:false};
@@ -246,7 +246,7 @@ function update(dt){
  memories.forEach(m=>{if(!m.taken&&Math.hypot(p.x+4-m.x,p.y+34-m.y)<55){m.taken=true;score++;hud();if(score===8)say("Já têm oito memórias. O portão final começa a despertar.");}});
  enemies.forEach(e=>{
   if(!e.alive)return;
-  e.x+=e.dir*(1.15*dt);if(e.x<e.x-100)e.dir*=-1;
+  e.x+=e.dir*(1.15*dt);if(e.x<e.min||e.x>e.max)e.dir*=-1;
   if(Math.abs(p.x-e.x)<58&&Math.abs(p.y-e.y)<58){if(p.vy>3&&p.y<e.y-20){e.alive=false;p.vy=-9;say("Boa! O caminho está livre.");}else damage();}
  });
  if(p.x>1900&&checkpoint<2050)checkpoint=2050;
