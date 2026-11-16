@@ -1,177 +1,270 @@
-(()=>{"use strict";
-const $=s=>document.querySelector(s), clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
-const nav=$(".nav"),menu=$(".menu-toggle");
-if(menu&&nav)menu.addEventListener("click",()=>{const open=nav.classList.toggle("open");menu.setAttribute("aria-expanded",String(open));});
+(()=>{
+"use strict";
+const $=s=>document.querySelector(s);
+const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+const canvas=$("#game"),ctx=canvas&&canvas.getContext("2d"),preview=$("#hero-game-preview"),pctx=preview&&preview.getContext("2d");
+if(!canvas||!ctx)return;
+const W=1280,H=720,G=610,LEVEL=9600,GRAV=.82;
+canvas.width=W;canvas.height=H;
+if(preview){preview.width=W;preview.height=H;}
+ctx.imageSmoothingEnabled=true;
+if(pctx)pctx.imageSmoothingEnabled=true;
 if($("#year"))$("#year").textContent=new Date().getFullYear();
 
-const canvas=$("#game"),ctx=canvas?.getContext("2d"),preview=$("#hero-game-preview"),pctx=preview?.getContext("2d");
-if(!canvas||!ctx)return;
-const W=1280,H=720,GROUND=590,LEVEL=8200;
-canvas.width=W;canvas.height=H;if(preview){preview.width=W;preview.height=H;}
-ctx.imageSmoothingEnabled=false;if(pctx)pctx.imageSmoothingEnabled=false;
-
-const atlas=new Image();atlas.src="assets/sprites/wedding-couple-16bit.svg";
-const state={x:150,y:GROUND-138,vx:0,vy:0,face:1,onGround:false,inv:0,score:0,lives:3,playing:false,finished:false,checkpoint:150,camera:0,time:0,shake:0};
-const keys={left:false,right:false};
-const memories=[
- {x:720,y:450},{x:1220,y:360},{x:1780,y:480},{x:2320,y:335},{x:2920,y:430},{x:3510,y:320},
- {x:4180,y:455},{x:4860,y:360},{x:5480,y:455},{x:6120,y:330},{x:6760,y:430},{x:7440,y:360}
-].map((m,i)=>({...m,taken:false,phase:i*1.7}));
+const nav=$(".nav"),menu=$(".menu-toggle");
+if(menu&&nav)menu.addEventListener("click",()=>{const open=nav.classList.toggle("open");menu.setAttribute("aria-expanded",String(open));});
 
 const platforms=[
-{x:0,y:GROUND,w:620,h:130},{x:700,y:515,w:230,h:205},{x:1010,y:440,w:250,h:280},
-{x:1340,y:540,w:360,h:180},{x:1780,y:470,w:250,h:250},{x:2110,y:390,w:220,h:330},
-{x:2420,y:530,w:420,h:190},{x:2960,y:455,w:230,h:265},{x:3300,y:350,w:250,h:370},
-{x:3660,y:520,w:420,h:200},{x:4190,y:450,w:230,h:270},{x:4520,y:545,w:450,h:175},
-{x:5070,y:400,w:260,h:320},{x:5450,y:500,w:360,h:220},{x:5920,y:360,w:230,h:360},
-{x:6260,y:520,w:420,h:200},{x:6810,y:440,w:280,h:280},{x:7200,y:540,w:330,h:180},
-{x:7630,y:460,w:300,h:260},{x:8010,y:GROUND,w:190,h:130}
+{x:0,y:610,w:700},{x:790,y:565,w:520},{x:1400,y:610,w:620},{x:2140,y:525,w:250},
+{x:2530,y:470,w:270},{x:3030,y:610,w:390},{x:3610,y:560,w:430},{x:4210,y:610,w:610},
+{x:4930,y:530,w:270},{x:5350,y:610,w:650},{x:6100,y:520,w:300},{x:6500,y:610,w:620},
+{x:7250,y:560,w:350},{x:7770,y:610,w:680},{x:8500,y:530,w:310},{x:8910,y:610,w:690}
 ];
-
-const hazards=[{x:930,y:492,w:46},{x:1690,y:517,w:50},{x:2840,y:507,w:55},{x:3670,y:497,w:48},{x:4680,y:522,w:55},{x:6270,y:497,w:45}];
+const memories=[
+{x:460,y:535},{x:930,y:495},{x:1650,y:555},{x:2250,y:460},{x:2630,y:405},{x:3150,y:555},
+{x:3820,y:505},{x:4450,y:555},{x:5050,y:465},{x:6220,y:455},{x:7390,y:495},{x:8050,y:555}
+];
+const crystals=[{x:2200,active:false},{x:3100,active:false}];
 const enemies=[
- {x:1570,y:500,vx:1.2,type:"knight",alive:true,min:1390,max:1660},
- {x:3220,y:310,vx:-1,type:"bat",alive:true,min:2990,max:3500},
- {x:4460,y:505,vx:1.1,type:"knight",alive:true,min:4200,max:4850},
- {x:5780,y:455,vx:-1.25,type:"bat",alive:true,min:5480,max:6150},
- {x:7130,y:485,vx:1.3,type:"knight",alive:true,min:6860,max:7520}
+{x:1120,y:525,w:48,h:55,v:0,dir:1,alive:true},
+{x:1700,y:555,w:48,h:55,v:0,dir:-1,alive:true},
+{x:3790,y:505,w:48,h:55,v:0,dir:1,alive:true},
+{x:5200,y:555,w:48,h:55,v:0,dir:-1,alive:true},
+{x:6880,y:555,w:48,h:55,v:0,dir:1,alive:true},
+{x:8020,y:555,w:48,h:55,v:0,dir:-1,alive:true}
 ];
-const particles=[];const magic=[];
+const p={x:110,y:540,vx:0,vy:0,face:1,onGround:false,coyote:0,buffer:0,inv:0,attack:0};
+const bride={x:55,y:540,vx:0,vy:0,face:1,onGround:false};
+let camera=0,time=0,playing=false,finished=false,score=0,lives=3,checkpoint=110,bridgeOpen=false,interact=false,last=0,previewTime=0;
+const keys={left:false,right:false,interact:false};
 const overlay=$("#game-overlay"),scoreNode=$("#score"),levelNode=$("#level-name"),lifeNode=$(".game-lives"),message=$("#game-message");
+
 function say(t){if(message)message.textContent=t;}
-function round(c,x,y,w,h,r,fill){c.fillStyle=fill;c.beginPath();c.roundRect(x,y,w,h,r);c.fill();}
-function text(c,t,x,y,size,fill,font="700"){c.fillStyle=fill;c.font=font+" "+size+"px 'DM Sans',sans-serif";c.fillText(t,x,y);}
-function sprite(c,kind,frame,x,bottom,flip=false,scale=2.15){
- if(!atlas.complete)return;
- const sx=(frame%5)*48,sy=kind==="bride"?64:0;
- c.save();if(flip){c.translate(x+48*scale,bottom-64*scale);c.scale(-1,1);c.drawImage(atlas,sx,sy,48,64,0,0,48*scale,64*scale);}
- else c.drawImage(atlas,sx,sy,48,64,x,bottom-64*scale,48*scale,64*scale);c.restore();
+function rounded(c,x,y,w,h,r,fill){c.fillStyle=fill;c.beginPath();c.roundRect(x,y,w,h,r);c.fill();}
+function glow(c,x,y,r,color){const g=c.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,color);g.addColorStop(1,"rgba(255,255,255,0)");c.fillStyle=g;c.beginPath();c.arc(x,y,r,0,Math.PI*2);c.fill();}
+function heart(c,x,y,s=1,fill="#ef4779"){c.save();c.translate(x,y);c.scale(s,s);c.fillStyle=fill;c.beginPath();c.moveTo(0,16);c.bezierCurveTo(-34,-10,-25,-30,-8,-27);c.bezierCurveTo(-1,-26,3,-19,5,-13);c.bezierCurveTo(17,-36,41,-16,27,6);c.lineTo(5,31);c.closePath();c.fill();c.restore();}
+function cloud(c,x,y,s=1){c.save();c.translate(x,y);c.scale(s,s);c.fillStyle="rgba(255,255,255,.72)";c.beginPath();c.arc(0,12,25,0,Math.PI*2);c.arc(27,4,33,0,Math.PI*2);c.arc(60,13,23,0,Math.PI*2);c.roundRect(-18,12,100,27,15);c.fill();c.restore();}
+function tree(c,x,y,s=1,front=false){
+ c.save();c.translate(x,y);c.scale(s,s);
+ c.fillStyle=front?"#5b3d34":"#67473a";c.fillRect(-9,0,18,88);
+ c.fillStyle=front?"#274d43":"#3f6d58";c.beginPath();c.arc(0,-8,43,0,Math.PI*2);c.arc(-25,16,31,0,Math.PI*2);c.arc(26,18,32,0,Math.PI*2);c.fill();
+ c.fillStyle=front?"#3d755d":"#6b9671";c.beginPath();c.arc(-14,-18,19,0,Math.PI*2);c.arc(18,-8,18,0,Math.PI*2);c.fill();
+ c.restore();
 }
-function burst(x,y,count=12,type="spark"){
- for(let i=0;i<count;i++){const a=Math.random()*Math.PI*2,s=1+Math.random()*4;particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-1,life:30+Math.random()*35,type});}
+function castle(c,x,y,s=1){
+ c.save();c.translate(x,y);c.scale(s,s);
+ c.fillStyle="#f3dfc2";c.strokeStyle="#b98f78";c.lineWidth=4;
+ c.fillRect(-110,0,220,125);c.strokeRect(-110,0,220,125);
+ const towers=[-112,-52,54,112];
+ towers.forEach((tx,i)=>{const h=i%2?145:185;c.fillRect(tx-22,125-h,44,h);c.strokeRect(tx-22,125-h,44,h);c.fillStyle="#8d526c";c.beginPath();c.moveTo(tx-29,125-h);c.lineTo(tx,125-h-45);c.lineTo(tx+29,125-h);c.closePath();c.fill();c.fillStyle="#f3dfc2";});
+ c.fillStyle="#7a5660";c.beginPath();c.roundRect(-25,65,50,60,24);c.fill();
+ c.fillStyle="#ffe08a";c.fillRect(-8,88,16,22);
+ c.restore();
 }
-function updateParticles(){
- for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.x+=p.vx;p.y+=p.vy;p.vy+=.08;p.life--;if(p.life<=0)particles.splice(i,1);}
+function drawBackground(c,cam,tm){
+ const sky=c.createLinearGradient(0,0,0,H);sky.addColorStop(0,"#69b8f4");sky.addColorStop(.52,"#bfe7f4");sky.addColorStop(1,"#ffd9b1");c.fillStyle=sky;c.fillRect(0,0,W,H);
+ glow(c,W*.78,105,75,"rgba(255,239,173,.55)");
+ for(let i=0;i<7;i++)cloud(c,(i*250-(cam*.10)%250)-80,95+(i%3)*72,.72+(i%2)*.18);
+ c.fillStyle="#7898b5";c.beginPath();c.moveTo(0,370);for(let x=0;x<=W;x+=90)c.lineTo(x,310+Math.sin((x+cam*.05)*.008)*55);c.lineTo(W,H);c.lineTo(0,H);c.closePath();c.fill();
+ c.fillStyle="#5d8b83";c.beginPath();c.moveTo(0,455);for(let x=0;x<=W;x+=110)c.lineTo(x,400+Math.sin((x+cam*.09)*.006)*65);c.lineTo(W,H);c.lineTo(0,H);c.closePath();c.fill();
+ const cx=9700-cam;if(cx>-400&&cx<W+400)castle(c,cx,445,1.2);
+ for(let i=0;i<26;i++){const x=(i*187-(cam*.28)%187)-80,y=405+(i*71)%170;tree(c,x,y,0.55+(i%4)*.08,false);}
+ const mist=c.createLinearGradient(0,360,0,H);mist.addColorStop(0,"rgba(255,255,255,0)");mist.addColorStop(1,"rgba(255,245,224,.22)");c.fillStyle=mist;c.fillRect(0,360,W,H-360);
 }
-function sky(c,tm,cam){
- const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,"#4c78bd");g.addColorStop(.52,"#9ed3df");g.addColorStop(1,"#f2c996");c.fillStyle=g;c.fillRect(0,0,W,H);
- const moonX=1030-cam*.035,moonY=105;const mg=c.createRadialGradient(moonX,moonY,5,moonX,moonY,100);mg.addColorStop(0,"rgba(255,246,206,.95)");mg.addColorStop(1,"rgba(255,246,206,0)");c.fillStyle=mg;c.fillRect(moonX-110,moonY-110,220,220);c.fillStyle="#fff0c7";c.beginPath();c.arc(moonX,moonY,38,0,Math.PI*2);c.fill();
- for(let i=0;i<28;i++){const x=(i*271-cam*.12+tm*.3)%(W+80)-40,y=50+(i*71)%310;c.fillStyle="rgba(255,245,204,"+(.28+.25*(i%3)/2)+")";c.fillRect(x,y,2+(i%2),2+(i%2));}
- function cloud(x,y,s){c.fillStyle="rgba(255,247,225,.62)";c.beginPath();c.ellipse(x,y,65*s,18*s,0,0,Math.PI*2);c.ellipse(x-35*s,y+2,35*s,15*s,0,0,Math.PI*2);c.ellipse(x+30*s,y-5,40*s,20*s,0,0,Math.PI*2);c.fill();}
- cloud(180-cam*.08,170,.9);cloud(820-cam*.1,210,.65);cloud(1130-cam*.06,300,.8);
-}
-function mountains(c,cam){
- const layers=[{y:400,color:"#527b83",speed:.10},{y:455,color:"#3d6870",speed:.18},{y:510,color:"#315b4d",speed:.28}];
- layers.forEach((l,j)=>{c.fillStyle=l.color;c.beginPath();c.moveTo(0,H);for(let x=-80;x<W+120;x+=80){const wx=x+cam*l.speed;c.lineTo(x,l.y-70*Math.sin(wx*.006+j)-45*Math.cos(wx*.002));}c.lineTo(W,H);c.fill();});
-}
-function castle(c,x,y,scale=1){
- c.save();c.translate(x,y);c.scale(scale,scale);
- c.fillStyle="#f5e3c0";c.fillRect(20,65,210,105);c.fillRect(0,85,48,85);c.fillRect(202,75,55,95);
- c.fillStyle="#c8a879";c.fillRect(105,112,38,58);c.fillStyle="#3a4c70";c.beginPath();c.moveTo(5,85);c.lineTo(24,40);c.lineTo(44,85);c.fill();c.beginPath();c.moveTo(205,75);c.lineTo(230,25);c.lineTo(255,75);c.fill();c.beginPath();c.moveTo(72,65);c.lineTo(125,0);c.lineTo(178,65);c.fill();
- c.fillStyle="#d6b477";for(let i=0;i<8;i++){c.fillRect(34+i*24,96,9,12);}c.fillStyle="#f7d98d";c.fillRect(119,30,12,15);c.restore();
-}
-function waterfall(c,x,y){
- c.fillStyle="#263f4c";c.fillRect(x,y,120,H-y);const g=c.createLinearGradient(x,0,x+120,0);g.addColorStop(0,"#8de0ec");g.addColorStop(.5,"#e5ffff");g.addColorStop(1,"#6fc5dc");c.fillStyle=g;c.fillRect(x+12,y,96,H-y);
- for(let i=0;i<7;i++){c.fillStyle="rgba(255,255,255,.6)";c.fillRect(x+20+i*13,y+20,3,H-y-30);}
-}
-function background(c,cam,tm){
- c.clearRect(0,0,W,H);sky(c,tm,cam);mountains(c,cam);
- // magical forest
- for(let i=0;i<38;i++){const wx=i*250+80,x=wx-cam*.45;if(x<-100||x>W+100)continue;const h=100+(i%5)*22;c.fillStyle=i%2?"#244e3e":"#2c6248";c.fillRect(x-7,GROUND-h,14,h);c.beginPath();c.arc(x,GROUND-h,42+(i%3)*10,0,Math.PI*2);c.fill();}
- waterfall(c,1780-cam*.38,260);castle(c,7300-cam*.9,300,.95);
- // floating islands
- for(let i=0;i<5;i++){const x=850+i*1250-cam*.22,y=230+(i%2)*55;c.fillStyle="#496f5b";c.beginPath();c.moveTo(x-70,y);c.lineTo(x+70,y);c.lineTo(x+35,y+35);c.lineTo(x-25,y+55);c.closePath();c.fill();c.fillStyle="#89ad79";c.fillRect(x-60,y-6,120,10);}
- // foreground vines
- c.fillStyle="rgba(20,45,35,.3)";for(let x=-20;x<W+20;x+=80){const y=120+((x+cam*.3)%160);c.fillRect(x,y,4,90);}
-}
-function terrain(c,cam){
- platforms.forEach((q,i)=>{const x=q.x-cam;if(x+q.w<0||x>W)return;
-   const g=c.createLinearGradient(0,q.y,0,q.y+q.h);g.addColorStop(0,"#8c6848");g.addColorStop(1,"#4e3b36");round(c,x,q.y,q.w,q.h,5,g);
-   c.fillStyle="#6fa35d";c.fillRect(x,q.y-10,q.w,12);c.fillStyle="#b4d477";c.fillRect(x,q.y-10,q.w,4);
-   for(let n=16;n<q.w-8;n+=48){c.fillStyle=i%2?"#725443":"#805e45";c.fillRect(x+n,q.y+30,24,5);c.fillRect(x+n+10,q.y+58,16,5);}
+function drawPlatforms(c,cam,tm){
+ platforms.forEach((q,i)=>{
+  const x=q.x-cam;if(x+q.w<0||x>W)return;
+  const depth=q.y<600?65:92;
+  rounded(c,x,q.y,q.w,depth,7,"#5f5149");
+  c.fillStyle="#9c7c5e";c.fillRect(x,q.y+11,q.w,depth-11);
+  c.fillStyle="#416d55";c.fillRect(x,q.y,q.w,15);
+  c.fillStyle="#78a16c";c.fillRect(x,q.y,q.w,6);
+  for(let n=24;n<q.w-20;n+=52){c.fillStyle=i%2?"#8b6e55":"#ad8b68";c.fillRect(x+n,q.y+33,24,5);c.fillRect(x+n+12,q.y+58,15,4);}
+  for(let n=15;n<q.w;n+=65){c.fillStyle="#d7e09a";c.fillRect(x+n,q.y-5,3,8);c.fillRect(x+n+5,q.y-2,2,5);}
  });
- // wooden bridge
- const bx=360-cam;if(bx<W&&bx+310>0){c.fillStyle="#5d392a";c.fillRect(bx,525,310,24);for(let i=0;i<7;i++){c.fillStyle="#a16b42";c.fillRect(bx+i*48,520,38,18);}}
+ if(bridgeOpen){
+  const x=3290-cam,y=605,w=330;
+  c.fillStyle="#7a543e";c.fillRect(x,y,w,18);c.fillStyle="#c18c5b";c.fillRect(x,y-7,w,8);
+  for(let n=20;n<w;n+=45){c.fillStyle="#4f3a35";c.fillRect(x+n,y-5,8,30);}
+  glow(c,x+w/2,y+10,80,"rgba(255,220,129,.18)");
+ }
 }
-function drawHeart(c,x,y,s=1){c.save();c.translate(x,y);c.scale(s,s);c.fillStyle="#ff667f";c.beginPath();c.moveTo(0,18);c.bezierCurveTo(-36,-8,-28,-30,-11,-27);c.bezierCurveTo(-2,-25,2,-18,4,-12);c.bezierCurveTo(16,-36,42,-16,27,8);c.lineTo(4,31);c.closePath();c.fill();c.restore();}
-function collectibles(c,cam,tm,preview=false){
- memories.forEach((m,i)=>{if(m.taken&&!preview)return;const x=m.x-cam,y=m.y+Math.sin(tm*.06+m.phase)*10;if(x<-50||x>W+50)return;
-   c.fillStyle="rgba(255,235,148,.18)";c.beginPath();c.arc(x,y,38,0,Math.PI*2);c.fill();drawHeart(c,x,y,.43);text(c,"♥",x-6,y+7,9,"#fff5d5");
- });
+function drawCrystal(c,cam,cr,tm){
+ const x=cr.x-cam;if(x<-80||x>W+80)return;
+ const active=cr.active;glow(c,x,cr.active?430:445,active?75:45,active?"rgba(255,110,172,.45)":"rgba(119,214,255,.32)");
+ c.save();c.translate(x,445);
+ c.rotate(Math.sin(tm*.03)*.08);c.fillStyle=active?"#ff6fba":"#79d9ff";c.strokeStyle="#fff";c.lineWidth=3;
+ c.beginPath();c.moveTo(0,-42);c.lineTo(24,-8);c.lineTo(10,35);c.lineTo(-16,24);c.lineTo(-24,-10);c.closePath();c.fill();c.stroke();
+ c.fillStyle="rgba(255,255,255,.6)";c.beginPath();c.moveTo(0,-30);c.lineTo(8,-8);c.lineTo(0,5);c.closePath();c.fill();c.restore();
+ c.fillStyle="#fff";c.font="700 11px DM Sans,sans-serif";c.textAlign="center";c.fillText(active?"ATIVADO":"E  ATIVAR",x,485);c.textAlign="left";
 }
-function enemiesDraw(c,cam,tm){
- enemies.forEach((e,i)=>{if(!e.alive)return;const x=e.x-cam,y=e.y+Math.sin(tm*.06+i)*7;if(x<-80||x>W+80)return;
-   if(e.type==="bat"){c.fillStyle="#493b65";c.beginPath();c.moveTo(x,y+15);c.lineTo(x-32,y-8);c.lineTo(x-10,y+20);c.lineTo(x,y+8);c.lineTo(x+10,y+20);c.lineTo(x+32,y-8);c.closePath();c.fill();c.fillStyle="#ffb4c6";c.fillRect(x-6,y+3,4,4);c.fillRect(x+4,y+3,4,4);}
-   else {c.fillStyle="#6c7082";c.fillRect(x-20,y-42,40,50);c.fillStyle="#b5bfd0";c.fillRect(x-27,y-58,54,20);c.fillStyle="#5a3d45";c.fillRect(x-10,y-52,20,6);c.fillStyle="#d8b15d";c.fillRect(x-30,y-6,60,7);}
- });
+function drawMemory(c,cam,m,tm){
+ const x=m.x-cam,y=m.y+Math.sin(tm*.045+m.x)*9;if(x<-40||x>W+40)return;
+ glow(c,x,y,38,"rgba(255,228,151,.42)");heart(c,x,y,.43,"#ff7a9e");
+ c.fillStyle="#fff4b2";c.beginPath();c.arc(x,y-4,3,0,Math.PI*2);c.fill();
 }
-function drawGoal(c,cam,tm){
- const x=8100-cam;if(x<-250||x>W+250)return;
- castle(c,x-110,315,.95);for(let i=0;i<8;i++){drawHeart(c,x-100+i*28,235+Math.sin(tm*.05+i)*13,.32);}
- text(c,"O GRANDE REENCONTRO",x-120,560,18,"#fff2cc","700");
+function drawEnemy(c,cam,e,tm){
+ if(!e.alive)return;const x=e.x-cam;if(x<-80||x>W+80)return;
+ c.save();c.translate(x,e.y+8);c.scale(e.dir,1);
+ c.fillStyle="#4a3952";c.beginPath();c.ellipse(0,27,24,29,0,0,Math.PI*2);c.fill();
+ c.fillStyle="#7d557f";c.beginPath();c.arc(0,3,20,0,Math.PI*2);c.fill();
+ c.fillStyle="#f4dcae";c.beginPath();c.arc(-7,2,4,0,Math.PI*2);c.arc(7,2,4,0,Math.PI*2);c.fill();
+ c.fillStyle="#2b2535";c.fillRect(-11,18,22,5);c.fillStyle="#ffb3cc";c.fillRect(-4,19,8,2);
+ c.strokeStyle="#3b2d45";c.lineWidth=6;c.beginPath();c.moveTo(-12,47);c.lineTo(-19,61);c.moveTo(12,47);c.lineTo(19,61);c.stroke();c.restore();
 }
-function drawPlayer(c,cam,tm){
- const run=state.playing&&Math.abs(state.vx)>.5,frame=run?1+Math.floor(tm/7)%3:(state.onGround?0:4);
- if(state.inv<=0||Math.floor(tm/5)%2===0)sprite(c,"groom",frame,state.x-cam-52,state.y+138,state.face<0,2.15);
+function drawHero(c,x,y,face,tm,brideMode=false){
+ c.save();c.translate(x,y);c.scale(face,1);
+ const run=playing&&Math.abs(brideMode?bride.vx:p.vx)>.6;
+ const bob=run?Math.sin(tm*.22)*3:Math.sin(tm*.07)*1.5;
+ c.translate(0,bob);
+ if(brideMode){
+  c.strokeStyle="#5b3a31";c.lineWidth=7;c.beginPath();c.moveTo(-10,45);c.lineTo(-14,66);c.moveTo(9,45);c.lineTo(14,66);c.stroke();
+  c.fillStyle="#fff9ef";c.beginPath();c.moveTo(0,10);c.lineTo(-30,67);c.lineTo(30,67);c.closePath();c.fill();
+  c.fillStyle="#ef6d91";c.beginPath();c.moveTo(-25,63);c.quadraticCurveTo(0,52,25,63);c.lineTo(30,68);c.lineTo(-30,68);c.closePath();c.fill();
+  c.fillStyle="#fff";c.beginPath();c.arc(0,-3,20,0,Math.PI*2);c.fill();c.fillStyle="#9c5b43";c.beginPath();c.arc(0,-11,22,Math.PI,Math.PI*2);c.fill();
+  c.fillStyle="#4c332e";c.fillRect(-18,-20,36,5);c.fillRect(-8,-27,16,8);
+  c.fillStyle="#fff";c.beginPath();c.moveTo(18,-27);c.lineTo(29,-14);c.lineTo(17,-14);c.closePath();c.fill();
+  c.fillStyle="#3a2730";c.fillRect(-8,-2,3,3);c.fillRect(7,-2,3,3);
+  c.strokeStyle="#f2c8d0";c.lineWidth=2;c.beginPath();c.arc(-25,12,12,0,Math.PI*2);c.stroke();
+ }else{
+  c.strokeStyle="#242c43";c.lineWidth=7;c.beginPath();c.moveTo(-10,48);c.lineTo(-15,67);c.moveTo(9,48);c.lineTo(14,67);c.stroke();
+  c.fillStyle="#243b70";c.beginPath();c.roundRect(-24,8,48,48,10);c.fill();
+  c.fillStyle="#f7efe0";c.beginPath();c.moveTo(-17,10);c.lineTo(0,55);c.lineTo(17,10);c.closePath();c.fill();
+  c.fillStyle="#e8b084";c.beginPath();c.arc(0,-6,20,0,Math.PI*2);c.fill();
+  c.fillStyle="#51372f";c.beginPath();c.arc(0,-12,21,Math.PI,Math.PI*2);c.fill();c.fillRect(-20,-13,40,7);
+  c.fillStyle="#222b40";c.fillRect(-9,-7,3,3);c.fillRect(6,-7,3,3);
+  c.fillStyle="#e7bd70";c.fillRect(-4,17,8,4);
+ }
+ c.restore();
 }
-function drawParticles(c,cam){
- particles.forEach(p=>{const x=p.x-cam;if(x<-20||x>W+20)return;c.fillStyle=p.type==="magic"?"#ffcf73":"#fff2b0";c.fillRect(x,p.y,3,3);});
+function drawParticles(c,cam,tm){
+ for(let i=0;i<36;i++){const x=(i*311-(cam*.42)%311)-20,y=120+(i*97)%470+Math.sin(tm*.03+i)*12;c.fillStyle=i%4?"rgba(255,255,255,.42)":"rgba(255,218,126,.62)";c.beginPath();c.arc(x,y,i%5===0?2.5:1.2,0,Math.PI*2);c.fill();}
 }
-function scene(c,cam,tm,preview=false){
- background(c,cam,tm);terrain(c,cam);collectibles(c,cam,tm,preview);enemiesDraw(c,cam,tm);drawGoal(c,cam,tm);
- if(preview){sprite(c,"groom",Math.floor(tm/10)%3,430,570,false,2.15);sprite(c,"bride",Math.floor(tm/10+1)%3,555,570,false,2.15);for(let i=0;i<5;i++)drawHeart(c,730+i*38,320+Math.sin(tm*.05+i)*18,.32);}
- else {drawPlayer(c,cam,tm);drawParticles(c,cam);}
- // cinematic frame
- c.fillStyle="rgba(11,22,32,.18)";c.fillRect(0,0,W,46);c.fillRect(0,H-28,W,28);
- text(c,"THE KINGDOM OF LOVE",26,31,13,"#fff1cf","700");text(c,"CAPÍTULO ÚNICO  ·  A PRIMEIRA AVENTURA",W-315,31,10,"#f4dfb0","600");
+function drawWorld(c,cam,tm,previewMode=false){
+ c.clearRect(0,0,W,H);drawBackground(c,cam,tm);drawPlatforms(c,cam,tm);
+ crystals.forEach(cr=>drawCrystal(c,cam,cr,tm));
+ memories.forEach(m=>{if(!m.taken||previewMode)drawMemory(c,cam,m,tm);});
+ enemies.forEach(e=>drawEnemy(c,cam,e,tm));
+ if(!previewMode){
+  drawHero(c,p.x-cam,p.y, p.face,tm,false);
+  const targetX=p.x-95;const dx=targetX-bride.x;bride.vx=clamp(dx*.035,-3.2,3.2);bride.x+=bride.vx;bride.y=p.y;
+  drawHero(c,bride.x-cam,bride.y,dx<0?-1:1,tm,true);
+ }else{
+  drawHero(c,470,545,1,tm,true);drawHero(c,365,545,1,tm,false);
+  for(let i=0;i<5;i++)heart(c,680+i*38,330+Math.sin(tm*.04+i)*18,.28);
+ }
+ drawParticles(c,cam,tm);
+ if(!previewMode){
+  rounded(c,20,18,300,58,14,"rgba(20,39,63,.78)");
+  c.fillStyle="#fff";c.font="700 17px DM Sans,sans-serif";c.fillText("MEMÓRIAS  "+score+" / 12",68,53);heart(c,48,45,.34);
+  rounded(c,W-300,18,280,58,14,"rgba(20,39,63,.78)");
+  c.fillStyle="#ffe4a3";c.font="700 12px DM Sans,sans-serif";c.fillText(bridgeOpen?"A PONTE ESTÁ ATIVA":"CRISTAIS  "+crystals.filter(x=>x.active).length+" / 2",W-278,43);
+  c.fillStyle="#fff";c.font="600 10px DM Sans,sans-serif";c.fillText("O REINO DO AMOR",W-278,61);
+ }
 }
-function hud(){
- if(scoreNode)scoreNode.textContent=state.score+" / 12";
- if(levelNode)levelNode.textContent="THE KINGDOM OF LOVE";
- if(lifeNode)lifeNode.textContent="♥ ".repeat(state.lives);
+function solidAt(x,y){
+ let best=null;
+ for(const q of platforms){if(x+35>q.x&&x-5<q.x+q.w&&y+68>=q.y&&y+68<=q.y+30)best=q;}
+ if(bridgeOpen&&x+35>3290&&x-5<3620&&y+68>=598)best={x:3290,y:598,w:330};
+ return best;
 }
+function damage(){
+ if(p.inv>0)return;
+ lives--;p.inv=100;hud();
+ if(lives<=0){playing=false;if(overlay){overlay.classList.remove("hidden");const h=overlay.querySelector("h3"),pa=overlay.querySelector("p"),b=$("#start-game");h.innerHTML="A magia ainda vos espera.";pa.textContent="Recomece a aventura e atravesse o reino juntos.";b.textContent="Tentar novamente ▶";}return;}
+ p.x=checkpoint;p.y=540;p.vx=p.vy=0;say("Não desistam. O último ponto de controlo está logo atrás.");
+}
+function hud(){if(scoreNode)scoreNode.textContent=score+" / 12";if(levelNode)levelNode.textContent="O REINO DO AMOR";if(lifeNode)lifeNode.textContent="♥ ".repeat(lives).trim();}
 function reset(){
- Object.assign(state,{x:150,y:GROUND-138,vx:0,vy:0,face:1,onGround:false,inv:0,score:0,lives:3,playing:false,finished:false,checkpoint:150,camera:0,time:0,shake:0});
- memories.forEach(m=>m.taken=false);enemies.forEach(e=>e.alive=true);particles.length=0;magic.length=0;hud();
- const h=overlay?.querySelector("h3"),p=overlay?.querySelector("p"),b=$("#start-game");
- if(h)h.innerHTML="A vossa história<br>começa aqui.";
- if(p)p.textContent="Uma única fase. Um reino mágico. Recolham as 12 memórias e cheguem ao castelo.";
+ Object.assign(p,{x:110,y:540,vx:0,vy:0,face:1,onGround:false,coyote:0,buffer:0,inv:0,attack:0});
+ bride.x=55;bride.y=540;bride.vx=0;
+ memories.forEach(m=>m.taken=false);crystals.forEach(x=>x.active=false);enemies.forEach(e=>e.alive=true);
+ score=0;lives=3;checkpoint=110;bridgeOpen=false;playing=false;finished=false;camera=0;
+ hud();say("A ponte só aparece quando o casal ativa os dois cristais.");
+ const h=overlay?.querySelector("h3"),pa=overlay?.querySelector("p"),b=$("#start-game");
+ if(h)h.innerHTML="O reino do amor<br>espera por vocês.";
+ if(pa)pa.textContent="Atravessem a floresta encantada, ativem a ponte mágica, descubram as memórias e cheguem ao castelo.";
  if(b)b.innerHTML="Começar a aventura <span>▶</span>";
  overlay?.classList.remove("hidden");
 }
-function hurt(){
- if(state.inv>0)return;state.lives--;state.inv=100;state.shake=12;burst(state.x,state.y+50,18);hud();
- if(state.lives<=0){state.playing=false;overlay?.classList.remove("hidden");const h=overlay.querySelector("h3"),p=overlay.querySelector("p"),b=$("#start-game");if(h)h.textContent="O amor ainda espera por vocês.";if(p)p.textContent="Tentem novamente e atravessem o reino juntos.";if(b)b.textContent="Tentar novamente ▶";return;}
- state.x=state.checkpoint;state.y=GROUND-138;state.vx=state.vy=0;
+function start(){if(lives<=0)reset();playing=true;finished=false;overlay?.classList.add("hidden");say("Encontrem os dois cristais. Depois, a ponte mágica vai abrir.");last=performance.now();}
+function jump(){if(playing)p.buffer=9;}
+function interactAction(){
+ if(!playing)return;
+ let nearest=null,dist=999;
+ crystals.forEach(cr=>{const d=Math.abs(p.x-cr.x);if(d<dist){dist=d;nearest=cr;}});
+ if(nearest&&dist<120&&!nearest.active){nearest.active=true;bridgeOpen=crystals.every(x=>x.active);say(bridgeOpen?"Os dois cristais responderam. A ponte mágica abriu!":"Um cristal despertou. Encontrem o segundo.");if(bridgeOpen)checkpoint=3650;}
 }
-function jump(){if(!state.playing||state.finished)return;if(state.onGround){state.vy=-16;state.onGround=false;burst(state.x+45,state.y+130,8,"magic");}}
-function start(){if(state.lives<=0)reset();state.playing=true;state.finished=false;overlay?.classList.add("hidden");say("Atravessem o reino, recolham as 12 memórias e cheguem juntos ao castelo.");}
-$("#start-game")?.addEventListener("click",start);$("#reset-game")?.addEventListener("click",reset);
-window.addEventListener("keydown",e=>{const k=e.key.toLowerCase();if(["arrowleft","arrowright","arrowup"," ","a","d","w"].includes(k))e.preventDefault();if(k==="arrowleft"||k==="a")keys.left=true;if(k==="arrowright"||k==="d")keys.right=true;if(k==="arrowup"||k==="w"||k===" ")jump();});
-window.addEventListener("keyup",e=>{const k=e.key.toLowerCase();if(k==="arrowleft"||k==="a")keys.left=false;if(k==="arrowright"||k==="d")keys.right=false;});
-window.addEventListener("blur",()=>{keys.left=keys.right=false;});
-document.querySelectorAll(".mobile-controls button").forEach(b=>{const k=b.dataset.key,down=e=>{e.preventDefault();if(k==="jump")jump();else keys[k]=true},up=e=>{e.preventDefault();if(k!=="jump")keys[k]=false};b.addEventListener("pointerdown",down);["pointerup","pointerleave","pointercancel"].forEach(v=>b.addEventListener(v,up));});
-const form=$("#couple-form"),result=$("#form-result");
-if(form&&result)form.addEventListener("submit",e=>{e.preventDefault();if(!form.reportValidity())return;const labels={names:"Nomes",date:"Data",email:"E-mail",meet:"Como se conheceram",memories:"Memórias",style:"Estilo visual",places:"Lugares",characters:"Personagens",challenges:"Desafios",music:"Música e mensagem"},data=new FormData(form),lines=["WEDDING ADVENTURE — RESUMO",""];Object.keys(labels).forEach(k=>{const v=String(data.get(k)||"").trim();if(v)lines.push(labels[k]+": "+v)});const summary=lines.join("\n");result.hidden=false;result.replaceChildren();const pre=document.createElement("pre");pre.textContent=summary;pre.style.cssText="white-space:pre-wrap;background:#fff;padding:14px;max-height:220px;overflow:auto";const btn=document.createElement("button");btn.type="button";btn.textContent="Copiar respostas";btn.addEventListener("click",()=>navigator.clipboard?.writeText(summary).then(()=>btn.textContent="Copiado ✓"));result.append(pre,btn);});
+$("#start-game")?.addEventListener("click",start);
+$("#reset-game")?.addEventListener("click",reset);
 
-let last=performance.now();
+window.addEventListener("keydown",e=>{
+ const k=e.key.toLowerCase();
+ if(["arrowleft","arrowright","arrowup"," ","a","d","w","e"].includes(k))e.preventDefault();
+ if(k==="arrowleft"||k==="a")keys.left=true;
+ if(k==="arrowright"||k==="d")keys.right=true;
+ if(k==="arrowup"||k===" "||k==="w")jump();
+ if(k==="e"&&!keys.interact){keys.interact=true;interactAction();}
+});
+window.addEventListener("keyup",e=>{const k=e.key.toLowerCase();if(k==="arrowleft"||k==="a")keys.left=false;if(k==="arrowright"||k==="d")keys.right=false;if(k==="e")keys.interact=false;});
+window.addEventListener("blur",()=>{keys.left=keys.right=false;keys.interact=false;});
+
+document.querySelectorAll(".mobile-controls button").forEach(b=>{
+ const k=b.dataset.key;
+ const down=e=>{e.preventDefault();if(k==="jump")jump();else if(k==="interact")interactAction();else keys[k]=true;};
+ const up=e=>{e.preventDefault();if(k!=="jump"&&k!=="interact")keys[k]=false;};
+ b.addEventListener("pointerdown",down);["pointerup","pointerleave","pointercancel"].forEach(v=>b.addEventListener(v,up));
+});
+
+const form=$("#couple-form"),result=$("#form-result");
+if(form&&result)form.addEventListener("submit",e=>{
+ e.preventDefault();if(!form.reportValidity())return;
+ const labels={names:"Nomes",date:"Data",email:"E-mail",meet:"Como se conheceram",memories:"Memórias",style:"Estilo visual",places:"Lugares",characters:"Personagens",challenges:"Desafios",music:"Música e mensagem"};
+ const data=new FormData(form),lines=["WEDDING ADVENTURE — RESUMO",""];
+ Object.keys(labels).forEach(k=>{const v=String(data.get(k)||"").trim();if(v)lines.push(labels[k]+": "+v);});
+ const summary=lines.join("\n");result.hidden=false;result.replaceChildren();
+ const pre=document.createElement("pre");pre.textContent=summary;pre.style.cssText="white-space:pre-wrap;background:#fff;padding:14px;max-height:220px;overflow:auto";
+ const btn=document.createElement("button");btn.type="button";btn.textContent="Copiar respostas";btn.addEventListener("click",()=>navigator.clipboard?.writeText(summary).then(()=>btn.textContent="Copiado ✓"));
+ result.append(pre,btn);
+});
+
+reset();
+let lastFrame=performance.now();
+function update(dt){
+ if(!playing||finished)return;
+ if(keys.left){p.vx-=.72*dt;p.face=-1;}
+ if(keys.right){p.vx+=.72*dt;p.face=1;}
+ if(!keys.left&&!keys.right)p.vx*=Math.pow(.80,dt);
+ p.vx=clamp(p.vx,-6.8,6.8);
+ const oldBottom=p.y+68;
+ p.vy+=GRAV*dt;p.x=clamp(p.x+p.vx*dt,0,LEVEL-55);p.y+=p.vy*dt;p.onGround=false;
+ const ground=solidAt(p.x,p.y);
+ if(ground&&p.vy>=0&&oldBottom<=ground.y+14&&p.y+68>=ground.y){p.y=ground.y-68;p.vy=0;p.onGround=true;}
+ if(p.onGround)p.coyote=8;else p.coyote=Math.max(0,p.coyote-dt);
+ if(p.buffer>0){p.buffer-=dt;if(p.onGround||p.coyote>0){p.vy=-16.5;p.onGround=false;p.coyote=0;p.buffer=0;}}
+ if(p.inv>0)p.inv-=dt;
+ memories.forEach(m=>{if(!m.taken&&Math.hypot(p.x+4-m.x,p.y+34-m.y)<55){m.taken=true;score++;hud();if(score===8)say("Já têm oito memórias. O portão final começa a despertar.");}});
+ enemies.forEach(e=>{
+  if(!e.alive)return;
+  e.x+=e.dir*(1.15*dt);if(e.x<e.x-100)e.dir*=-1;
+  if(Math.abs(p.x-e.x)<58&&Math.abs(p.y-e.y)<58){if(p.vy>3&&p.y<e.y-20){e.alive=false;p.vy=-9;say("Boa! O caminho está livre.");}else damage();}
+ });
+ if(p.x>1900&&checkpoint<2050)checkpoint=2050;
+ if(bridgeOpen&&p.x>3650&&checkpoint<4210)checkpoint=4210;
+ if(p.x>6100&&checkpoint<6500)checkpoint=6500;
+ if(p.x>8500&&checkpoint<8500)checkpoint=8500;
+ if(p.y>H+80)damage();
+ if(p.x>9100){
+   if(score>=8){playing=false;finished=true;say("Chegaram ao castelo. A vossa história está completa. ♥");}
+   else{p.x=9000;say("O portão pede mais memórias. Recolham pelo menos 8.");}
+ }
+ camera=clamp(p.x-390,0,LEVEL-W);
+}
 function loop(ts){
- const dt=Math.min((ts-last)/16.667||1,1.6);last=ts;state.time+=dt;updateParticles();
- if(state.playing&&!state.finished){
-   if(keys.left){state.vx-=.72*dt;state.face=-1}if(keys.right){state.vx+=.72*dt;state.face=1}if(!keys.left&&!keys.right)state.vx*=Math.pow(.82,dt);
-   state.vx=clamp(state.vx,-6.5,6.5);const oldBottom=state.y+138;state.x=clamp(state.x+state.vx*dt,0,LEVEL-90);state.vy+=.78*dt;state.y+=state.vy*dt;state.onGround=false;
-   platforms.forEach(q=>{const bottom=state.y+138;if(state.x+72>q.x&&state.x+12<q.x+q.w&&state.vy>=0&&oldBottom<=q.y+16&&bottom>=q.y&&bottom<=q.y+35){state.y=q.y-138;state.vy=0;state.onGround=true;}});
-   if(state.y>H+120)hurt();
-   if(state.inv>0)state.inv-=dt;if(state.shake>0)state.shake-=dt;
-   memories.forEach(m=>{if(!m.taken&&Math.abs(state.x+45-m.x)<55&&Math.abs(state.y+75-m.y)<70){m.taken=true;state.score++;burst(m.x,m.y,18,"magic");say("Memória encontrada! "+state.score+" de 12.");hud();}});
-   enemies.forEach(e=>{if(!e.alive)return;e.x+=e.vx*dt;if(e.x<e.min||e.x>e.max)e.vx*=-1;if(Math.abs(state.x+45-e.x)<62&&Math.abs(state.y+80-e.y)<72){if(state.vy>2&&state.y<e.y-35){e.alive=false;state.vy=-10;burst(e.x,e.y,20,"magic");say("Desafio superado!");}else hurt();}});
-   hazards.forEach(h=>{if(state.x+70>h.x&&state.x+10<h.x+h.w&&state.y+138>h.y&&state.y+100<h.y+35)hurt();});
-   if(state.x>1900)state.checkpoint=1950;if(state.x>4000)state.checkpoint=4100;if(state.x>5900)state.checkpoint=6000;
-   if(state.x>7900){if(state.score>=9){state.finished=true;state.playing=false;burst(state.x,380,70,"magic");say("O reencontro dos noivos! Conseguiram! ♥");}else{state.x=7750;say("Ainda faltam "+(9-state.score)+" memórias para abrir os portões do castelo.");}}}
- state.camera=clamp(state.x-390,0,LEVEL-W);let shakeX=state.shake?Math.sin(state.time*.8)*state.shake:0;
- ctx.save();ctx.translate(shakeX,0);scene(ctx,state.camera,state.time,false);ctx.restore();hud();
- if(pctx){previewTime++;scene(pctx,0,previewTime,true);}
+ const dt=Math.min((ts-lastFrame)/16.667||1,1.6);lastFrame=ts;time+=dt;
+ update(dt);drawWorld(ctx,camera,time,false);hud();
+ if(pctx){previewTime+=dt*.9;drawWorld(pctx,0,previewTime,true);}
  requestAnimationFrame(loop);
 }
-let previewTime=0;reset();requestAnimationFrame(loop);
+requestAnimationFrame(loop);
 })();
