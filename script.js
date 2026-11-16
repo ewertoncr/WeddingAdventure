@@ -62,14 +62,12 @@ function castle(c,x,y,s=1){
  c.restore();
 }
 function drawBackground(c,cam,tm){
- const sky=c.createLinearGradient(0,0,0,H);sky.addColorStop(0,"#69b8f4");sky.addColorStop(.52,"#bfe7f4");sky.addColorStop(1,"#ffd9b1");c.fillStyle=sky;c.fillRect(0,0,W,H);
- glow(c,W*.78,105,75,"rgba(255,239,173,.55)");
- for(let i=0;i<7;i++)cloud(c,(i*250-(cam*.10)%250)-80,95+(i%3)*72,.72+(i%2)*.18);
- c.fillStyle="#7898b5";c.beginPath();c.moveTo(0,370);for(let x=0;x<=W;x+=90)c.lineTo(x,310+Math.sin((x+cam*.05)*.008)*55);c.lineTo(W,H);c.lineTo(0,H);c.closePath();c.fill();
- c.fillStyle="#5d8b83";c.beginPath();c.moveTo(0,455);for(let x=0;x<=W;x+=110)c.lineTo(x,400+Math.sin((x+cam*.09)*.006)*65);c.lineTo(W,H);c.lineTo(0,H);c.closePath();c.fill();
- const cx=9700-cam;if(cx>-400&&cx<W+400)castle(c,cx,445,1.2);
- for(let i=0;i<26;i++){const x=(i*187-(cam*.28)%187)-80,y=405+(i*71)%170;tree(c,x,y,0.55+(i%4)*.08,false);}
- const mist=c.createLinearGradient(0,360,0,H);mist.addColorStop(0,"rgba(255,255,255,0)");mist.addColorStop(1,"rgba(255,245,224,.22)");c.fillStyle=mist;c.fillRect(0,360,W,H-360);
+ const sky=c.createLinearGradient(0,0,0,H);sky.addColorStop(0,"#293d70");sky.addColorStop(.48,"#8495ae");sky.addColorStop(1,"#f0cba8");c.fillStyle=sky;c.fillRect(0,0,W,H);
+ if(art.background.complete&&art.background.naturalWidth){
+   const scale=H/720,sw=1600*scale,offset=(cam*.14)%(sw);
+   for(let i=-1;i<3;i++)c.drawImage(art.background,i*sw-offset,0,sw,H);
+ }
+ for(let i=0;i<28;i++){const x=(i*173-(cam*.32)%173)-30,y=100+(i*89)%480+Math.sin(tm*.025+i)*13;c.fillStyle=i%3?"rgba(255,239,196,.48)":"rgba(176,240,224,.7)";c.beginPath();c.arc(x,y,i%4===0?3:1.5,0,Math.PI*2);c.fill();}
 }
 function drawPlatforms(c,cam,tm){
  platforms.forEach((q,i)=>{
@@ -113,28 +111,14 @@ function drawEnemy(c,cam,e,tm){
  c.strokeStyle="#3b2d45";c.lineWidth=6;c.beginPath();c.moveTo(-12,47);c.lineTo(-19,61);c.moveTo(12,47);c.lineTo(19,61);c.stroke();c.restore();
 }
 function drawHero(c,x,y,face,tm,brideMode=false){
- c.save();c.translate(x,y);c.scale(face,1);
+ const img=brideMode?art.bride:art.groom;
  const run=playing&&Math.abs(brideMode?bride.vx:p.vx)>.6;
- const bob=run?Math.sin(tm*.22)*3:Math.sin(tm*.07)*1.5;
- c.translate(0,bob);
- if(brideMode){
-  c.strokeStyle="#5b3a31";c.lineWidth=7;c.beginPath();c.moveTo(-10,45);c.lineTo(-14,66);c.moveTo(9,45);c.lineTo(14,66);c.stroke();
-  c.fillStyle="#fff9ef";c.beginPath();c.moveTo(0,10);c.lineTo(-30,67);c.lineTo(30,67);c.closePath();c.fill();
-  c.fillStyle="#ef6d91";c.beginPath();c.moveTo(-25,63);c.quadraticCurveTo(0,52,25,63);c.lineTo(30,68);c.lineTo(-30,68);c.closePath();c.fill();
-  c.fillStyle="#fff";c.beginPath();c.arc(0,-3,20,0,Math.PI*2);c.fill();c.fillStyle="#9c5b43";c.beginPath();c.arc(0,-11,22,Math.PI,Math.PI*2);c.fill();
-  c.fillStyle="#4c332e";c.fillRect(-18,-20,36,5);c.fillRect(-8,-27,16,8);
-  c.fillStyle="#fff";c.beginPath();c.moveTo(18,-27);c.lineTo(29,-14);c.lineTo(17,-14);c.closePath();c.fill();
-  c.fillStyle="#3a2730";c.fillRect(-8,-2,3,3);c.fillRect(7,-2,3,3);
-  c.strokeStyle="#f2c8d0";c.lineWidth=2;c.beginPath();c.arc(-25,12,12,0,Math.PI*2);c.stroke();
- }else{
-  c.strokeStyle="#242c43";c.lineWidth=7;c.beginPath();c.moveTo(-10,48);c.lineTo(-15,67);c.moveTo(9,48);c.lineTo(14,67);c.stroke();
-  c.fillStyle="#243b70";c.beginPath();c.roundRect(-24,8,48,48,10);c.fill();
-  c.fillStyle="#f7efe0";c.beginPath();c.moveTo(-17,10);c.lineTo(0,55);c.lineTo(17,10);c.closePath();c.fill();
-  c.fillStyle="#e8b084";c.beginPath();c.arc(0,-6,20,0,Math.PI*2);c.fill();
-  c.fillStyle="#51372f";c.beginPath();c.arc(0,-12,21,Math.PI,Math.PI*2);c.fill();c.fillRect(-20,-13,40,7);
-  c.fillStyle="#222b40";c.fillRect(-9,-7,3,3);c.fillRect(6,-7,3,3);
-  c.fillStyle="#e7bd70";c.fillRect(-4,17,8,4);
- }
+ const bob=run?Math.sin(tm*.22)*3:Math.sin(tm*.06)*1.2;
+ const w=brideMode?108:102,h=brideMode?150:146;
+ c.save();c.translate(x,y+bob);c.scale(face,1);
+ if(img.complete&&img.naturalWidth)c.drawImage(img,-w*.5,-h+68,w,h);
+ else{c.fillStyle=brideMode?"#f5e8dc":"#30496f";c.beginPath();c.ellipse(0,30,25,35,0,0,Math.PI*2);c.fill();}
+ if(brideMode){c.globalAlpha=.75;for(let i=0;i<3;i++){const px=Math.sin(tm*.08+i*2)*35,py=-75-i*17;c.fillStyle="#ffe8a4";c.beginPath();c.arc(px,py,2.2,0,Math.PI*2);c.fill();}}
  c.restore();
 }
 function drawParticles(c,cam,tm){
