@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 220">
+<defs>
+ <linearGradient id="dress" x2="1" y2="1"><stop stop-color="#fff8e9"/><stop offset=".5" stop-color="#e8d9c6"/><stop offset="1" stop-color="#c5a6a5"/></linearGradient>
+ <linearGradient id="veil" x2="1" y2="1"><stop stop-color="#fff" stop-opacity=".8"/><stop offset="1" stop-color="#b8d9db" stop-opacity=".2"/></linearGradient>
+ <linearGradient id="gold" x2="0" y2="1"><stop stop-color="#ffe8a8"/><stop offset="1" stop-color="#b77b3b"/></linearGradient>
+ <radialGradient id="skin"><stop stop-color="#ffdbbd"/><stop offset="1" stop-color="#c78c73"/></radialGradient>
+ <filter id="shadow"><feGaussianBlur stdDeviation="3"/></filter>
+</defs>
+<ellipse cx="80" cy="208" rx="43" ry="7" fill="#342a3b" opacity=".25" filter="url(#shadow)"/>
+<!-- veil flowing behind --><path d="M54 31Q13 64 23 157q15 34 48 31l14-98 20 101q45-24 35-91-8-47-40-70z" fill="url(#veil)" stroke="#fff" stroke-opacity=".8" stroke-width="2"/>
+<!-- shoes and dress --><path d="M65 174l-5 29h21l4-29M98 174l4 29h21l-7-31" fill="#e9d9c8"/><path d="M80 77q-24-6-34 19l-25 103q61 23 119 0L111 96q-8-20-31-19z" fill="url(#dress)" stroke="#c7a88c" stroke-width="2"/>
+<path d="M80 83Q54 116 40 194M81 84q26 32 40 110" fill="none" stroke="#fff" stroke-width="3" opacity=".8"/>
+<!-- bodice --><path d="M61 79q19 11 39 0l13 49q-30 17-64 0z" fill="#fff6e9" stroke="#caa779" stroke-width="2"/><path d="M80 83l-10 18 11 14 10-14z" fill="#e9c7c7"/><path d="M68 117q13 7 25 0" fill="none" stroke="#b98d72" stroke-width="2"/>
+<!-- floral embroidery --><g fill="#d49aa2" stroke="#fff4dc" stroke-width="1"><circle cx="44" cy="145" r="5"/><circle cx="55" cy="157" r="4"/><circle cx="105" cy="151" r="5"/><circle cx="116" cy="166" r="4"/><circle cx="73" cy="171" r="4"/><circle cx="88" cy="185" r="4"/></g><g fill="#b6b985"><path d="M45 150l-9 9 12-4M104 155l11 8-13-3M73 175l-9 10 13-6"/></g>
+<!-- arms --><path d="M60 89q-16 13-21 35l9 17 12-5-4-13 15-18M101 89q17 13 21 35l-9 17-12-5 4-13-15-18" fill="none" stroke="#e9d9c6" stroke-width="12" stroke-linecap="round"/><path d="M43 135l11 5-2 12q-8 5-14-2zM117 135l-11 5 2 12q8 5 14-2z" fill="url(#skin)"/>
+<!-- bouquet --><path d="M44 146l-8 26m8-26 4 27m-4-27-15 18" stroke="#698568" stroke-width="3"/><g fill="#e8a3ac" stroke="#fff0d6" stroke-width="1"><circle cx="28" cy="153" r="8"/><circle cx="42" cy="145" r="9"/><circle cx="52" cy="155" r="7"/></g><circle cx="42" cy="145" r="3" fill="#e7c47b"/>
+<!-- neck and face --><path d="M68 62v20q12 12 25 0V61" fill="url(#skin)"/><path d="M51 30q2-25 30-25 29 0 31 28l-5 35q-8 19-27 20-21-2-29-22z" fill="url(#skin)" stroke="#895b50" stroke-width="2"/>
+<!-- hair curls --><path d="M48 43Q39 5 78 3q37-1 39 37l-7 20-9-23q-23 10-47-1l-6 23z" fill="#70432e"/><path d="M49 27q-15 5-9 28 3 12 11 16l4-26M111 27q16 7 10 28-4 13-12 17l-4-27" fill="#8b573b"/><path d="M56 18q15-16 39-7" fill="none" stroke="#c18b60" stroke-width="5"/>
+<!-- eyes and smile --><path d="M65 49q7-6 13 0M91 49q7-6 13 0" fill="none" stroke="#6d4238" stroke-width="2.5" stroke-linecap="round"/><ellipse cx="73" cy="54" rx="2.5" ry="3.5" fill="#55716b"/><ellipse cx="98" cy="54" rx="2.5" ry="3.5" fill="#55716b"/><path d="M82 55l-3 9 6 1M74 70q9 8 19-1" fill="none" stroke="#a76c62" stroke-width="2" stroke-linecap="round"/><circle cx="61" cy="64" r="5" fill="#e99c9b" opacity=".45"/><circle cx="108" cy="64" r="5" fill="#e99c9b" opacity=".45"/>
+<!-- tiara --><path d="M53 29l7-12 9 9 11-16 11 16 9-9 7 12" fill="none" stroke="url(#gold)" stroke-width="4" stroke-linejoin="round"/><circle cx="80" cy="12" r="5" fill="#b8e4df" stroke="#fff" stroke-width="2"/><circle cx="61" cy="19" r="3" fill="#e6a1b1"/><circle cx="99" cy="19" r="3" fill="#e6a1b1"/>
+<!-- magical glimmers --><path d="M20 76l4-10 4 10 10 4-10 4-4 10-4-10-10-4z" fill="#fff0b5"/><path d="M137 92l3-8 3 8 8 3-8 3-3 8-3-8-8-3z" fill="#d7f5f0"/>
+</svg>
