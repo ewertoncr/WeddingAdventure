@@ -1,193 +1,54 @@
 <!doctype html>
-<html lang="pt-PT">
+<html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Wedding Adventure — A Lenda do Amor</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Wedding Adventure — A Caminho da Noiva</title>
 <style>
-:root{--gold:#f6d77a;--ink:#091326}
-*{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#071226;font-family:Georgia,serif}
-body{display:grid;place-items:center}
-#game{position:relative;width:100vw;height:100vh;overflow:hidden;background:#071226}
-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-#vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 45%,rgba(3,8,22,.42) 100%)}
-#title{position:absolute;top:18px;left:24px;color:#fff;text-shadow:0 2px 12px #000;font-size:22px;letter-spacing:.08em}
-#title small{display:block;color:var(--gold);font:12px Arial,sans-serif;letter-spacing:.18em;margin-top:5px}
-#hud{position:absolute;right:22px;top:18px;display:flex;gap:10px;align-items:center;color:white;font:700 15px Arial,sans-serif}
-.pill{padding:10px 14px;border:1px solid rgba(246,215,122,.65);border-radius:999px;background:rgba(8,16,39,.62);backdrop-filter:blur(8px)}
-#message{position:absolute;left:50%;bottom:105px;transform:translateX(-50%);padding:11px 18px;border-radius:999px;background:rgba(8,16,39,.58);border:1px solid rgba(255,255,255,.18);color:#fff;font:14px Arial,sans-serif;opacity:.85}
-#touch{position:absolute;inset:auto 0 20px 0;display:flex;justify-content:space-between;padding:0 22px;pointer-events:none}
-.cluster{display:flex;gap:12px;pointer-events:auto}
-.btn{width:62px;height:62px;border-radius:50%;border:1px solid rgba(246,215,122,.75);background:rgba(8,16,39,.55);color:#fff;font:700 25px Arial;box-shadow:0 8px 24px rgba(0,0,0,.25);backdrop-filter:blur(8px)}
-#fade{position:absolute;inset:0;background:#071226;display:grid;place-items:center;color:#fff;font:700 20px Georgia;z-index:10;transition:opacity .5s}
-#fade.hide{opacity:0;pointer-events:none}
-</style>
-</head>
-<body>
-<div id="game">
-<canvas id="c" width="1600" height="900"></canvas>
-<div id="vignette"></div>
-<div id="title">WEDDING ADVENTURE<small>A LENDA DO AMOR · DEMO INDEPENDENTE</small></div>
-<div id="hud"><div class="pill" id="hearts">♥ ♥ ♥</div><div class="pill" id="score">000000</div></div>
-<div id="message">Acompanhe a noiva até ao portal de cristal</div>
-<div id="touch">
-  <div class="cluster"><button class="btn" data-k="left">‹</button><button class="btn" data-k="right">›</button></div>
-  <div class="cluster"><button class="btn" data-k="jump">↑</button><button class="btn" data-k="attack">✦</button></div>
-</div>
-<div id="fade">A preparar o Reino do Amor…</div>
-</div>
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#08152f;font-family:Arial,Helvetica,sans-serif}
+body{display:grid;place-items:center}.game{position:relative;width:min(100vw,177.78vh);height:min(100vh,56.25vw);overflow:hidden;background:#5ebcf5}
+canvas{width:100%;height:100%;display:block}
+.touch{position:absolute;inset:auto 18px 18px;display:flex;justify-content:space-between;pointer-events:none}.touch .cluster{display:flex;gap:12px}
+.touch button{pointer-events:auto;width:62px;height:62px;border-radius:50%;border:2px solid #fff8;background:#17243dcc;color:white;font-weight:900;font-size:25px;box-shadow:0 4px 12px #0006}
+#loading{position:absolute;inset:0;display:grid;place-items:center;background:#08152f;color:white;font-size:22px;z-index:5}
+</style></head>
+<body><div class="game"><div id="loading">Carregando Wedding Adventure…</div><canvas id="c" width="1280" height="720"></canvas>
+<div class="touch"><div class="cluster"><button data-k="left">◀</button><button data-k="right">▶</button></div><div class="cluster"><button data-k="jump">▲</button></div></div></div>
 <script>
-"use strict";
-const cv=document.getElementById("c"),ctx=cv.getContext("2d");
-const W=1600,H=900;
-const keys={left:false,right:false,jump:false,attack:false};
-const art={groom:new Image(),bride:new Image(),bg:new Image()};
-art.groom.src="../assets/art/groom-hero.svg";
-art.bride.src="../assets/art/bride-hero.svg";
-art.bg.src="../assets/art/enchanted-kingdom.svg";
-let ready=0;
-for(const im of Object.values(art)){im.onload=()=>{ready++};im.onerror=()=>{ready++}};
-const world={width:5600};
-const p={x:520,y:620,w:115,h:165,vx:0,vy:0,dir:1,onGround:false,attack:0,inv:0,frame:0};
-const partner={x:410,y:645,frame:0};
-const platforms=[
-{x:0,y:790,w:1250,h:110},{x:1370,y:735,w:540,h:165},{x:2050,y:790,w:1100,h:110},
-{x:3300,y:720,w:620,h:180},{x:4070,y:790,w:1530,h:110},
-{x:1100,y:650,w:210,h:28},{x:1500,y:590,w:220,h:28},{x:1830,y:525,w:210,h:28},
-{x:2500,y:640,w:250,h:28},{x:2870,y:555,w:230,h:28},{x:3530,y:590,w:230,h:28},
-{x:3900,y:510,w:170,h:28},{x:4500,y:625,w:260,h:28}
-];
-const crystals=[
-{x:720,y:735},{x:1210,y:600},{x:1580,y:540},{x:1860,y:475},{x:2550,y:590},
-{x:2940,y:505},{x:3600,y:540},{x:3960,y:460},{x:4620,y:575},{x:5000,y:735}
-].map(o=>({...o,taken:false}));
-const foes=[
-{x:1730,y:660,w:72,h:75,v:-1,min:1450,max:1900,dead:false},
-{x:3050,y:715,w:72,h:75,v:1,min:2600,max:3180,dead:false},
-{x:4380,y:715,w:72,h:75,v:-1,min:4200,max:4700,dead:false},
-{x:4860,y:715,w:72,h:75,v:1,min:4550,max:5200,dead:false}
-];
-let cam=0,score=0,lives=3,finished=false,time=0;
-const sparks=[];
-function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
-function hit(a,b){return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y}
-function emit(x,y,n=8,color="#f6d77a"){for(let i=0;i<n;i++)sparks.push({x,y,vx:(Math.random()-.5)*5,vy:-Math.random()*4-1,l:30+Math.random()*35,color})}
-function inputKey(k,on){keys[k]=on}
-window.addEventListener("keydown",e=>{
- const k=e.key.toLowerCase();
- if(k==="a"||k==="arrowleft")inputKey("left",true);
- if(k==="d"||k==="arrowright")inputKey("right",true);
- if(k==="w"||k==="arrowup"||k===" ")inputKey("jump",true);
- if(k==="j"||k==="k")inputKey("attack",true);
-});
-window.addEventListener("keyup",e=>{
- const k=e.key.toLowerCase();
- if(k==="a"||k==="arrowleft")inputKey("left",false);
- if(k==="d"||k==="arrowright")inputKey("right",false);
- if(k==="w"||k==="arrowup"||k===" ")inputKey("jump",false);
- if(k==="j"||k==="k")inputKey("attack",false);
-});
-for(const b of document.querySelectorAll(".btn")){
- const k=b.dataset.k;
- b.addEventListener("pointerdown",e=>{e.preventDefault();inputKey(k,true)});
- b.addEventListener("pointerup",e=>{e.preventDefault();inputKey(k,false)});
- b.addEventListener("pointercancel",()=>inputKey(k,false));
- b.addEventListener("pointerleave",()=>inputKey(k,false));
-}
-function background(){
- const g=ctx.createLinearGradient(0,0,0,H);
- g.addColorStop(0,"#162f69");g.addColorStop(.48,"#6da9df");g.addColorStop(1,"#f1b2c9");
- ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
- const scale=Math.max(W/art.bg.width*1.15,H/art.bg.height*1.15)||1;
- const bw=1600*scale,bh=720*scale;
- if(art.bg.complete&&art.bg.naturalWidth)ctx.drawImage(art.bg,-cam*.12,80,bw,bh);
- ctx.fillStyle="rgba(255,239,170,.22)";
- for(let i=0;i<45;i++){let x=(i*137-cam*.18)%W;if(x<0)x+=W;let y=70+(i*83)%420;ctx.beginPath();ctx.arc(x,y,1.7,0,7);ctx.fill()}
-}
-function terrain(){
- for(const s of platforms){
-  const x=s.x-cam;if(x+s.w<0||x>W)continue;
-  const gr=ctx.createLinearGradient(0,s.y,0,s.y+s.h);
-  gr.addColorStop(0,"#5e744b");gr.addColorStop(.09,"#3b493d");gr.addColorStop(1,"#171d29");
-  ctx.fillStyle=gr;ctx.beginPath();ctx.roundRect(x,s.y,s.w,s.h,14);ctx.fill();
-  ctx.fillStyle="#8eb76b";ctx.fillRect(x,s.y,s.w,10);
-  ctx.fillStyle="rgba(255,255,255,.12)";
-  for(let q=x+25;q<x+s.w;q+=75){ctx.beginPath();ctx.arc(q,s.y-2,7,0,7);ctx.fill()}
- }
-}
-function drawCrystal(o){
- if(o.taken)return;const x=o.x-cam;
- ctx.save();ctx.translate(x,o.y);ctx.rotate(Math.sin(time*.04+o.x)*.08);
- ctx.shadowColor="#ff83e8";ctx.shadowBlur=24;ctx.fillStyle="#e06dff";
- ctx.beginPath();ctx.moveTo(0,-28);ctx.lineTo(19,-4);ctx.lineTo(11,25);ctx.lineTo(-12,25);ctx.lineTo(-20,-4);ctx.closePath();ctx.fill();
- ctx.shadowBlur=0;ctx.fillStyle="rgba(255,255,255,.65)";ctx.beginPath();ctx.moveTo(-5,-17);ctx.lineTo(3,-8);ctx.lineTo(0,8);ctx.closePath();ctx.fill();ctx.restore();
-}
-function drawFoe(e){
- if(e.dead)return;const x=e.x-cam,y=e.y;
- ctx.save();ctx.translate(x+36,y+38);
- ctx.shadowColor="rgba(0,0,0,.45)";ctx.shadowBlur=18;
- const g=ctx.createRadialGradient(-8,-14,4,0,0,45);g.addColorStop(0,"#9c90c7");g.addColorStop(1,"#34314d");
- ctx.fillStyle=g;ctx.beginPath();ctx.ellipse(0,4,38,39,0,0,7);ctx.fill();
- ctx.shadowBlur=0;ctx.fillStyle="#151425";ctx.beginPath();ctx.ellipse(0,-4,28,17,0,0,7);ctx.fill();
- ctx.fillStyle="#ff6b9e";ctx.beginPath();ctx.arc(-10,-6,4,0,7);ctx.arc(10,-6,4,0,7);ctx.fill();
- ctx.strokeStyle="#c8a7ff";ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(-22,22);ctx.lineTo(-40,37);ctx.moveTo(22,22);ctx.lineTo(40,37);ctx.stroke();
- ctx.restore();
-}
-function drawHero(img,x,y,flip,phase,scale=1){
- ctx.save();ctx.translate(x,y);if(flip)ctx.scale(-1,1);
- const bob=Math.sin(phase)*3;
- ctx.globalAlpha=p.inv>0&&Math.floor(p.inv/5)%2===0?.45:1;
- ctx.shadowColor="rgba(0,0,0,.3)";ctx.shadowBlur=18;
- if(img.complete&&img.naturalWidth){
-   ctx.drawImage(img,-70,-210+bob,140,210);
- }else{
-   ctx.fillStyle="#d7b06a";ctx.beginPath();ctx.arc(0,-145,24,0,7);ctx.fill();
- }
- ctx.restore();
-}
+const C=document.getElementById('c'),X=C.getContext('2d');const W=1280,H=720;
+const AS='/WeddingAdventure/assets/art/';const groom=new Image(),bride=new Image(),world=new Image();
+groom.src=AS+'groom-hero.svg';bride.src=AS+'bride-hero.svg';world.src=AS+'enchanted-kingdom.svg';
+let ready=0;[groom,bride,world].forEach(i=>i.onload=()=>{if(++ready===3)document.getElementById('loading').remove()});
+const key={};addEventListener('keydown',e=>{key[e.key.toLowerCase()]=1;if([' ','arrowup','arrowleft','arrowright'].includes(e.key.toLowerCase()))e.preventDefault()});
+addEventListener('keyup',e=>key[e.key.toLowerCase()]=0);
+document.querySelectorAll('[data-k]').forEach(b=>{const k=b.dataset.k;b.onpointerdown=()=>key[k]=1;b.onpointerup=b.onpointercancel=()=>key[k]=0});
+let started=false,finish=false,t=0,score=0,cam=0;const p={x:90,y:520,vx:0,vy:0,on:false};
+const platforms=[[0,610,430],[470,610,430],[950,610,330],[1370,610,480],[1900,610,540],[2490,610,620],[3200,610,680]];
+const coins=[360,570,680,1040,1190,1450,1570,2010,2160,2590,2740,3330,3480];const enemies=[760,1150,1510,2070,2670,3430];const endX=3650;
+function rect(x,y,w,h,f){X.fillStyle=f;X.fillRect(x,y,w,h)}
+function platform(x,y,w){rect(x,y,w,110,'#754526');rect(x,y,w,18,'#2e8a42');rect(x,y,w,6,'#9ee34e');for(let i=10;i<w;i+=44){rect(x+i,y+32,25,18,'#9b5d35');rect(x+i+3,y+35,19,12,'#7d472c')}}
+function heart(x,y,s=1){X.fillStyle='#ff4b70';X.beginPath();X.arc(x-7*s,y,8*s,0,7);X.arc(x+7*s,y,8*s,0,7);X.lineTo(x,y+16*s);X.fill()}
+function coin(x,y){X.fillStyle='#ffd43b';X.beginPath();X.arc(x,y,17,0,7);X.fill();X.fillStyle='#fff0a2';X.fillRect(x-3,y-10,6,20)}
+function enemy(x,y){X.fillStyle='#63311f';X.beginPath();X.roundRect(x-26,y-35,52,35,12);X.fill();X.fillStyle='#fff';X.fillRect(x-14,y-24,7,7);X.fillRect(x+7,y-24,7,7);X.fillStyle='#16151c';X.fillRect(x-12,y-22,3,3);X.fillRect(x+9,y-22,3,3)}
+function drawCharacter(img,x,y,run){const bob=run?Math.sin(t*18)*3:Math.sin(t*3)*2;X.save();X.translate(x,y+bob);X.drawImage(img,-110,-185,220,185);X.restore()}
+function background(){X.clearRect(0,0,W,H);X.fillStyle='#55baf5';X.fillRect(0,0,W,H);if(world.complete)X.drawImage(world,0,0,W,H);X.fillStyle='rgba(10,28,55,.12)';X.fillRect(0,390,W,330)}
 function update(){
- if(finished)return;
- time++;
- let ax=(keys.right?1:0)-(keys.left?1:0);
- if(ax){p.vx+=ax*.65;p.dir=ax}
- else p.vx*=.82;
- p.vx=clamp(p.vx,-6.5,6.5);
- if(keys.jump&&p.onGround){p.vy=-14;p.onGround=false;emit(p.x+50,p.y+p.h,10,"#fff1b2")}
- if(keys.attack&&p.attack<=0){p.attack=18;emit(p.x+(p.dir>0?110:-10),p.y+80,18,"#f7d66c")}
- if(p.attack>0)p.attack--;
- if(p.inv>0)p.inv--;
- p.vy+=.7;p.x+=p.vx;p.y+=p.vy;p.onGround=false;
- for(const s of platforms){
-   if(p.x+p.w>s.x&&p.x<s.x+s.w&&p.y+p.h>s.y&&p.y+p.h-p.vy<=s.y){p.y=s.y-p.h;p.vy=0;p.onGround=true}
- }
- if(p.y>1000){lives--;p.x=Math.max(100,p.x-500);p.y=400;p.vy=0;p.inv=90}
- for(const c of crystals)if(!c.taken&&Math.hypot(p.x+55-c.x,p.y+80-c.y)<52){c.taken=true;score+=100;emit(c.x,c.y,18,"#ff8af0")}
- for(const e of foes){
-   if(e.dead)continue;e.x+=e.v;if(e.x<e.min||e.x>e.max)e.v*=-1;
-   const atk={x:p.dir>0?p.x+p.w:p.x-70,y:p.y+35,w:70,h:70};
-   const eb={x:e.x,y:e.y,w:e.w,h:e.h};
-   if(p.attack>5&&hit(atk,eb)){e.dead=true;score+=600;emit(e.x+36,e.y+35,28,"#cda7ff")}
-   if(!e.dead&&hit(p,eb)&&p.inv<=0){lives--;p.inv=90;p.vx=-p.dir*8;p.vy=-7;emit(p.x+55,p.y+70,15,"#ff6b8a");if(lives<=0){p.x=520;p.y=500;lives=3;score=0}}
- }
- partner.x+=(p.x-85-partner.x)*.06;partner.y=p.y+25;partner.frame+=.05;
- if(p.x>5200&&foes.every(e=>e.dead)){finished=true;document.getElementById("message").textContent="O portal de cristal foi despertado — vitória!"}
- cam+=(clamp(p.x-380,0,4000)-cam)*.075;
- for(let i=sparks.length-1;i>=0;i--){const s=sparks[i];s.x+=s.vx;s.y+=s.vy;s.vy+=.08;s.l--;if(s.l<=0)sparks.splice(i,1)}
- document.getElementById("score").textContent=String(score).padStart(6,"0");
- document.getElementById("hearts").textContent="♥ ".repeat(lives).trim();
+ if(!started||finish)return;const l=key['arrowleft']||key['a']||key.left,r=key['arrowright']||key['d']||key.right;
+ if(r)p.vx=Math.min(7,p.vx+.65);else if(l)p.vx=Math.max(-4,p.vx-.65);else p.vx*=.82;
+ if((key['arrowup']||key['w']||key[' ']||key.jump)&&p.on){p.vy=-14;p.on=false}p.vy+=.65;p.x+=p.vx;p.y+=p.vy;
+ let floor=610;for(const q of platforms)if(p.x>q[0]-20&&p.x<q[0]+q[2]+20&&p.y+60<=q[1]+12&&p.y+60+p.vy>=q[1])floor=q[1];
+ if(p.y+60>=floor){p.y=floor-60;p.vy=0;p.on=true}else p.on=false;p.x=Math.max(20,Math.min(endX,p.x));cam=Math.max(0,Math.min(endX-W,p.x-350));
+ for(let i=0;i<coins.length;i++){const cx=coins[i];if(cx>0&&Math.abs(p.x-cx)<35&&Math.abs(p.y-520)<90){score+=25;coins[i]=-1}}
+ for(const ex of enemies)if(Math.abs(p.x-ex)<45&&p.y>535){score=Math.max(0,score-50);p.x-=100;p.vx=-3}
+ if(p.x>endX-120)finish=true;t+=1/60;
 }
-function render(){
- ctx.clearRect(0,0,W,H);background();terrain();
- for(const c of crystals)drawCrystal(c);
- for(const e of foes)drawFoe(e);
- drawHero(art.bride,partner.x-cam,partner.y,false,partner.frame);
- drawHero(art.groom,p.x-cam,p.y,p.dir<0,p.frame+=Math.abs(p.vx)*.04);
- for(const s of sparks){ctx.globalAlpha=Math.max(0,s.l/65);ctx.fillStyle=s.color;ctx.beginPath();ctx.arc(s.x-cam,s.y,3.5,0,7);ctx.fill()}ctx.globalAlpha=1;
- if(finished){ctx.fillStyle="rgba(3,8,22,.55)";ctx.fillRect(0,0,W,H);ctx.textAlign="center";ctx.fillStyle="#fff";ctx.font="700 62px Georgia";ctx.fillText("A LENDA DO AMOR",W/2,370);ctx.font="22px Arial";ctx.fillStyle="#f6d77a";ctx.fillText("Fase concluída · pontuação "+score,W/2,415);ctx.textAlign="left"}
+function draw(){
+ background();X.save();X.translate(-cam,0);for(const q of platforms)platform(...q);for(const cx of coins)if(cx>0)coin(cx,520);for(const ex of enemies)enemy(ex,610);
+ const cx=endX-40;X.fillStyle='#e9c49b';X.fillRect(cx-220,270,420,340);X.fillStyle='#8c3155';
+ [[cx-210,270,cx-130],[cx+40,270,cx+125],[cx-70,220,cx+15]].forEach(a=>{X.beginPath();X.moveTo(a[0],a[1]);X.lineTo((a[0]+a[2])/2,a[1]-130);X.lineTo(a[2],a[1]);X.fill()});
+ X.fillStyle='#42233e';X.fillRect(cx-25,465,50,145);heart(cx,345,2);drawCharacter(groom,p.x,p.y,Math.abs(p.vx)>.5);drawCharacter(bride,endX-70,520,false);X.restore();
+ rect(18,18,330,78,'rgba(7,17,40,.78)');X.fillStyle='white';X.font='900 24px Arial';X.fillText('WEDDING ADVENTURE',34,50);X.font='700 18px Arial';X.fillText('1P  SCORE '+String(score).padStart(6,'0'),34,78);X.fillText('FASE 1-1',570,46);X.fillText('TEMPO '+Math.max(0,180-Math.floor(t)),780,46);for(let i=0;i<5;i++)heart(1040+i*38,38,.7);
+ if(!started){X.fillStyle='#0009';X.fillRect(0,0,W,H);X.fillStyle='white';X.textAlign='center';X.font='900 54px Arial';X.fillText('WEDDING ADVENTURE',W/2,260);X.font='700 26px Arial';X.fillText('A CAMINHO DA NOIVA',W/2,310);X.font='700 22px Arial';X.fillText('ENTER / toque para começar',W/2,365);X.textAlign='left'}
+ if(finish){X.fillStyle='#1b092dcc';X.fillRect(0,0,W,H);for(let i=0;i<18;i++)heart(120+(i*71)%1040,90+(i*43)%480,.7+(i%2)*.3);X.fillStyle='white';X.textAlign='center';X.font='900 46px Arial';X.fillText('VOCÊ ENCONTROU A NOIVA!',W/2,240);X.font='700 30px Arial';X.fillText('♥  Abraço, beijo e final feliz  ♥',W/2,300);X.font='700 22px Arial';X.fillText('Pontuação: '+score,W/2,345);X.textAlign='left'}
 }
-function loop(){update();render();requestAnimationFrame(loop)}
-Promise.all(Object.values(art).map(im=>im.complete?Promise.resolve():new Promise(r=>im.addEventListener("load",r,{once:true})))).finally(()=>{document.getElementById("fade").classList.add("hide");loop()});
-</script>
-</body>
-</html>
+addEventListener('pointerdown',()=>{started=true});function loop(){update();draw();requestAnimationFrame(loop)}loop();
+</script></body></html>
