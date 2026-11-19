@@ -4,12 +4,12 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Wedding Adventure — A Caminho da Noiva</title>
 <style>
-*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#08152f;font-family:Arial,Helvetica,sans-serif}
-body{display:grid;place-items:center}.game{position:relative;width:min(100vw,177.78vh);height:min(100vh,56.25vw);overflow:hidden;background:#5ebcf5}
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#0c1128;font-family:Arial,sans-serif}
+body{display:grid;place-items:center}.game{position:relative;width:min(100vw,177.78vh);height:min(100vh,56.25vw);overflow:hidden;border-radius:18px;box-shadow:0 18px 60px #0008;background:#6ac8f0}
 canvas{width:100%;height:100%;display:block}
-.touch{position:absolute;inset:auto 18px 18px;display:flex;justify-content:space-between;pointer-events:none}.touch .cluster{display:flex;gap:12px}
-.touch button{pointer-events:auto;width:62px;height:62px;border-radius:50%;border:2px solid #fff8;background:#17243dcc;color:white;font-weight:900;font-size:25px;box-shadow:0 4px 12px #0006}
-#loading{position:absolute;inset:0;display:grid;place-items:center;background:#08152f;color:white;font-size:22px;z-index:5}
+.touch{position:absolute;left:22px;right:22px;bottom:18px;display:flex;justify-content:space-between;pointer-events:none}.touch .cluster{display:flex;gap:12px}
+.touch button{pointer-events:auto;width:64px;height:64px;border:2px solid #ffffff99;border-radius:50%;background:#14203dcc;color:#fff;font-weight:900;font-size:24px;box-shadow:0 5px 16px #0006}
+#loading{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(circle,#293f79,#090d20);color:white;font-size:22px;z-index:5}
 </style></head>
 <body><div class="game"><div id="loading">Carregando Wedding Adventure…</div><canvas id="c" width="1280" height="720"></canvas>
 <div class="touch"><div class="cluster"><button data-k="left">◀</button><button data-k="right">▶</button></div><div class="cluster"><button data-k="jump">▲</button></div></div></div>
@@ -25,30 +25,6 @@ let started=false,finish=false,t=0,score=0,cam=0;const p={x:90,y:520,vx:0,vy:0,o
 const platforms=[[0,610,430],[470,610,430],[950,610,330],[1370,610,480],[1900,610,540],[2490,610,620],[3200,610,680]];
 const coins=[360,570,680,1040,1190,1450,1570,2010,2160,2590,2740,3330,3480];const enemies=[760,1150,1510,2070,2670,3430];const endX=3650;
 function rect(x,y,w,h,f){X.fillStyle=f;X.fillRect(x,y,w,h)}
-function platform(x,y,w){rect(x,y,w,110,'#754526');rect(x,y,w,18,'#2e8a42');rect(x,y,w,6,'#9ee34e');for(let i=10;i<w;i+=44){rect(x+i,y+32,25,18,'#9b5d35');rect(x+i+3,y+35,19,12,'#7d472c')}}
-function heart(x,y,s=1){X.fillStyle='#ff4b70';X.beginPath();X.arc(x-7*s,y,8*s,0,7);X.arc(x+7*s,y,8*s,0,7);X.lineTo(x,y+16*s);X.fill()}
-function coin(x,y){X.fillStyle='#ffd43b';X.beginPath();X.arc(x,y,17,0,7);X.fill();X.fillStyle='#fff0a2';X.fillRect(x-3,y-10,6,20)}
-function enemy(x,y){X.fillStyle='#63311f';X.beginPath();X.roundRect(x-26,y-35,52,35,12);X.fill();X.fillStyle='#fff';X.fillRect(x-14,y-24,7,7);X.fillRect(x+7,y-24,7,7);X.fillStyle='#16151c';X.fillRect(x-12,y-22,3,3);X.fillRect(x+9,y-22,3,3)}
-function drawCharacter(img,x,y,run){const bob=run?Math.sin(t*18)*3:Math.sin(t*3)*2;X.save();X.translate(x,y+bob);X.drawImage(img,-110,-185,220,185);X.restore()}
-function background(){X.clearRect(0,0,W,H);X.fillStyle='#55baf5';X.fillRect(0,0,W,H);if(world.complete)X.drawImage(world,0,0,W,H);X.fillStyle='rgba(10,28,55,.12)';X.fillRect(0,390,W,330)}
-function update(){
- if(!started||finish)return;const l=key['arrowleft']||key['a']||key.left,r=key['arrowright']||key['d']||key.right;
- if(r)p.vx=Math.min(7,p.vx+.65);else if(l)p.vx=Math.max(-4,p.vx-.65);else p.vx*=.82;
- if((key['arrowup']||key['w']||key[' ']||key.jump)&&p.on){p.vy=-14;p.on=false}p.vy+=.65;p.x+=p.vx;p.y+=p.vy;
- let floor=610;for(const q of platforms)if(p.x>q[0]-20&&p.x<q[0]+q[2]+20&&p.y+60<=q[1]+12&&p.y+60+p.vy>=q[1])floor=q[1];
- if(p.y+60>=floor){p.y=floor-60;p.vy=0;p.on=true}else p.on=false;p.x=Math.max(20,Math.min(endX,p.x));cam=Math.max(0,Math.min(endX-W,p.x-350));
- for(let i=0;i<coins.length;i++){const cx=coins[i];if(cx>0&&Math.abs(p.x-cx)<35&&Math.abs(p.y-520)<90){score+=25;coins[i]=-1}}
- for(const ex of enemies)if(Math.abs(p.x-ex)<45&&p.y>535){score=Math.max(0,score-50);p.x-=100;p.vx=-3}
- if(p.x>endX-120)finish=true;t+=1/60;
-}
-function draw(){
- background();X.save();X.translate(-cam,0);for(const q of platforms)platform(...q);for(const cx of coins)if(cx>0)coin(cx,520);for(const ex of enemies)enemy(ex,610);
- const cx=endX-40;X.fillStyle='#e9c49b';X.fillRect(cx-220,270,420,340);X.fillStyle='#8c3155';
- [[cx-210,270,cx-130],[cx+40,270,cx+125],[cx-70,220,cx+15]].forEach(a=>{X.beginPath();X.moveTo(a[0],a[1]);X.lineTo((a[0]+a[2])/2,a[1]-130);X.lineTo(a[2],a[1]);X.fill()});
- X.fillStyle='#42233e';X.fillRect(cx-25,465,50,145);heart(cx,345,2);drawCharacter(groom,p.x,p.y,Math.abs(p.vx)>.5);drawCharacter(bride,endX-70,520,false);X.restore();
- rect(18,18,330,78,'rgba(7,17,40,.78)');X.fillStyle='white';X.font='900 24px Arial';X.fillText('WEDDING ADVENTURE',34,50);X.font='700 18px Arial';X.fillText('1P  SCORE '+String(score).padStart(6,'0'),34,78);X.fillText('FASE 1-1',570,46);X.fillText('TEMPO '+Math.max(0,180-Math.floor(t)),780,46);for(let i=0;i<5;i++)heart(1040+i*38,38,.7);
- if(!started){X.fillStyle='#0009';X.fillRect(0,0,W,H);X.fillStyle='white';X.textAlign='center';X.font='900 54px Arial';X.fillText('WEDDING ADVENTURE',W/2,260);X.font='700 26px Arial';X.fillText('A CAMINHO DA NOIVA',W/2,310);X.font='700 22px Arial';X.fillText('ENTER / toque para começar',W/2,365);X.textAlign='left'}
- if(finish){X.fillStyle='#1b092dcc';X.fillRect(0,0,W,H);for(let i=0;i<18;i++)heart(120+(i*71)%1040,90+(i*43)%480,.7+(i%2)*.3);X.fillStyle='white';X.textAlign='center';X.font='900 46px Arial';X.fillText('VOCÊ ENCONTROU A NOIVA!',W/2,240);X.font='700 30px Arial';X.fillText('♥  Abraço, beijo e final feliz  ♥',W/2,300);X.font='700 22px Arial';X.fillText('Pontuação: '+score,W/2,345);X.textAlign='left'}
-}
+function platform(x,y,w){X.fillStyle='#6d422d';X.beginPath();X.moveTo(x,y);X.quadraticCurveTo(x+w*.25,y-8,x+w*.5,y);X.quadraticCurveTo(x+w*.75,y-8,x+w,y);X.lineTo(x+w,y+90);X.lineTo(x,y+90);X.closePath();X.fill();X.fillStyle='#3e9d51';X.beginPath();X.moveTo(x,y);X.quadraticCurveTo(x+w*.25,y-9,x+w*.5,y);X.quadraticCurveTo(x+w*.75,y-9,x+w,y);X.lineTo(x+w,y+15);X.quadraticCurveTo(x+w*.75,y+8,x+w*.5,y+15);X.quadraticCurveTo(x+w*.25,y+7,x,y+15);X.closePath();X.fill();X.fillStyle='#8fe15e';X.fillRect(x,y,w,4);for(let i=25;i<w;i+=60)flower(x+i,y+12,.42)}
 addEventListener('pointerdown',()=>{started=true});function loop(){update();draw();requestAnimationFrame(loop)}loop();
 </script></body></html>
