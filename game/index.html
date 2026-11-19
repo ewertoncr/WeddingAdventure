@@ -1,30 +1,41 @@
 <!doctype html>
-<html lang="pt-BR">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Wedding Adventure — A Caminho da Noiva</title>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Wedding Adventure</title>
 <style>
-*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#0c1128;font-family:Arial,sans-serif}
-body{display:grid;place-items:center}.game{position:relative;width:min(100vw,177.78vh);height:min(100vh,56.25vw);overflow:hidden;border-radius:18px;box-shadow:0 18px 60px #0008;background:#6ac8f0}
-canvas{width:100%;height:100%;display:block}
-.touch{position:absolute;left:22px;right:22px;bottom:18px;display:flex;justify-content:space-between;pointer-events:none}.touch .cluster{display:flex;gap:12px}
-.touch button{pointer-events:auto;width:64px;height:64px;border:2px solid #ffffff99;border-radius:50%;background:#14203dcc;color:#fff;font-weight:900;font-size:24px;box-shadow:0 5px 16px #0006}
-#loading{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(circle,#293f79,#090d20);color:white;font-size:22px;z-index:5}
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#0b1028;font-family:Arial,sans-serif}
+body{display:grid;place-items:center}.game{position:relative;width:min(100vw,177.78vh);height:min(100vh,56.25vw);overflow:hidden;border-radius:18px;box-shadow:0 20px 70px #0009}
+canvas{width:100%;height:100%;display:block}.touch{position:absolute;left:20px;right:20px;bottom:18px;display:flex;justify-content:space-between;pointer-events:none}.cluster{display:flex;gap:12px}.touch button{pointer-events:auto;width:64px;height:64px;border:2px solid #ffffff99;border-radius:50%;background:#18233ed9;color:#fff;font:900 25px Arial;box-shadow:0 5px 18px #0007}
+#loading{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(circle,#314b89,#090d20);color:#fff;font:700 22px Arial;z-index:5}
 </style></head>
-<body><div class="game"><div id="loading">Carregando Wedding Adventure…</div><canvas id="c" width="1280" height="720"></canvas>
-<div class="touch"><div class="cluster"><button data-k="left">◀</button><button data-k="right">▶</button></div><div class="cluster"><button data-k="jump">▲</button></div></div></div>
+<body><div class="game"><div id="loading">Carregando o reino encantado…</div><canvas id="c" width="1280" height="720"></canvas>
+<div class="touch"><div class="cluster"><button data-k="left">◀</button><button data-k="right">▶</button></div><button data-k="jump">▲</button></div></div>
 <script>
-const C=document.getElementById('c'),X=C.getContext('2d');const W=1280,H=720;
-const AS='/WeddingAdventure/assets/art/';const groom=new Image(),bride=new Image(),world=new Image();
-groom.src=AS+'groom-hero.svg';bride.src=AS+'bride-hero.svg';world.src=AS+'enchanted-kingdom.svg';
-let ready=0;[groom,bride,world].forEach(i=>i.onload=()=>{if(++ready===3)document.getElementById('loading').remove()});
+const C=document.getElementById('c'),X=C.getContext('2d'),W=1280,H=720;
+const A='/WeddingAdventure/assets/art/';const groom=new Image(),bride=new Image(),world=new Image();
+groom.src=A+'groom-hero.svg';bride.src=A+'bride-hero.svg';world.src=A+'enchanted-kingdom.svg';
+let loaded=0;[groom,bride,world].forEach(i=>i.onload=()=>{if(++loaded===3)document.getElementById('loading').remove()});
 const key={};addEventListener('keydown',e=>{key[e.key.toLowerCase()]=1;if([' ','arrowup','arrowleft','arrowright'].includes(e.key.toLowerCase()))e.preventDefault()});
 addEventListener('keyup',e=>key[e.key.toLowerCase()]=0);
-document.querySelectorAll('[data-k]').forEach(b=>{const k=b.dataset.k;b.onpointerdown=()=>key[k]=1;b.onpointerup=b.onpointercancel=()=>key[k]=0});
-let started=false,finish=false,t=0,score=0,cam=0;const p={x:90,y:520,vx:0,vy:0,on:false};
-const platforms=[[0,610,430],[470,610,430],[950,610,330],[1370,610,480],[1900,610,540],[2490,610,620],[3200,610,680]];
-const coins=[360,570,680,1040,1190,1450,1570,2010,2160,2590,2740,3330,3480];const enemies=[760,1150,1510,2070,2670,3430];const endX=3650;
-function rect(x,y,w,h,f){X.fillStyle=f;X.fillRect(x,y,w,h)}
-function platform(x,y,w){X.fillStyle='#6d422d';X.beginPath();X.moveTo(x,y);X.quadraticCurveTo(x+w*.25,y-8,x+w*.5,y);X.quadraticCurveTo(x+w*.75,y-8,x+w,y);X.lineTo(x+w,y+90);X.lineTo(x,y+90);X.closePath();X.fill();X.fillStyle='#3e9d51';X.beginPath();X.moveTo(x,y);X.quadraticCurveTo(x+w*.25,y-9,x+w*.5,y);X.quadraticCurveTo(x+w*.75,y-9,x+w,y);X.lineTo(x+w,y+15);X.quadraticCurveTo(x+w*.75,y+8,x+w*.5,y+15);X.quadraticCurveTo(x+w*.25,y+7,x,y+15);X.closePath();X.fill();X.fillStyle='#8fe15e';X.fillRect(x,y,w,4);for(let i=25;i<w;i+=60)flower(x+i,y+12,.42)}
-addEventListener('pointerdown',()=>{started=true});function loop(){update();draw();requestAnimationFrame(loop)}loop();
+document.querySelectorAll('[data-k]').forEach(b=>{let k=b.dataset.k;b.onpointerdown=()=>key[k]=1;b.onpointerup=b.onpointercancel=()=>key[k]=0});
+let started=false,finish=false,t=0,cam=0,score=0;
+const p={x:100,y:500,vx:0,vy:0,on:false,dir:1,run:0};
+const platforms=[[0,610,500],[570,610,400],[970,610,390],[1430,610,480],[1980,610,470],[2510,610,570],[3160,610,720]];
+const gaps=[[500,570],[970,970],[1360,1430],[1910,1980],[2450,2510],[3080,3160]];
+const coins=[340,450,650,760,850,1060,1200,1490,1640,1820,2050,2210,2580,2740,2910,3290,3460,3650];
+const foes=[790,1170,1580,2150,2700,3420],END=3800;
+const sparks=[];
+function rounded(x,y,w,h,r,f){X.fillStyle=f;X.beginPath();X.roundRect(x,y,w,h,r);X.fill()}
+function heart(x,y,s=1){X.fillStyle='#ff5578';X.beginPath();X.arc(x-7*s,y,8*s,0,7);X.arc(x+7*s,y,8*s,0,7);X.lineTo(x,y+18*s);X.fill()}
+function sparkle(x,y,s){X.fillStyle='#fff0a5';X.beginPath();for(let i=0;i<8;i++){let a=i*Math.PI/4,r=i%2?s:s*.25;X.lineTo(x+Math.cos(a)*r,y+Math.sin(a)*r)}X.closePath();X.fill()}
+function coin(x,y){X.save();X.translate(x,y);X.rotate(Math.sin(t*4+x)*.08);X.shadowColor='#ffd65d';X.shadowBlur=14;X.fillStyle='#ffd34d';X.beginPath();X.ellipse(0,0,14,19,0,0,7);X.fill();X.shadowBlur=0;X.strokeStyle='#fff2a5';X.lineWidth=3;X.stroke();X.fillStyle='#fff3a8';X.fillRect(-2,-11,4,22);X.restore()}
+function tree(x,y,s){X.save();X.translate(x,y);X.scale(s,s);X.fillStyle='#5b382d';X.beginPath();X.moveTo(-12,80);X.lineTo(-8,6);X.lineTo(8,6);X.lineTo(12,80);X.fill();[[0,0,55],[32,18,43],[-32,18,44],[4,-38,40]].forEach(a=>{X.fillStyle='#287750';X.beginPath();X.arc(a[0],a[1],a[2],0,7);X.fill();X.fillStyle='#49ab69';X.beginPath();X.arc(a[0]-8,a[1]-8,a[2]*.62,0,7);X.fill()});X.restore()}
+function flower(x,y,s){X.save();X.translate(x,y);X.scale(s,s);X.strokeStyle='#3d8d4e';X.lineWidth=4;X.beginPath();X.moveTo(0,0);X.lineTo(0,-27);X.stroke();for(let i=0;i<5;i++){let a=i*1.256;X.fillStyle=i%2?'#ffd9ed':'#fff';X.beginPath();X.arc(Math.cos(a)*9,-27+Math.sin(a)*9,8,0,7);X.fill()}X.fillStyle='#f5b63e';X.beginPath();X.arc(0,-27,5,0,7);X.fill();X.restore()}
+function platform(x,y,w){X.fillStyle='#6b402d';X.beginPath();X.moveTo(x,y);X.quadraticCurveTo(x+w*.25,y-9,x+w*.5,y);X.quadraticCurveTo(x+w*.75,y-9,x+w,y);X.lineTo(x+w,y+105);X.lineTo(x,y+105);X.closePath();X.fill();X.fillStyle='#409d52';X.beginPath();X.moveTo(x,y);X.quadraticCurveTo(x+w*.25,y-10,x+w*.5,y);X.quadraticCurveTo(x+w*.75,y-10,x+w,y);X.lineTo(x+w,y+16);X.quadraticCurveTo(x+w*.75,y+8,x+w*.5,y+15);X.quadraticCurveTo(x+w*.25,y+8,x,y+16);X.closePath();X.fill();X.fillStyle='#91e260';X.fillRect(x,y,w,4);for(let i=25;i<w;i+=62)flower(x+i,y+14,.42)}
+function enemy(x,y){X.save();X.translate(x,y);X.fillStyle='#713c33';X.beginPath();X.ellipse(0,-23,28,30,0,0,7);X.fill();X.fillStyle='#d7a260';X.beginPath();X.arc(0,-44,22,0,7);X.fill();X.fillStyle='#4b2829';X.beginPath();X.arc(0,-50,23,Math.PI,7);X.fill();X.fillStyle='#fff';X.fillRect(-11,-47,7,7);X.fillRect(5,-47,7,7);X.fillStyle='#222';X.fillRect(-9,-45,3,3);X.fillRect(7,-45,3,3);X.restore()}
+function castle(x){X.save();X.translate(x,0);X.fillStyle='#f1d0ad';X.fillRect(-225,280,450,330);X.fillStyle='#d7a47d';X.fillRect(-185,335,370,275);X.fillStyle='#913e63';for(const a of [[-215,280,-125,125],[85,280,170,105],[-58,245,58,105]]){X.beginPath();X.moveTo(a[0],a[1]);X.lineTo((a[0]+a[2])/2,a[1]-a[3]);X.lineTo(a[2],a[1]);X.fill()}X.fillStyle='#3e2a49';X.beginPath();X.roundRect(-34,475,68,135,32);X.fill();X.fillStyle='#ffeaa2';X.beginPath();X.arc(0,380,22,0,7);X.fill();heart(0,380,1.1);X.fillStyle='#fff2d4';X.font='700 21px Georgia';X.textAlign='center';X.fillText('CASTELO DO AMOR',0,650);X.restore()}
+function character(img,x,y,active){let bob=active?Math.sin(t*18)*4:Math.sin(t*3)*2;X.save();X.translate(x,y+bob);X.scale(1.25,1.25);if(img===groom&&p.dir<0)X.scale(-1,1);X.shadowColor=img===bride?'#ffb5dc99':'#18203b99';X.shadowBlur=20;X.drawImage(img,-110,-185,220,185);X.shadowBlur=0;X.restore()}
+function background(){X.clearRect(0,0,W,H);let sky=X.createLinearGradient(0,0,0,H);sky.addColorStop(0,'#54b9ef');sky.addColorStop(.58,'#b6e9f7');sky.addColorStop(1,'#f5d0b8');X.fillStyle=sky;X.fillRect(0,0,W,H);if(world.complete){X.globalAlpha=.16;X.drawImage(world,0,0,W,H);X.globalAlpha=1}X.fillStyle='#ffffff99';for(let i=0;i<7;i++){let x=((i*260-cam*.15)%(W+260))-130,y=85+(i%3)*65;X.beginPath();X.ellipse(x,y,90,22,0,0,7);X.ellipse(x+55,y+5,68,18,0,0,7);X.fill()}for(let i=0;i<10;i++){let x=((i*310-cam*.30)%(END+500))-250;tree(x,420+(i%2)*20,.72+(i%3)*.13)}}
+function update(){if(!started||finish)return;let l=key['arrowleft']||key['a']||key.left,r=key['arrowright']||key['d']||key.right;if(r){p.vx=Math.min(7.5,p.vx+.6);p.dir=1}else if(l){p.vx=Math.max(-4.8,p.vx-.6);p.dir=-1}else p.vx*=.84;if((key['arrowup']||key['w']||key[' ']||key.jump)&&p.on){p.vy=-14.5;p.on=false}p.vy+=.62;p.x+=p.vx;p.y+=p.vy;let floor=610;for(const q of platforms)if(p.x>q[0]-18&&p.x<q[0]+q[2]+18&&p.y+64<=q[1]+12&&p.y+64+p.vy>=q[1])floor=q[1];if(p.y+64>=floor){p.y=floor-64;p.vy=0;p.on=true}else p.on=false;p.x=Math.max(25,Math.min(END,p.x));cam=Math.max(0,Math.min(END-W,p.x-350));p.run++;for(let i=0;i<coins.length;i++)if(coins[i]>0&&Math.abs(p.x-coins[i])<38&&Math.abs(p.y-535)<100){score+=25;coins[i]=-1;for(let j=0;j<8;j++)sparks.push({x:p.x,y:p.y-35,vx:(Math.random()-.5)*4,vy:-Math.random()*4,a:1})}for(const ex of foes)if(Math.abs(p.x-ex)<48&&p.y>545){score=Math.max(0,score-50);p.x-=100;p.vx=-3}for(const q of sparks){q.x+=q.vx;q.y+=q.vy;q.vy+=.18;q.a-=.035}while(sparks.length&&sparks[0].a<=0)sparks.shift();if(p.x>END-120)finish=true;t+=1/60}
+function draw(){background();X.save();X.translate(-cam,0);for(const q of platforms)platform(...q);for(const q of gaps){X.strokeStyle='#613142';X.lineWidth=7;X.beginPath();X.moveTo(q[0],610);X.lineTo(q[0]+70,665);X.stroke();X.beginPath();X.moveTo(q[1],610);X.lineTo(q[1]-70,665);X.stroke()}for(const cx of coins)if(cx>0)coin(cx,520);for(const ex of foes)enemy(ex,610);castle(END);character(groom,p.x,p.y,Math.abs(p.vx)>.5);character(bride,END-65,555,false);for(const q of sparks){X.globalAlpha=q.a;sparkle(q.x,q.y,6)}X.globalAlpha=1;X.restore();rounded(20,18,370,92,18,'#101a38dd');X.fillStyle='#fff';X.font='900 24px Arial';X.fillText('WEDDING ADVENTURE',42,52);X.font='700 17px Arial';X.fillText('SCORE '+String(score).padStart(6,'0'),42,82);X.fillText('FASE 01',260,82);for(let i=0;i<3;i++)heart(1080+i*42,48,.75);X.fillStyle='#fff';X.font='700 15px Arial';X.fillText('A/← correr   W/↑/Espaço saltar',840,92);if(!started){X.fillStyle='#070c20b8';X.fillRect(0,0,W,H);X.fillStyle='#fff';X.textAlign='center';X.shadowColor='#000';X.shadowBlur=15;X.font='900 60px Georgia';X.fillText('WEDDING ADVENTURE',W/2,245);X.font='italic 28px Georgia';X.fillText('A caminho da pessoa que você ama',W/2,292);X.shadowBlur=0;X.fillStyle='#a94367';X.beginPath();X.roundRect(W/2-165,340,330,62,31);X.fill();X.fillStyle='#fff';X.font='900 20px Arial';X.fillText('COMEÇAR A AVENTURA',W/2,380);X.textAlign='left'}if(finish){X.fillStyle='#17091dd9';X.fillRect(0,0,W,H);for(let i=0;i<24;i++)heart(90+(i*97)%1100,90+(i*53)%520,.55+(i%3)*.2);X.fillStyle='#fff';X.textAlign='center';X.font='900 48px Georgia';X.fillText('VOCÊ CHEGOU ATÉ ELA',W/2,245);X.font='700 29px Georgia';X.fillText('Um abraço. Um beijo. Um novo começo.',W/2,300);X.font='700 21px Arial';X.fillText('SCORE '+score,W/2,345);X.textAlign='left'}}
+addEventListener('pointerdown',()=>started=true);addEventListener('keydown',e=>{if(e.key==='Enter')started=true});function loop(){update();draw();requestAnimationFrame(loop)}loop();
 </script></body></html>
